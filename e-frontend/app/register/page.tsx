@@ -51,20 +51,10 @@ const RegisterFormContent = memo(function RegisterFormContent({
     <Form {...form}>
       <form 
         onSubmit={(e) => {
-          const formData = new FormData(e.currentTarget);
-          const name = formData.get('name') as string;
-          const email = formData.get('email') as string;
-          const password = formData.get('password') as string;
-          const confirmPassword = formData.get('confirmPassword') as string;
-          
-          if (password === confirmPassword) {
-            onSubmit({ name, email, password, confirmPassword });
-          } else {
-            form.setError('confirmPassword', { 
-              type: 'manual', 
-              message: 'Passwords do not match' 
-            });
-          }
+          e.preventDefault();
+          form.handleSubmit((data: RegisterFormValues) => {
+            onSubmit(data);
+          })(e);
         }} 
         className="space-y-4"
       >
@@ -176,7 +166,8 @@ export default function RegisterPage() {
       password: "",
       confirmPassword: "",
     },
-    mode: "onTouched",
+    mode: "onBlur",
+    reValidateMode: "onBlur",
   });
 
   // Form submission handler - memoized to prevent re-renders
@@ -205,45 +196,41 @@ export default function RegisterPage() {
     }
   }, []);
 
-  const RegisterForm = memo(() => (
-    <div className="flex min-h-screen flex-col items-center justify-center bg-gradient-to-br from-primary-foreground to-secondary p-4">
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5 }}
-        className="w-full max-w-md"
-      >
-        <Card className="w-full">
-          <CardHeader className="space-y-1">
-            <CardTitle className="text-2xl font-bold text-center">Create an account</CardTitle>
-            <CardDescription className="text-center">
-              Enter your information to create an account
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <RegisterFormContent 
-              form={form} 
-              isLoading={isLoading} 
-              onSubmit={onSubmit} 
-              handleKeyDown={handleKeyDown} 
-            />
-          </CardContent>
-          <CardFooter className="flex flex-col space-y-4">
-            <div className="text-center text-sm">
-              Already have an account?{" "}
-              <Link href="/login" className="text-primary hover:underline">
-                Sign In
-              </Link>
-            </div>
-          </CardFooter>
-        </Card>
-      </motion.div>
-    </div>
-  ));
-
   return (
     <AuthRedirect>
-      <RegisterForm />
+      <div className="flex min-h-screen flex-col items-center justify-center bg-gradient-to-br from-primary-foreground to-secondary p-4">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
+          className="w-full max-w-md"
+        >
+          <Card className="w-full">
+            <CardHeader className="space-y-1">
+              <CardTitle className="text-2xl font-bold text-center">Create an account</CardTitle>
+              <CardDescription className="text-center">
+                Enter your information to create an account
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <RegisterFormContent 
+                form={form} 
+                isLoading={isLoading} 
+                onSubmit={onSubmit} 
+                handleKeyDown={handleKeyDown} 
+              />
+            </CardContent>
+            <CardFooter className="flex flex-col space-y-4">
+              <div className="text-center text-sm">
+                Already have an account?{" "}
+                <Link href="/login" className="text-primary hover:underline">
+                  Sign In
+                </Link>
+              </div>
+            </CardFooter>
+          </Card>
+        </motion.div>
+      </div>
     </AuthRedirect>
   );
 } 

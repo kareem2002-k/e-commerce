@@ -47,10 +47,9 @@ const LoginFormContent = memo(function LoginFormContent({
       <form 
         onSubmit={(e) => {
           e.preventDefault();
-          const formData = new FormData(e.currentTarget);
-          const email = formData.get('email') as string;
-          const password = formData.get('password') as string;
-          onSubmit({ email, password });
+          form.handleSubmit((data: LoginFormValues) => {
+            onSubmit(data);
+          })(e);
         }} 
         className="space-y-4"
       >
@@ -123,7 +122,8 @@ export default function LoginPage() {
       email: "",
       password: "",
     },
-    mode: "onTouched",
+    mode: "onBlur",
+    reValidateMode: "onBlur",
   });
 
   // Form submission handler - memoized to prevent re-renders
@@ -152,45 +152,41 @@ export default function LoginPage() {
     }
   }, []);
 
-  const LoginForm = memo(() => (
-    <div className="flex min-h-screen flex-col items-center justify-center bg-gradient-to-br from-primary-foreground to-secondary p-4">
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5 }}
-        className="w-full max-w-md"
-      >
-        <Card className="w-full">
-          <CardHeader className="space-y-1">
-            <CardTitle className="text-2xl font-bold text-center">Sign in</CardTitle>
-            <CardDescription className="text-center">
-              Enter your credentials to access your account
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <LoginFormContent 
-              form={form} 
-              isLoading={isLoading} 
-              onSubmit={onSubmit} 
-              handleKeyDown={handleKeyDown} 
-            />
-          </CardContent>
-          <CardFooter className="flex flex-col space-y-4">
-            <div className="text-center text-sm">
-              Don&apos;t have an account?{" "}
-              <Link href="/register" className="text-primary hover:underline">
-                Register
-              </Link>
-            </div>
-          </CardFooter>
-        </Card>
-      </motion.div>
-    </div>
-  ));
-
   return (
     <AuthRedirect>
-      <LoginForm />
+      <div className="flex min-h-screen flex-col items-center justify-center bg-gradient-to-br from-primary-foreground to-secondary p-4">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
+          className="w-full max-w-md"
+        >
+          <Card className="w-full">
+            <CardHeader className="space-y-1">
+              <CardTitle className="text-2xl font-bold text-center">Sign in</CardTitle>
+              <CardDescription className="text-center">
+                Enter your credentials to access your account
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <LoginFormContent 
+                form={form} 
+                isLoading={isLoading} 
+                onSubmit={onSubmit} 
+                handleKeyDown={handleKeyDown} 
+              />
+            </CardContent>
+            <CardFooter className="flex flex-col space-y-4">
+              <div className="text-center text-sm">
+                Don&apos;t have an account?{" "}
+                <Link href="/register" className="text-primary hover:underline">
+                  Register
+                </Link>
+              </div>
+            </CardFooter>
+          </Card>
+        </motion.div>
+      </div>
     </AuthRedirect>
   );
 }
