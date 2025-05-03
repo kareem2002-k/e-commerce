@@ -1,6 +1,5 @@
 "use client";
 
-import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 import { LogOut, User } from "lucide-react";
@@ -9,20 +8,23 @@ import { ProtectedRoute } from "@/components/auth/ProtectedRoute";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Avatar } from "@/components/ui/avatar";
+import { toast } from "sonner";
 
 export default function HomePage() {
   const router = useRouter();
   const { user, logout } = useAuth();
-  const [showLogoutSuccess, setShowLogoutSuccess] = useState(false);
 
   const handleLogout = () => {
     logout();
-    setShowLogoutSuccess(true);
     
-    // Show logout success message for 2 seconds, then redirect
+    toast.success("Logged out successfully", {
+      description: "You have been logged out of your account."
+    });
+    
+    // Redirect after a short delay
     setTimeout(() => {
       router.push("/login");
-    }, 2000);
+    }, 1500);
   };
 
   return (
@@ -114,17 +116,6 @@ export default function HomePage() {
             </motion.div>
           </div>
         </div>
-
-        {/* Logout Success Toast */}
-        {showLogoutSuccess && (
-          <motion.div
-            initial={{ opacity: 0, y: 50 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="fixed bottom-4 right-4"
-          >
-           
-          </motion.div>
-        )}
       </motion.div>
     </ProtectedRoute>
   );

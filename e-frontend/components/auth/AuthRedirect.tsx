@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/context/AuthContext';
 
@@ -15,16 +15,25 @@ interface AuthRedirectProps {
 export const AuthRedirect: React.FC<AuthRedirectProps> = ({ children }) => {
   const router = useRouter();
   const { user, loading } = useAuth();
+  const [redirected, setRedirected] = useState(false);
+  const [renderChildren, setRenderChildren] = useState(false);
 
   useEffect(() => {
-    if (!loading && user) {
-      // User is already authenticated, redirect to home page
-      router.push('/home');
+    // Only perform this check once when component mounts or when auth state changes
+    if (!loading) {
+      if (user && !redirected) {
+        // User is already authenticated, redirect to home page
+        setRedirected(true);
+        router.push('/home');
+      } else if (!user) {
+        // User is not authenticated, render the children
+        setRenderChildren(true);
+      }
     }
-  }, [user, loading, router]);
+  }, [user, loading, router, redirected]);
 
-  // If user is authenticated, show loading state while redirecting
-  if (loading || user) {
+  // If still loading or already redirected, show loading state
+  if (loading || (user && redirected)) {
     return (
       <div className="flex h-screen w-full items-center justify-center">
         <div className="h-8 w-8 animate-spin rounded-full border-4 border-primary border-t-transparent"></div>
@@ -32,6 +41,15 @@ export const AuthRedirect: React.FC<AuthRedirectProps> = ({ children }) => {
     );
   }
 
-  // User is not authenticated, render children (auth forms)
-  return <>{children}</>;
+  // Only render children if we've determined the user is not authenticated
+  if (renderChildren) {
+    return <>{children}</>;
+  }
+
+  // Default loading state
+  return (
+    <div className="flex h-screen w-full items-center justify-center">
+      <div className="h-8 w-8 animate-spin rounded-full border-4 border-primary border-t-transparent"></div>
+    </div>
+  );
 }; 

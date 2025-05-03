@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useCallback, memo } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
@@ -20,7 +20,7 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from "@/components/ui/card";
-import { toast } from "sonner"
+import { toast } from "sonner";
 
 // Define form schema
 const loginSchema = z.object({
@@ -30,11 +30,91 @@ const loginSchema = z.object({
 
 type LoginFormValues = z.infer<typeof loginSchema>;
 
+// Memoized form component to prevent unnecessary re-renders
+const LoginFormContent = memo(function LoginFormContent({ 
+  form, 
+  isLoading, 
+  onSubmit, 
+  handleKeyDown 
+}: { 
+  form: any, 
+  isLoading: boolean, 
+  onSubmit: (data: LoginFormValues) => void,
+  handleKeyDown: (e: React.KeyboardEvent) => void 
+}) {
+  return (
+    <Form {...form}>
+      <form 
+        onSubmit={(e) => {
+          e.preventDefault();
+          const formData = new FormData(e.currentTarget);
+          const email = formData.get('email') as string;
+          const password = formData.get('password') as string;
+          onSubmit({ email, password });
+        }} 
+        className="space-y-4"
+      >
+        <FormField
+          control={form.control}
+          name="email"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Email</FormLabel>
+              <FormControl>
+                <Input
+                  placeholder="your.email@example.com"
+                  type="email"
+                  autoComplete="email"
+                  onKeyDown={handleKeyDown}
+                  {...field}
+                />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="password"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Password</FormLabel>
+              <FormControl>
+                <Input
+                  placeholder="Password"
+                  type="password"
+                  autoComplete="current-password"
+                  onKeyDown={handleKeyDown}
+                  {...field}
+                />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <Button
+          type="submit"
+          className="w-full"
+          disabled={isLoading}
+        >
+          {isLoading ? (
+            <div className="flex items-center justify-center">
+              <div className="h-5 w-5 animate-spin rounded-full border-2 border-primary-foreground border-t-transparent"></div>
+              <span className="ml-2">Signing in...</span>
+            </div>
+          ) : (
+            "Sign In"
+          )}
+        </Button>
+      </form>
+    </Form>
+  );
+});
+
 export default function LoginPage() {
   const router = useRouter();
   const { login, error, clearError } = useAuth();
   const [isLoading, setIsLoading] = useState(false);
-  const [showError, setShowError] = useState(false);
 
   // Initialize React Hook Form
   const form = useForm<LoginFormValues>({
@@ -43,26 +123,36 @@ export default function LoginPage() {
       email: "",
       password: "",
     },
+    mode: "onTouched",
   });
 
-  // Form submission handler
-  const onSubmit = async (values: LoginFormValues) => {
+  // Form submission handler - memoized to prevent re-renders
+  const onSubmit = useCallback(async (values: LoginFormValues) => {
     try {
       setIsLoading(true);
       await login(values.email, values.password);
+      toast.success("Login successful", {
+        description: "You have been successfully logged in."
+      });
       router.push("/home");
     } catch (err) {
-      setShowError(true);
-      setTimeout(() => {
-        setShowError(false);
-        clearError();
-      }, 5000);
+      toast.error("Login failed", {
+        description: error || "Failed to login. Please check your credentials."
+      });
+      clearError();
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [login, router, error, clearError]);
 
-  const LoginForm = () => (
+  // Prevent form submission when pressing Enter in inputs - memoized to prevent re-renders
+  const handleKeyDown = useCallback((e: React.KeyboardEvent) => {
+    if (e.key === 'Enter' && e.target instanceof HTMLInputElement) {
+      e.preventDefault();
+    }
+  }, []);
+
+  const LoginForm = memo(() => (
     <div className="flex min-h-screen flex-col items-center justify-center bg-gradient-to-br from-primary-foreground to-secondary p-4">
       <motion.div
         initial={{ opacity: 0, y: 20 }}
@@ -78,58 +168,12 @@ export default function LoginPage() {
             </CardDescription>
           </CardHeader>
           <CardContent>
-            <Form {...form}>
-              <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-                <FormField
-                  control={form.control}
-                  name="email"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Email</FormLabel>
-                      <FormControl>
-                        <Input
-                          placeholder="your.email@example.com"
-                          type="email"
-                          {...field}
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                <FormField
-                  control={form.control}
-                  name="password"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Password</FormLabel>
-                      <FormControl>
-                        <Input
-                          placeholder="Password"
-                          type="password"
-                          {...field}
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                <Button
-                  type="submit"
-                  className="w-full"
-                  disabled={isLoading}
-                >
-                  {isLoading ? (
-                    <div className="flex items-center justify-center">
-                      <div className="h-5 w-5 animate-spin rounded-full border-2 border-primary-foreground border-t-transparent"></div>
-                      <span className="ml-2">Signing in...</span>
-                    </div>
-                  ) : (
-                    "Sign In"
-                  )}
-                </Button>
-              </form>
-            </Form>
+            <LoginFormContent 
+              form={form} 
+              isLoading={isLoading} 
+              onSubmit={onSubmit} 
+              handleKeyDown={handleKeyDown} 
+            />
           </CardContent>
           <CardFooter className="flex flex-col space-y-4">
             <div className="text-center text-sm">
@@ -141,19 +185,8 @@ export default function LoginPage() {
           </CardFooter>
         </Card>
       </motion.div>
-
-      {/* Error Toast */}
-      {showError && error && (
-        <motion.div
-          initial={{ opacity: 0, y: 50 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="fixed bottom-4 right-4"
-        >
-         
-        </motion.div>
-      )}
     </div>
-  );
+  ));
 
   return (
     <AuthRedirect>
