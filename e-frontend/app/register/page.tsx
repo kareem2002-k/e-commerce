@@ -21,6 +21,8 @@ import {
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from "@/components/ui/card";
 import { toast } from "sonner";
+import { Logo } from "@/components/ui/logo";
+import { ThemeToggle } from "@/components/ui/theme-toggle";
 
 // Define form schema
 const registerSchema = z.object({
@@ -198,13 +200,21 @@ export default function RegisterPage() {
 
   return (
     <AuthRedirect>
-      <div className="flex min-h-screen flex-col items-center justify-center bg-gradient-to-br from-primary-foreground to-secondary p-4">
+      <div className="flex min-h-screen flex-col items-center justify-center bg-background p-4">
+        <div className="absolute top-4 right-4">
+          <ThemeToggle />
+        </div>
+        
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
-          className="w-full max-w-md"
+          className="w-full max-w-md flex flex-col items-center"
         >
+          <div className="mb-8">
+            <Logo variant="full" size={50} />
+          </div>
+          
           <Card className="w-full">
             <CardHeader className="space-y-1">
               <CardTitle className="text-2xl font-bold text-center">Create an account</CardTitle>

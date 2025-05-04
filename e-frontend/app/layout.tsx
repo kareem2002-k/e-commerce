@@ -3,6 +3,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { AuthProvider } from "@/context/AuthContext";
 import { Toaster } from "sonner";
+import { ThemeProvider } from "next-themes";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -15,8 +16,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Auth System",
-  description: "Authentication system with protected routes",
+  title: "VoltEdge | Premium Electronics",
+  description: "Shop the latest electronics at VoltEdge - Your one-stop destination for premium electronics and gadgets.",
 };
 
 export default function RootLayout({
@@ -25,14 +26,21 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <AuthProvider>
-          {children}
-          <Toaster position="bottom-right" />
-        </AuthProvider>
+        <ThemeProvider 
+          attribute="class" 
+          defaultTheme="system" 
+          enableSystem 
+          disableTransitionOnChange
+        >
+          <AuthProvider>
+            {children}
+            <Toaster position="bottom-right" />
+          </AuthProvider>
+        </ThemeProvider>
       </body>
     </html>
   );
