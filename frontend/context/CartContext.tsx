@@ -32,7 +32,7 @@ interface CartContextType {
   removingFromCart: Record<string, boolean>;
   error: string | null;
   fetchCart: () => Promise<void>;
-  addToCart: (productId: string, quantity: number) => Promise<void>;
+  addToCart: (productId: string, quantity: number, productDetails?: Partial<CartItem['product']>) => Promise<void>;
   updateCartItem: (itemId: string, quantity: number) => Promise<void>;
   removeCartItem: (itemId: string) => Promise<void>;
   clearCart: () => Promise<void>;
@@ -44,7 +44,8 @@ const CartContext = createContext<CartContextType | undefined>(undefined);
 
 export function CartProvider({ children }: { children: React.ReactNode }) {
   const [cart, setCart] = useState<Cart | null>(null);
-  const [loading, setLoading] = useState<boolean>(true);
+  const [loading, setLoading] = useState<boolean>(false);
+  const [initialLoad, setInitialLoad] = useState<boolean>(true);
   const [addingToCart, setAddingToCart] = useState<boolean>(false);
   const [updatingCart, setUpdatingCart] = useState<Record<string, boolean>>({});
   const [removingFromCart, setRemovingFromCart] = useState<Record<string, boolean>>({});
@@ -67,12 +68,17 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
   const fetchCart = async () => {
     if (!token) {
       setCart(null);
-      setLoading(false);
+      setInitialLoad(false);
       return;
     }
 
-    try {
+    // Only show loading on initial load
+    const isInitialLoading = initialLoad;
+    if (isInitialLoading) {
       setLoading(true);
+    }
+
+    try {
       // Use the correct endpoint from backend/src/index.ts (/cart)
       const response = await axios.get(`${API_URL}/cart`, {
         headers: { Authorization: `Bearer ${token}` }
@@ -80,15 +86,24 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
       setCart(response.data);
       setError(null);
     } catch (err) {
-      setError('Failed to fetch cart');
+      // Don't overwrite local cart on error to maintain UI consistency
+      if (!cart) {
+        setError('Failed to fetch cart');
+      }
       console.error('Error fetching cart:', err);
     } finally {
-      setLoading(false);
+      if (isInitialLoading) {
+        setLoading(false);
+        setInitialLoad(false);
+      }
     }
   };
 
+  // Generate a temporary ID for optimistic updates
+  const generateTempId = () => `temp-${Date.now()}-${Math.random().toString(36).substring(2)}`;
+
   // Add item to cart
-  const addToCart = async (productId: string, quantity: number) => {
+  const addToCart = async (productId: string, quantity: number, productDetails?: Partial<CartItem['product']>) => {
     if (!token) {
       toast.error('Please login to add items to cart');
       return;
@@ -114,20 +129,36 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
             ...cart,
             cartItems: updatedCartItems
           });
-        } else {
-          // If product information is available from elsewhere in the app
-          // we could add it here for a more complete optimistic update
+        } else if (productDetails) {
+          // Create a temporary item with available product details
+          const tempItem: CartItem = {
+            id: generateTempId(),
+            productId,
+            quantity,
+            product: {
+              id: productId,
+              name: productDetails.name || 'Loading...',
+              price: productDetails.price || 0,
+              description: productDetails.description || '',
+              images: productDetails.images || [{url: ''}]
+            }
+          };
+          
+          setCart({
+            ...cart,
+            cartItems: [...cart.cartItems, tempItem]
+          });
         }
       }
       
       // Use the correct endpoint from backend/src/index.ts (/cart/items)
-      const response = await axios.post(
+      await axios.post(
         `${API_URL}/cart/items`,
         { productId, quantity },
         { headers: { Authorization: `Bearer ${token}` } }
       );
       
-      // Refresh cart after adding to get the actual server state
+      // Silently refresh cart to get the actual server state
       await fetchCart();
       toast.success('Item added to cart');
     } catch (err: any) {
@@ -219,31 +250,34 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
   const clearCart = async () => {
     if (!token) return;
 
+    // Optimistic update - clear cart immediately
+    const originalCart = cart;
+    setCart(cart ? { ...cart, cartItems: [] } : null);
+    
     try {
-      setLoading(true);
       // Use the correct endpoint from backend/src/index.ts (/cart)
       await axios.delete(
         `${API_URL}/cart`,
         { headers: { Authorization: `Bearer ${token}` } }
       );
       
-      // Clear the cart locally immediately
-      setCart(cart ? { ...cart, cartItems: [] } : null);
       toast.success('Cart cleared');
     } catch (err: any) {
+      // Restore original cart on failure
+      setCart(originalCart);
       setError(err.response?.data?.message || 'Failed to clear cart');
       toast.error(err.response?.data?.message || 'Failed to clear cart');
-      
-      // If the API call failed, revert by re-fetching
-      await fetchCart();
-    } finally {
-      setLoading(false);
     }
   };
 
   // Fetch cart when user or token changes
   useEffect(() => {
-    fetchCart();
+    if (user && token) {
+      fetchCart();
+    } else {
+      setCart(null);
+      setInitialLoad(false);
+    }
   }, [user, token]);
 
   const value = {
