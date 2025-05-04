@@ -26,31 +26,37 @@ import { toast } from "sonner";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { Product, Category, ProductImage } from "@/types";
+import { useCategories, useProductAdmin } from "@/hooks/useApiService";
 
-type Category = {
-  id: string;
+type ProductFormData = {
   name: string;
-  description: string | null;
-  parentId: string | null;
+  description: string;
+  sku: string;
+  price: string;
+  stock: string;
+  lowStockThreshold: string;
+  categoryId: string;
+  images?: string;
 };
 
-type ProductImage = {
-  id?: string;
-  url: string;
-  altText: string;
-  file?: File;
-  isNew?: boolean;
-};
+type ProductFormErrors = Partial<Record<keyof ProductFormData, string>>;
 
 export default function AddProductPage() {
   const router = useRouter();
   const { user, token } = useAuth();
   const [loading, setLoading] = useState(false);
-  const [categories, setCategories] = useState<Category[]>([]);
   const [activeTab, setActiveTab] = useState("basic");
   
+  // Use the API service hooks
+  const categoriesResponse = useCategories();
+  const { createData } = useProductAdmin();
+  
+  // Get categories from API response
+  const categories = categoriesResponse.data as Category[] || [];
+  
   // Form state
-  const [product, setProduct] = useState({
+  const [product, setProduct] = useState<ProductFormData>({
     name: "",
     description: "",
     sku: "",
@@ -61,7 +67,7 @@ export default function AddProductPage() {
   });
   
   const [images, setImages] = useState<ProductImage[]>([]);
-  const [errors, setErrors] = useState<Record<string, string>>({});
+  const [errors, setErrors] = useState<ProductFormErrors>({});
   
   // Admin protection
   useEffect(() => {
@@ -73,34 +79,15 @@ export default function AddProductPage() {
     }
   }, [user, router]);
   
-  // Fetch categories
-  useEffect(() => {
-    const fetchCategories = async () => {
-      try {
-        const response = await fetch('/api/categories');
-        if (!response.ok) throw new Error('Failed to fetch categories');
-        const data = await response.json();
-        setCategories(data);
-      } catch (error) {
-        console.error('Error fetching categories:', error);
-        toast.error("Failed to load categories");
-      }
-    };
-    
-    if (user?.isAdmin) {
-      fetchCategories();
-    }
-  }, [user]);
-  
   // Handle input change
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
     
     // Clear errors when field is updated
-    if (errors[name]) {
+    if (errors[name as keyof ProductFormData]) {
       setErrors(prev => {
         const newErrors = { ...prev };
-        delete newErrors[name];
+        delete newErrors[name as keyof ProductFormData];
         return newErrors;
       });
     }
@@ -109,7 +96,7 @@ export default function AddProductPage() {
   };
   
   // Handle select change
-  const handleSelectChange = (name: string, value: string) => {
+  const handleSelectChange = (name: keyof ProductFormData, value: string) => {
     // Clear errors when field is updated
     if (errors[name]) {
       setErrors(prev => {
@@ -168,7 +155,7 @@ export default function AddProductPage() {
   
   // Validate form
   const validateForm = () => {
-    const newErrors: Record<string, string> = {};
+    const newErrors: ProductFormErrors = {};
     
     if (!product.name.trim()) newErrors.name = "Product name is required";
     if (!product.description.trim()) newErrors.description = "Description is required";
@@ -244,7 +231,6 @@ export default function AddProductPage() {
           if (image.isNew && image.file) {
             // In a real application, you would upload the file to your server or cloud storage
             // For demo purposes, we'll simulate an upload
-            // const uploadedUrl = await uploadImage(image.file);
             const uploadedUrl = image.url; // Simulate successful upload
             
             return {
@@ -271,23 +257,15 @@ export default function AddProductPage() {
       
       // Check for user authentication
       if (user?.email) {
-        console.log(user.email);
+        const response = await createData(
+          productData,
+          "Product created successfully",
+          "Failed to create product"
+        );
         
-        const response = await fetch('/api/products', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${token}`
-          },
-          body: JSON.stringify(productData)
-        });
-        
-        if (!response.ok) {
-          throw new Error('Failed to create product');
+        if (!response.error) {
+          router.push('/admin/products');
         }
-        
-        toast.success("Product created successfully");
-        router.push('/admin/products');
       } else {
         toast.error("Authentication required");
       }

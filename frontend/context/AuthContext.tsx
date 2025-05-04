@@ -2,13 +2,7 @@
 
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import axios from 'axios';
-
-type User = {
-  id: string;
-  name: string;
-  email: string;
-  isAdmin: boolean;
-};
+import { User } from '@/types';
 
 type AuthContextType = {
   user: User | null;

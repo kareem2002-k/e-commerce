@@ -58,41 +58,12 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import Image from "next/image";
 import { useGet } from "@/hooks/useApiFetch";
 import DataLoader from "@/components/ui/data-loader";
-
-// Product type based on backend schema
-type Product = {
-  id: string;
-  name: string;
-  description: string;
-  price: number;
-  stock: number;
-  sku: string;
-  lowStockThreshold: number;
-  categoryId: string;
-  category: {
-    id: string;
-    name: string;
-  };
-  images: {
-    id: string;
-    url: string;
-    altText: string;
-  }[];
-};
-
-type Category = {
-  id: string;
-  name: string;
-  description: string | null;
-  parentId: string | null;
-};
+import { useProductsState, useCategoriesState, useProductAdmin } from "@/hooks/useApiService";
+import { Product, Category } from "@/types";
 
 export default function AdminProductsPage() {
   const router = useRouter();
   const { user, token } = useAuth();
-  const [products, setProducts] = useState<Product[]>([]);
-  const [categories, setCategories] = useState<Category[]>([]);
-  const [loading, setLoading] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [productToDelete, setProductToDelete] = useState<Product | null>(null);
@@ -101,21 +72,26 @@ export default function AdminProductsPage() {
   const [searchFocused, setSearchFocused] = useState(false);
   const [activeTab, setActiveTab] = useState("all");
   
-  // Stats
+  // Use custom hooks for products and categories
+  const { 
+    products, 
+    setProducts, 
+    loading: productsLoading 
+  } = useProductsState();
+  
+  const { 
+    categories, 
+    loading: categoriesLoading 
+  } = useCategoriesState();
+  
+  const { deleteData } = useProductAdmin();
+  
+  // Stats state
   const [stats, setStats] = useState({
     totalProducts: 0,
     lowStockProducts: 0,
     totalValue: 0,
     totalCategories: 0
-  });
-  
-  // Fetch data using custom hooks
-  const [productsState, fetchProducts] = useGet<Product[]>('/api/products', {
-    showErrorToast: false,
-  });
-  
-  const [categoriesState, fetchCategories] = useGet<Category[]>('/api/categories', {
-    showErrorToast: false,
   });
   
   // Admin protection
@@ -128,40 +104,35 @@ export default function AdminProductsPage() {
     }
   }, [user, router]);
   
-  // Set data when it's loaded
+  // Set stats when products and categories are loaded
   useEffect(() => {
-    if (productsState.isSuccess && productsState.data) {
-      setProducts(productsState.data);
-      
+    if (products.length > 0) {
       // Calculate stats
-      const totalValue = productsState.data.reduce((sum: number, product: Product) => 
+      const totalValue = products.reduce((sum: number, product: Product) => 
         sum + (product.price * product.stock), 0);
-      const lowStockCount = productsState.data.filter((product: Product) => 
+      const lowStockCount = products.filter((product: Product) => 
         product.stock <= product.lowStockThreshold).length;
       
       setStats(prev => ({
         ...prev,
-        totalProducts: productsState.data.length,
+        totalProducts: products.length,
         lowStockProducts: lowStockCount,
         totalValue
       }));
     }
-  }, [productsState.data, productsState.isSuccess]);
+  }, [products]);
   
   useEffect(() => {
-    if (categoriesState.isSuccess && categoriesState.data) {
-      setCategories(categoriesState.data);
+    if (categories.length > 0) {
       setStats(prev => ({
         ...prev,
-        totalCategories: categoriesState.data.length
+        totalCategories: categories.length
       }));
     }
-  }, [categoriesState.data, categoriesState.isSuccess]);
+  }, [categories]);
   
   // Combined loading state
-  useEffect(() => {
-    setLoading(productsState.loading || categoriesState.loading);
-  }, [productsState.loading, categoriesState.loading]);
+  const loading = productsLoading || categoriesLoading;
   
   // Apply filters and sorting
   const filteredProducts = products.filter(product => {
@@ -212,42 +183,32 @@ export default function AdminProductsPage() {
     if (!productToDelete) return;
     
     try {
-      // Check for user authentication
-      if (!user?.email) {
-        toast.error("Authentication required");
-        return;
+      console.log(user?.email);
+      
+      const response = await deleteData(productToDelete.id, 
+        "Product deleted successfully", 
+        "Failed to delete product"
+      );
+      
+      if (!response.error) {
+        // Success - update local state
+        setProducts(products.filter(p => p.id !== productToDelete.id));
+        
+        // Update stats
+        setStats(prev => ({
+          ...prev,
+          totalProducts: prev.totalProducts - 1,
+          lowStockProducts: productToDelete.stock <= productToDelete.lowStockThreshold 
+            ? prev.lowStockProducts - 1 
+            : prev.lowStockProducts,
+          totalValue: prev.totalValue - (productToDelete.price * productToDelete.stock)
+        }));
+        
+        setDeleteDialogOpen(false);
+        setProductToDelete(null);
       }
-      
-      console.log(user.email);
-      
-      const response = await fetch(`/api/products/${productToDelete.id}`, {
-        method: 'DELETE',
-        headers: {
-          'Authorization': `Bearer ${token}`
-        }
-      });
-      
-      if (!response.ok) throw new Error('Failed to delete product');
-      
-      // Success - update local state
-      setProducts(products.filter(p => p.id !== productToDelete.id));
-      
-      // Update stats
-      setStats(prev => ({
-        ...prev,
-        totalProducts: prev.totalProducts - 1,
-        lowStockProducts: productToDelete.stock <= productToDelete.lowStockThreshold 
-          ? prev.lowStockProducts - 1 
-          : prev.lowStockProducts,
-        totalValue: prev.totalValue - (productToDelete.price * productToDelete.stock)
-      }));
-      
-      toast.success("Product deleted successfully");
-      setDeleteDialogOpen(false);
-      setProductToDelete(null);
     } catch (error) {
       console.error('Error deleting product:', error);
-      toast.error("Failed to delete product");
     }
   };
 
@@ -582,8 +543,7 @@ export default function AdminProductsPage() {
                   error={null} // We're not showing the error, just handling the loading state
                   data={sortedProducts}
                   onRetry={() => {
-                    fetchProducts();
-                    fetchCategories();
+                    // No need to explicitly fetch again since the custom hooks handle that
                   }}
                   isEmpty={(data) => data.length === 0}
                   emptyComponent={
@@ -629,8 +589,7 @@ export default function AdminProductsPage() {
                   error={null} // We're not showing the error, just handling the loading state
                   data={sortedProducts}
                   onRetry={() => {
-                    fetchProducts();
-                    fetchCategories();
+                    // No need to explicitly fetch again since the custom hooks handle that
                   }}
                   isEmpty={(data) => data.length === 0}
                   emptyComponent={
@@ -676,8 +635,7 @@ export default function AdminProductsPage() {
                   error={null} // We're not showing the error, just handling the loading state
                   data={sortedProducts}
                   onRetry={() => {
-                    fetchProducts();
-                    fetchCategories();
+                    // No need to explicitly fetch again since the custom hooks handle that
                   }}
                   isEmpty={(data) => data.length === 0}
                   emptyComponent={
