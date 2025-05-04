@@ -6,7 +6,8 @@ import { motion, AnimatePresence } from "framer-motion";
 import { 
   Plus, Edit, Trash2, Search, 
   ChevronLeft, ChevronRight, FolderPlus, Zap,
-  XCircle, RefreshCw, Tag, FolderTree
+  XCircle, RefreshCw, Tag, FolderTree,
+  ChevronDown
 } from "lucide-react";
 import { useAuth } from "@/context/AuthContext";
 import { ProtectedRoute } from "@/components/auth/ProtectedRoute";
@@ -33,6 +34,7 @@ import TopBar from "@/components/layout/TopBar";
 import { toast } from "sonner";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import React from "react";
 
 type Category = {
   id: string;

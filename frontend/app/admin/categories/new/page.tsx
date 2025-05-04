@@ -21,6 +21,8 @@ import {
 import TopBar from "@/components/layout/TopBar";
 import { toast } from "sonner";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { useGet, usePost } from "@/hooks/useApiFetch";
+import DataLoader from "@/components/ui/data-loader";
 
 type Category = {
   id: string;
@@ -32,7 +34,7 @@ type Category = {
 
 export default function AddCategoryPage() {
   const router = useRouter();
-  const { user } = useAuth();
+  const { user ,token } = useAuth();
   const [loading, setLoading] = useState(false);
   const [categories, setCategories] = useState<Category[]>([]);
   
@@ -45,6 +47,19 @@ export default function AddCategoryPage() {
   
   const [errors, setErrors] = useState<Record<string, string>>({});
   
+  // Fetch categories using custom hook
+  const [categoriesState, fetchCategories] = useGet<Category[]>('/api/categories', {
+    showErrorToast: false
+  });
+  
+  // Create category API endpoint
+  const [createState, createCategory] = usePost<Category>('/api/categories', {
+    showSuccessToast: true,
+    successMessage: "Category created successfully",
+    showErrorToast: true,
+    errorMessage: "Failed to create category"
+  });
+  
   // Admin protection
   useEffect(() => {
     if (user && !user.isAdmin) {
@@ -55,24 +70,24 @@ export default function AddCategoryPage() {
     }
   }, [user, router]);
   
-  // Fetch categories
+  // Set categories when data is loaded
   useEffect(() => {
-    const fetchCategories = async () => {
-      try {
-        const response = await fetch('/api/categories');
-        if (!response.ok) throw new Error('Failed to fetch categories');
-        const data = await response.json();
-        setCategories(data);
-      } catch (error) {
-        console.error('Error fetching categories:', error);
-        toast.error("Failed to load categories");
-      }
-    };
-    
-    if (user?.isAdmin) {
-      fetchCategories();
+    if (categoriesState.isSuccess && categoriesState.data) {
+      setCategories(categoriesState.data);
     }
-  }, [user]);
+  }, [categoriesState.data, categoriesState.isSuccess]);
+  
+  // Update loading state
+  useEffect(() => {
+    setLoading(categoriesState.loading || createState.loading);
+  }, [categoriesState.loading, createState.loading]);
+  
+  // Handle navigation after successful category creation
+  useEffect(() => {
+    if (createState.isSuccess) {
+      router.push('/admin/products');
+    }
+  }, [createState.isSuccess, router]);
   
   // Handle input change
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -140,34 +155,24 @@ export default function AddCategoryPage() {
       return;
     }
     
-    setLoading(true);
+    const categoryData = {
+      ...category,
+      description: category.description.trim() || null,
+      parentId: category.parentId || null
+    };
     
-    try {
-      const categoryData = {
-        ...category,
-        description: category.description.trim() || null,
-        parentId: category.parentId || null
-      };
-      
-      const response = await fetch('/api/categories', {
-        method: 'POST',
+    // Get the auth token
+    if (user?.email) {
+      // Use the custom hook to create the category with auth header
+      console.log(user.email)
+      createCategory(undefined, { 
+        body: categoryData,
         headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(categoryData)
+          'Authorization': `Bearer ${token}`
+        }
       });
-      
-      if (!response.ok) {
-        throw new Error('Failed to create category');
-      }
-      
-      toast.success("Category created successfully");
-      router.push('/admin/products');
-    } catch (error) {
-      console.error('Error creating category:', error);
-      toast.error("Failed to create category");
-    } finally {
-      setLoading(false);
+    } else {
+      toast.error("Authentication required");
     }
   };
   
@@ -277,17 +282,27 @@ export default function AddCategoryPage() {
                       </SelectTrigger>
                       <SelectContent>
                         <SelectItem value="none">No parent (top-level category)</SelectItem>
-                        {categories.length > 0 ? (
-                          categories.map((cat) => (
-                            <SelectItem key={cat.id} value={cat.id}>
-                              {cat.name}
+                        <DataLoader
+                          isLoading={categoriesState.loading}
+                          error={null} // Not showing the error
+                          data={categories}
+                          isEmpty={(data) => data.length === 0}
+                          emptyComponent={
+                            <SelectItem value="loading" disabled>
+                              No categories found
                             </SelectItem>
-                          ))
-                        ) : (
-                          <SelectItem value="loading" disabled>
-                            Loading categories...
-                          </SelectItem>
-                        )}
+                          }
+                        >
+                          {(data) => (
+                            <>
+                              {data.map((cat) => (
+                                <SelectItem key={cat.id} value={cat.id}>
+                                  {cat.name}
+                                </SelectItem>
+                              ))}
+                            </>
+                          )}
+                        </DataLoader>
                       </SelectContent>
                     </Select>
                     {errors.parentId && (
@@ -324,7 +339,17 @@ export default function AddCategoryPage() {
                         className="bg-blue-600 hover:bg-blue-700 text-white"
                         disabled={loading}
                       >
-                        {loading ? "Saving..." : "Create Category"}
+                        {loading ? (
+                          <span className="flex items-center">
+                            <svg className="animate-spin -ml-1 mr-2 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                              <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                              <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                            </svg>
+                            Saving...
+                          </span>
+                        ) : (
+                          <>Create Category</>
+                        )}
                       </Button>
                     </motion.div>
                   </div>

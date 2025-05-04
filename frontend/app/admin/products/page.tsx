@@ -56,6 +56,8 @@ import { toast } from "sonner";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import Image from "next/image";
+import { useGet } from "@/hooks/useApiFetch";
+import DataLoader from "@/components/ui/data-loader";
 
 // Product type based on backend schema
 type Product = {
@@ -87,10 +89,10 @@ type Category = {
 
 export default function AdminProductsPage() {
   const router = useRouter();
-  const { user } = useAuth();
+  const { user, token } = useAuth();
   const [products, setProducts] = useState<Product[]>([]);
   const [categories, setCategories] = useState<Category[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [productToDelete, setProductToDelete] = useState<Product | null>(null);
@@ -107,6 +109,15 @@ export default function AdminProductsPage() {
     totalCategories: 0
   });
   
+  // Fetch data using custom hooks
+  const [productsState, fetchProducts] = useGet<Product[]>('/api/products', {
+    showErrorToast: false,
+  });
+  
+  const [categoriesState, fetchCategories] = useGet<Category[]>('/api/categories', {
+    showErrorToast: false,
+  });
+  
   // Admin protection
   useEffect(() => {
     if (user && !user.isAdmin) {
@@ -117,48 +128,41 @@ export default function AdminProductsPage() {
     }
   }, [user, router]);
   
-  // Fetch products
+  // Set data when it's loaded
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        // Fetch products
-        const productsResponse = await fetch('/api/products');
-        if (!productsResponse.ok) throw new Error('Failed to fetch products');
-        const productsData = await productsResponse.json();
-        setProducts(productsData);
-        
-        // Fetch categories
-        const categoriesResponse = await fetch('/api/categories');
-        if (!categoriesResponse.ok) throw new Error('Failed to fetch categories');
-        const categoriesData = await categoriesResponse.json();
-        setCategories(categoriesData);
-        
-        // Calculate stats
-        const totalValue = productsData.reduce((sum: number, product: Product) => 
-          sum + (product.price * product.stock), 0);
-        const lowStockCount = productsData.filter((product: Product) => 
-          product.stock <= product.lowStockThreshold).length;
-        
-        setStats({
-          totalProducts: productsData.length,
-          lowStockProducts: lowStockCount,
-          totalValue,
-          totalCategories: categoriesData.length
-        });
-        
-        setLoading(false);
-      } catch (error) {
-        console.error('Error fetching data:', error);
-        setLoading(false);
-        toast.error("Failed to load data");
-      }
-    };
-    
-    if (user?.isAdmin) {
-      fetchData();
+    if (productsState.isSuccess && productsState.data) {
+      setProducts(productsState.data);
+      
+      // Calculate stats
+      const totalValue = productsState.data.reduce((sum: number, product: Product) => 
+        sum + (product.price * product.stock), 0);
+      const lowStockCount = productsState.data.filter((product: Product) => 
+        product.stock <= product.lowStockThreshold).length;
+      
+      setStats(prev => ({
+        ...prev,
+        totalProducts: productsState.data.length,
+        lowStockProducts: lowStockCount,
+        totalValue
+      }));
     }
-  }, [user]);
-
+  }, [productsState.data, productsState.isSuccess]);
+  
+  useEffect(() => {
+    if (categoriesState.isSuccess && categoriesState.data) {
+      setCategories(categoriesState.data);
+      setStats(prev => ({
+        ...prev,
+        totalCategories: categoriesState.data.length
+      }));
+    }
+  }, [categoriesState.data, categoriesState.isSuccess]);
+  
+  // Combined loading state
+  useEffect(() => {
+    setLoading(productsState.loading || categoriesState.loading);
+  }, [productsState.loading, categoriesState.loading]);
+  
   // Apply filters and sorting
   const filteredProducts = products.filter(product => {
     const matchesSearch = 
@@ -208,12 +212,24 @@ export default function AdminProductsPage() {
     if (!productToDelete) return;
     
     try {
+      // Check for user authentication
+      if (!user?.email) {
+        toast.error("Authentication required");
+        return;
+      }
+      
+      console.log(user.email);
+      
       const response = await fetch(`/api/products/${productToDelete.id}`, {
         method: 'DELETE',
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
       });
       
       if (!response.ok) throw new Error('Failed to delete product');
       
+      // Success - update local state
       setProducts(products.filter(p => p.id !== productToDelete.id));
       
       // Update stats
@@ -307,7 +323,7 @@ export default function AdminProductsPage() {
               <svg className="h-8 w-8 mr-2 text-blue-500" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <path d="M13 10V3L4 14H11V21L20 10H13Z" fill="currentColor" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
               </svg>
-              <div>
+            <div>
                 <h1 className="text-3xl font-bold">Product Management</h1>
                 <p className="text-muted-foreground">
                   Control your store's inventory and product catalog
@@ -317,25 +333,25 @@ export default function AdminProductsPage() {
             
             <div className="flex items-center gap-2">
               <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-                <Button
+            <Button 
                   variant="outline"
                   onClick={() => toast.info("Coming soon: Import product functionality")}
                   className="hidden md:flex"
-                >
+            >
                   <Upload className="mr-2 h-4 w-4" />
                   Import
-                </Button>
+            </Button>
               </motion.div>
               
               <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-                <Button
+                          <Button
                   variant="outline"
                   onClick={() => toast.info("Coming soon: Export product functionality")}
                   className="hidden md:flex"
                 >
                   <Download className="mr-2 h-4 w-4" />
                   Export
-                </Button>
+                          </Button>
               </motion.div>
               
               <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
@@ -350,99 +366,101 @@ export default function AdminProductsPage() {
             </div>
           </motion.div>
           
-          {/* Stats Cards */}
-          <motion.div
-            variants={containerVariants}
-            initial="hidden"
-            animate="show" 
-            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8"
-          >
-            <motion.div variants={itemVariants} whileHover="hover">
-              <Card className="border-blue-100 dark:border-blue-900/30 hover:border-blue-300 transition-colors">
-                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                  <CardTitle className="text-sm font-medium">Total Products</CardTitle>
-                  <Package className="h-4 w-4 text-blue-600" />
-                </CardHeader>
-                <CardContent>
-                  <div className="text-2xl font-bold text-blue-600">
-                    {stats.totalProducts}
-                  </div>
-                  <p className="text-xs text-muted-foreground">
-                    across {stats.totalCategories} categories
-                  </p>
-                </CardContent>
-              </Card>
-            </motion.div>
-            
-            <motion.div variants={itemVariants} whileHover="hover">
-              <Card className="border-red-100 dark:border-red-900/30 hover:border-red-300 transition-colors">
-                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                  <CardTitle className="text-sm font-medium">Low Stock Alert</CardTitle>
-                  <motion.div 
-                    initial={{ rotate: 0 }}
-                    animate={{ rotate: stats.lowStockProducts > 0 ? [0, 10, -10, 0] : 0 }}
-                    transition={{ 
-                      repeat: stats.lowStockProducts > 0 ? Infinity : 0, 
-                      repeatDelay: 2
-                    }}
-                  >
-                    <Zap className="h-4 w-4 text-red-500" />
-                  </motion.div>
-                </CardHeader>
-                <CardContent>
-                  <div className="text-2xl font-bold text-red-500">
-                    {stats.lowStockProducts}
-                  </div>
-                  <p className="text-xs text-muted-foreground">
-                    products need attention
-                  </p>
-                </CardContent>
-              </Card>
-            </motion.div>
-            
-            <motion.div variants={itemVariants} whileHover="hover">
-              <Card className="border-green-100 dark:border-green-900/30 hover:border-green-300 transition-colors">
-                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                  <CardTitle className="text-sm font-medium">Inventory Value</CardTitle>
-                  <DollarSign className="h-4 w-4 text-green-600" />
-                </CardHeader>
-                <CardContent>
-                  <div className="text-2xl font-bold text-green-600">
-                    ${stats.totalValue.toLocaleString(undefined, {
-                      minimumFractionDigits: 2,
-                      maximumFractionDigits: 2
-                    })}
-                  </div>
-                  <p className="text-xs text-muted-foreground">
-                    total stock value
-                  </p>
-                </CardContent>
-              </Card>
-            </motion.div>
-            
-            <motion.div variants={itemVariants} whileHover="hover">
-              <Card className="border-purple-100 dark:border-purple-900/30 hover:border-purple-300 transition-colors">
-                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                  <CardTitle className="text-sm font-medium">Categories</CardTitle>
-                  <Tag className="h-4 w-4 text-purple-600" />
-                </CardHeader>
-                <CardContent>
-                  <div className="text-2xl font-bold text-purple-600">
-                    {stats.totalCategories}
-                  </div>
-                  <p className="text-xs text-muted-foreground">
-                    <Button 
-                      variant="link" 
-                      className="h-auto p-0 text-xs"
-                      onClick={() => router.push('/admin/categories')}
+          {/* Stats Cards - only show when data is loaded */}
+          {!loading && (
+            <motion.div
+              variants={containerVariants}
+              initial="hidden"
+              animate="show" 
+              className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8"
+            >
+              <motion.div variants={itemVariants} whileHover="hover">
+                <Card className="border-blue-100 dark:border-blue-900/30 hover:border-blue-300 transition-colors">
+                  <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                    <CardTitle className="text-sm font-medium">Total Products</CardTitle>
+                    <Package className="h-4 w-4 text-blue-600" />
+                  </CardHeader>
+                  <CardContent>
+                    <div className="text-2xl font-bold text-blue-600">
+                      {stats.totalProducts}
+                    </div>
+                    <p className="text-xs text-muted-foreground">
+                      across {stats.totalCategories} categories
+                    </p>
+                  </CardContent>
+                </Card>
+              </motion.div>
+              
+              <motion.div variants={itemVariants} whileHover="hover">
+                <Card className="border-red-100 dark:border-red-900/30 hover:border-red-300 transition-colors">
+                  <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                    <CardTitle className="text-sm font-medium">Low Stock Alert</CardTitle>
+                    <motion.div 
+                      initial={{ rotate: 0 }}
+                      animate={{ rotate: stats.lowStockProducts > 0 ? [0, 10, -10, 0] : 0 }}
+                      transition={{ 
+                        repeat: stats.lowStockProducts > 0 ? Infinity : 0, 
+                        repeatDelay: 2
+                      }}
                     >
-                      Manage categories
-                    </Button>
-                  </p>
-                </CardContent>
-              </Card>
+                      <Zap className="h-4 w-4 text-red-500" />
+                    </motion.div>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="text-2xl font-bold text-red-500">
+                      {stats.lowStockProducts}
+                    </div>
+                    <p className="text-xs text-muted-foreground">
+                      products need attention
+                    </p>
+                  </CardContent>
+                </Card>
+              </motion.div>
+              
+              <motion.div variants={itemVariants} whileHover="hover">
+                <Card className="border-green-100 dark:border-green-900/30 hover:border-green-300 transition-colors">
+                  <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                    <CardTitle className="text-sm font-medium">Inventory Value</CardTitle>
+                    <DollarSign className="h-4 w-4 text-green-600" />
+                  </CardHeader>
+                  <CardContent>
+                    <div className="text-2xl font-bold text-green-600">
+                      ${stats.totalValue.toLocaleString(undefined, {
+                        minimumFractionDigits: 2,
+                        maximumFractionDigits: 2
+                      })}
+                    </div>
+                    <p className="text-xs text-muted-foreground">
+                      total stock value
+                    </p>
+                  </CardContent>
+                </Card>
+              </motion.div>
+              
+              <motion.div variants={itemVariants} whileHover="hover">
+                <Card className="border-purple-100 dark:border-purple-900/30 hover:border-purple-300 transition-colors">
+                  <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                    <CardTitle className="text-sm font-medium">Categories</CardTitle>
+                    <Tag className="h-4 w-4 text-purple-600" />
+                  </CardHeader>
+                  <CardContent>
+                    <div className="text-2xl font-bold text-purple-600">
+                      {stats.totalCategories}
+                    </div>
+                    <p className="text-xs text-muted-foreground">
+                      <Button 
+                        variant="link" 
+                        className="h-auto p-0 text-xs"
+                        onClick={() => router.push('/admin/categories')}
+                      >
+                        Manage categories
+                      </Button>
+                    </p>
+                  </CardContent>
+                </Card>
+              </motion.div>
             </motion.div>
-          </motion.div>
+          )}
           
           {/* Tabs + Search + Filters */}
           <div className="space-y-4 mb-6">
@@ -559,15 +577,144 @@ export default function AdminProductsPage() {
               </div>
               
               <TabsContent value="all" className="pt-2">
-                {renderProductTable(sortedProducts)}
+                <DataLoader
+                  isLoading={loading}
+                  error={null} // We're not showing the error, just handling the loading state
+                  data={sortedProducts}
+                  onRetry={() => {
+                    fetchProducts();
+                    fetchCategories();
+                  }}
+                  isEmpty={(data) => data.length === 0}
+                  emptyComponent={
+                    <motion.div
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      className="text-center py-12 border rounded-md bg-white dark:bg-gray-800"
+                    >
+                      <svg className="mx-auto h-12 w-12 text-gray-400" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M13 10V3L4 14H11V21L20 10H13Z" fill="currentColor" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                      </svg>
+                      <h3 className="text-xl font-medium mt-4">No products found</h3>
+                      <p className="text-muted-foreground mt-2">
+                        {searchTerm || selectedCategory !== "all" 
+                          ? "Try adjusting your filters" 
+                          : "Add your first product to get started"}
+                      </p>
+                      {!searchTerm && selectedCategory === "all" && (
+                        <motion.div
+                          whileHover={{ scale: 1.05 }}
+                          whileTap={{ scale: 0.95 }}
+                          className="mt-6"
+                        >
+                          <Button 
+                            onClick={() => router.push('/admin/products/new')}
+                            className="bg-blue-600 hover:bg-blue-700"
+                          >
+                            <Plus className="mr-2 h-4 w-4" />
+                            Add New Product
+                          </Button>
+                        </motion.div>
+                      )}
+                    </motion.div>
+                  }
+                >
+                  {(data) => renderProductTable(data)}
+                </DataLoader>
               </TabsContent>
               
               <TabsContent value="in-stock" className="pt-2">
-                {renderProductTable(sortedProducts)}
+                <DataLoader
+                  isLoading={loading}
+                  error={null} // We're not showing the error, just handling the loading state
+                  data={sortedProducts}
+                  onRetry={() => {
+                    fetchProducts();
+                    fetchCategories();
+                  }}
+                  isEmpty={(data) => data.length === 0}
+                  emptyComponent={
+                    <motion.div
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      className="text-center py-12 border rounded-md bg-white dark:bg-gray-800"
+                    >
+                      <svg className="mx-auto h-12 w-12 text-gray-400" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M13 10V3L4 14H11V21L20 10H13Z" fill="currentColor" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                      </svg>
+                      <h3 className="text-xl font-medium mt-4">No products found</h3>
+                      <p className="text-muted-foreground mt-2">
+                        {searchTerm || selectedCategory !== "all" 
+                          ? "Try adjusting your filters" 
+                          : "Add your first product to get started"}
+                      </p>
+                      {!searchTerm && selectedCategory === "all" && (
+                        <motion.div
+                          whileHover={{ scale: 1.05 }}
+                          whileTap={{ scale: 0.95 }}
+                          className="mt-6"
+                        >
+                          <Button 
+                            onClick={() => router.push('/admin/products/new')}
+                            className="bg-blue-600 hover:bg-blue-700"
+                          >
+                            <Plus className="mr-2 h-4 w-4" />
+                            Add New Product
+                          </Button>
+                        </motion.div>
+                      )}
+                    </motion.div>
+                  }
+                >
+                  {(data) => renderProductTable(data)}
+                </DataLoader>
               </TabsContent>
               
               <TabsContent value="low-stock" className="pt-2">
-                {renderProductTable(sortedProducts)}
+                <DataLoader
+                  isLoading={loading}
+                  error={null} // We're not showing the error, just handling the loading state
+                  data={sortedProducts}
+                  onRetry={() => {
+                    fetchProducts();
+                    fetchCategories();
+                  }}
+                  isEmpty={(data) => data.length === 0}
+                  emptyComponent={
+                    <motion.div
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      className="text-center py-12 border rounded-md bg-white dark:bg-gray-800"
+                    >
+                      <svg className="mx-auto h-12 w-12 text-gray-400" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M13 10V3L4 14H11V21L20 10H13Z" fill="currentColor" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                      </svg>
+                      <h3 className="text-xl font-medium mt-4">No products found</h3>
+                      <p className="text-muted-foreground mt-2">
+                        {searchTerm || selectedCategory !== "all" 
+                          ? "Try adjusting your filters" 
+                          : "Add your first product to get started"}
+                      </p>
+                      {!searchTerm && selectedCategory === "all" && (
+                        <motion.div
+                          whileHover={{ scale: 1.05 }}
+                          whileTap={{ scale: 0.95 }}
+                          className="mt-6"
+                        >
+                          <Button 
+                            onClick={() => router.push('/admin/products/new')}
+                            className="bg-blue-600 hover:bg-blue-700"
+                          >
+                            <Plus className="mr-2 h-4 w-4" />
+                            Add New Product
+                          </Button>
+                        </motion.div>
+                      )}
+                    </motion.div>
+                  }
+                >
+                  {(data) => renderProductTable(data)}
+                </DataLoader>
               </TabsContent>
             </Tabs>
           </div>
@@ -597,52 +744,7 @@ export default function AdminProductsPage() {
   );
   
   function renderProductTable(products: Product[]) {
-    if (loading) {
-      return (
-        <div className="space-y-3">
-          <Skeleton className="h-10 w-full" />
-          {Array(5).fill(0).map((_, index) => (
-            <Skeleton key={index} className="h-16 w-full" />
-          ))}
-        </div>
-      );
-    }
-  
-    if (products.length === 0) {
-      return (
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="text-center py-12 border rounded-md bg-white dark:bg-gray-800"
-        >
-          <svg className="mx-auto h-12 w-12 text-gray-400" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M13 10V3L4 14H11V21L20 10H13Z" fill="currentColor" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-          </svg>
-          <h3 className="text-xl font-medium mt-4">No products found</h3>
-          <p className="text-muted-foreground mt-2">
-            {searchTerm || selectedCategory !== "all" 
-              ? "Try adjusting your filters" 
-              : "Add your first product to get started"}
-          </p>
-          {!searchTerm && selectedCategory === "all" && (
-            <motion.div
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              className="mt-6"
-            >
-              <Button 
-                onClick={() => router.push('/admin/products/new')}
-                className="bg-blue-600 hover:bg-blue-700"
-              >
-                <Plus className="mr-2 h-4 w-4" />
-                Add New Product
-              </Button>
-            </motion.div>
-          )}
-        </motion.div>
-      );
-    }
-  
+    // We've already handled loading and empty states with DataLoader
     return (
       <div className="border rounded-md bg-white dark:bg-gray-800 overflow-hidden">
         <Table>

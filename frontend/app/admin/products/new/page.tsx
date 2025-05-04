@@ -44,7 +44,7 @@ type ProductImage = {
 
 export default function AddProductPage() {
   const router = useRouter();
-  const { user } = useAuth();
+  const { user, token } = useAuth();
   const [loading, setLoading] = useState(false);
   const [categories, setCategories] = useState<Category[]>([]);
   const [activeTab, setActiveTab] = useState("basic");
@@ -269,20 +269,28 @@ export default function AddProductPage() {
         images: uploadedImages
       };
       
-      const response = await fetch('/api/products', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(productData)
-      });
-      
-      if (!response.ok) {
-        throw new Error('Failed to create product');
+      // Check for user authentication
+      if (user?.email) {
+        console.log(user.email);
+        
+        const response = await fetch('/api/products', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+          },
+          body: JSON.stringify(productData)
+        });
+        
+        if (!response.ok) {
+          throw new Error('Failed to create product');
+        }
+        
+        toast.success("Product created successfully");
+        router.push('/admin/products');
+      } else {
+        toast.error("Authentication required");
       }
-      
-      toast.success("Product created successfully");
-      router.push('/admin/products');
     } catch (error) {
       console.error('Error creating product:', error);
       toast.error("Failed to create product");

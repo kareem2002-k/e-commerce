@@ -21,37 +21,37 @@ router.get('/', async (req, res) => {
   }
 });
 
-// Get single product by ID
-router.get('/:id', async (req, res) => {
-  try {
-    const { id } = req.params;
-    const product = await prisma.product.findUnique({
-      where: { id },
-      include: {
-        category: true,
-        images: true,
-        reviews: {
-          include: {
-            user: {
-              select: {
-                id: true,
-                name: true
-              }
-            }
-          }
-        }
-      }
-    });
+// // Get single product by ID
+// router.get('/:id', async (req, res) => {
+//   try {
+//     const { id } = req.params;
+//     const product = await prisma.product.findUnique({
+//       where: { id },
+//       include: {
+//         category: true,
+//         images: true,
+//         reviews: {
+//           include: {
+//             user: {
+//               select: {
+//                 id: true,
+//                 name: true
+//               }
+//             }
+//           }
+//         }
+//       }
+//     });
     
-    if (!product) {
-      return res.status(404).json({ message: 'Product not found' });
-    }
+//     if (!product) {
+//       return res.status(404).json({ message: 'Product not found' });
+//     }
     
-    res.json(product);
-  } catch (error) {
-    res.status(500).json({ message: 'Error fetching product' });
-  }
-});
+//     res.json(product);
+//   } catch (error) {
+//     res.status(500).json({ message: 'Error fetching product' });
+//   }
+// });
 
 // Protected admin routes
 // Create new product

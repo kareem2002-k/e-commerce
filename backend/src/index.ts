@@ -1,6 +1,8 @@
 import express from 'express';
 import dotenv from 'dotenv';
 import authRoutes from './routes/auth';
+import productRoutes from './routes/products';
+import categoryRoutes from './routes/categories';
 import cors from 'cors';
 // Load environment variables
 dotenv.config();
@@ -22,6 +24,8 @@ app.get('/', (_req, res) => {
 
 // Routes
 app.use('/api/auth', authRoutes);
+app.use('/products', productRoutes);
+app.use('/categories', categoryRoutes);
 
 // Start server
 app.listen(PORT, () => {
