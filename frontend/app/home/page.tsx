@@ -9,8 +9,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Avatar } from "@/components/ui/avatar";
 import { toast } from "sonner";
-import { ThemeToggle } from "@/components/theme-toggle";
-
+import TopBar from "@/components/layout/TopBar";
 
 export default function HomePage() {
   const router = useRouter();
@@ -36,47 +35,9 @@ export default function HomePage() {
         animate={{ opacity: 1 }}
         className="min-h-screen bg-background"
       >
+        <TopBar />
+        
         <div className="mx-auto max-w-6xl p-4">
-          <div className="flex items-center justify-between border-b border-border py-4">
-            <motion.div 
-              initial={{ x: -20, opacity: 0 }}
-              animate={{ x: 0, opacity: 1 }}
-              transition={{ delay: 0.1 }}
-              className="flex items-center"
-            >
-            </motion.div>
-            <motion.div
-              initial={{ x: 20, opacity: 0 }}
-              animate={{ x: 0, opacity: 1 }}
-              transition={{ delay: 0.2 }}
-              className="flex items-center gap-4"
-            >
-              <ThemeToggle />
-              <Button 
-                variant="ghost" 
-                size="icon"
-                aria-label="Cart"
-              >
-                <ShoppingCart className="h-5 w-5" />
-              </Button>
-              <div className="flex items-center gap-2">
-                <Avatar className="h-9 w-9 border-2 border-primary">
-                  <User className="h-5 w-5" />
-                </Avatar>
-                <span className="hidden sm:inline font-medium">{user?.name}</span>
-              </div>
-              <Button 
-                variant="ghost" 
-                size="sm" 
-                onClick={handleLogout}
-                className="flex items-center gap-1"
-              >
-                <LogOut className="h-4 w-4" />
-                <span className="hidden sm:inline">Logout</span>
-              </Button>
-            </motion.div>
-          </div>
-
           <div className="mt-8">
             <motion.h1 
               initial={{ y: -20, opacity: 0 }}
@@ -101,13 +62,18 @@ export default function HomePage() {
               initial={{ y: 20, opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}
               transition={{ delay: 0.5 }}
+              onClick={() => router.push('/products')}
+              className="cursor-pointer"
             >
-              <Card className="h-full">
+              <Card className="h-full hover:shadow-md transition-shadow">
                 <CardHeader className="pb-2">
                   <CardTitle className="text-lg">Featured Products</CardTitle>
                 </CardHeader>
                 <CardContent>
                   <p>Discover our latest products and bestsellers. Premium quality at competitive prices.</p>
+                  <Button variant="link" className="p-0 mt-2">
+                    Browse Products →
+                  </Button>
                 </CardContent>
               </Card>
             </motion.div>
@@ -139,6 +105,16 @@ export default function HomePage() {
                 <CardContent>
                   <p><strong>Name:</strong> {user?.name}</p>
                   <p><strong>Email:</strong> {user?.email}</p>
+                  
+                  {/* Admin button */}
+                  {user?.isAdmin && (
+                    <Button 
+                      onClick={() => router.push('/admin/products')}
+                      className="bg-blue-600 hover:bg-blue-700 mt-4"
+                    >
+                      Manage Products
+                    </Button>
+                  )}
                 </CardContent>
               </Card>
             </motion.div>
