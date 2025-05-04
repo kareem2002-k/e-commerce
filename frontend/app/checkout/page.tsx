@@ -21,6 +21,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { Input } from '@/components/ui/input';
 
 interface Address {
   id: string;
@@ -29,6 +30,13 @@ interface Address {
   state: string;
   zipCode: string;
   country: string;
+}
+
+interface Coupon {
+  code: string;
+  discountType: 'PERCENTAGE' | 'FIXED_AMOUNT';
+  discountValue: number;
+  description: string;
 }
 
 export default function CheckoutPage() {
@@ -45,12 +53,27 @@ export default function CheckoutPage() {
   const [orderPlaced, setOrderPlaced] = useState(false);
   const [orderId, setOrderId] = useState('');
   
+  // Add coupon state
+  const [couponCode, setCouponCode] = useState('');
+  const [appliedCoupon, setAppliedCoupon] = useState<Coupon | null>(null);
+  const [validatingCoupon, setValidatingCoupon] = useState(false);
+  
   // Calculate order summary
   const subtotal = totalPrice;
+  
+  // Calculate discount if coupon is applied
+  const discountAmount = appliedCoupon ? 
+    (appliedCoupon.discountType === 'PERCENTAGE' 
+      ? (subtotal * (appliedCoupon.discountValue / 100)) 
+      : appliedCoupon.discountValue) 
+    : 0;
+  
+  const discountedSubtotal = Math.max(0, subtotal - discountAmount);
+  
   const shippingCost = 10.00; // Fixed shipping cost
   const taxRate = 0.1; // 10% tax
-  const taxAmount = subtotal * taxRate;
-  const totalAmount = subtotal + shippingCost + taxAmount;
+  const taxAmount = discountedSubtotal * taxRate;
+  const totalAmount = discountedSubtotal + shippingCost + taxAmount;
   
   // Get API URL with fallback
   const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001';
@@ -62,7 +85,7 @@ export default function CheckoutPage() {
       
       try {
         setLoadingAddresses(true);
-        const response = await axios.get(`${API_URL}/api/auth/addresses`, {
+        const response = await axios.get(`${API_URL}/addresses`, {
           headers: { Authorization: `Bearer ${token}` }
         });
         
@@ -83,6 +106,43 @@ export default function CheckoutPage() {
     
     fetchAddresses();
   }, [token]);
+  
+  // Apply coupon code
+  const handleApplyCoupon = async () => {
+    if (!couponCode.trim()) {
+      toast.error('Please enter a coupon code');
+      return;
+    }
+    
+    try {
+      setValidatingCoupon(true);
+      
+      const response = await axios.get(`${API_URL}/coupons/validate/${couponCode.trim()}`);
+      
+      if (response.data.valid) {
+        setAppliedCoupon(response.data.coupon);
+        toast.success('Coupon applied successfully!');
+      } else {
+        setAppliedCoupon(null);
+        toast.error(response.data.message || 'Invalid coupon code');
+      }
+    } catch (error: any) {
+      console.error('Error validating coupon:', error);
+      setAppliedCoupon(null);
+      
+      const errorMessage = error.response?.data?.message || 'Failed to validate coupon';
+      toast.error(errorMessage);
+    } finally {
+      setValidatingCoupon(false);
+    }
+  };
+  
+  // Remove applied coupon
+  const handleRemoveCoupon = () => {
+    setAppliedCoupon(null);
+    setCouponCode('');
+    toast.success('Coupon removed');
+  };
   
   // Redirect if cart is empty
   useEffect(() => {
@@ -112,7 +172,8 @@ export default function CheckoutPage() {
         {
           shippingAddressId: selectedShippingAddressId,
           billingAddressId: selectedBillingAddressId,
-          paymentMethod
+          paymentMethod,
+          couponCode: appliedCoupon?.code // Include coupon code if applied
         },
         { headers: { Authorization: `Bearer ${token}` } }
       );
@@ -287,6 +348,95 @@ export default function CheckoutPage() {
             </CardContent>
           </Card>
           
+          {/* Coupon Code - New section */}
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="h-5 w-5 text-purple-600"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                >
+                  <path d="M4 12h16" />
+                  <path d="M4 12a8 8 0 0 1 8-8" />
+                  <path d="M4 12a8 8 0 0 0 8 8" />
+                  <path d="M9 8l3-3 3 3" />
+                  <path d="M9 16l3 3 3-3" />
+                </svg>
+                Discount Code
+              </CardTitle>
+              <CardDescription>Enter a coupon code if you have one</CardDescription>
+            </CardHeader>
+            <CardContent>
+              {appliedCoupon ? (
+                <div className="flex flex-col gap-3">
+                  <div className="flex items-center gap-2 p-3 bg-green-50 dark:bg-green-900/20 rounded-md">
+                    <div className="h-8 w-8 rounded-full bg-green-100 dark:bg-green-800 flex items-center justify-center text-green-600 dark:text-green-400">
+                      <svg 
+                        xmlns="http://www.w3.org/2000/svg" 
+                        className="h-5 w-5" 
+                        viewBox="0 0 24 24" 
+                        fill="none" 
+                        stroke="currentColor" 
+                        strokeWidth="2" 
+                        strokeLinecap="round" 
+                        strokeLinejoin="round"
+                      >
+                        <path d="M20 6 9 17l-5-5" />
+                      </svg>
+                    </div>
+                    <div className="flex-grow">
+                      <p className="text-sm font-medium">{appliedCoupon.code}</p>
+                      <p className="text-xs text-muted-foreground">{appliedCoupon.description}</p>
+                    </div>
+                    <div>
+                      <Button 
+                        size="sm" 
+                        variant="ghost" 
+                        onClick={handleRemoveCoupon}
+                        className="h-8 text-muted-foreground hover:text-foreground"
+                      >
+                        Remove
+                      </Button>
+                    </div>
+                  </div>
+                  
+                  <div className="text-sm text-green-600 font-medium">
+                    {appliedCoupon.discountType === 'PERCENTAGE' 
+                      ? `${appliedCoupon.discountValue}% off` 
+                      : `${formatCurrency(appliedCoupon.discountValue)} off`} 
+                    your order
+                  </div>
+                </div>
+              ) : (
+                <div className="flex gap-2">
+                  <Input
+                    placeholder="Enter coupon code"
+                    value={couponCode}
+                    onChange={(e) => setCouponCode(e.target.value)}
+                    className="flex-grow"
+                  />
+                  <Button 
+                    onClick={handleApplyCoupon}
+                    disabled={validatingCoupon || !couponCode.trim()}
+                    className="min-w-[100px]"
+                  >
+                    {validatingCoupon ? (
+                      <div className="h-4 w-4 animate-spin rounded-full border-2 border-current border-t-transparent" />
+                    ) : (
+                      'Apply'
+                    )}
+                  </Button>
+                </div>
+              )}
+            </CardContent>
+          </Card>
+          
           {/* Payment Method */}
           <Card>
             <CardHeader>
@@ -379,6 +529,15 @@ export default function CheckoutPage() {
                   <span className="text-muted-foreground">Subtotal</span>
                   <span>{formatCurrency(subtotal)}</span>
                 </div>
+                
+                {/* Show discount if coupon is applied */}
+                {appliedCoupon && (
+                  <div className="flex justify-between text-sm text-green-600">
+                    <span>Discount ({appliedCoupon.code})</span>
+                    <span>-{formatCurrency(discountAmount)}</span>
+                  </div>
+                )}
+                
                 <div className="flex justify-between text-sm">
                   <span className="text-muted-foreground">Shipping</span>
                   <span>{formatCurrency(shippingCost)}</span>

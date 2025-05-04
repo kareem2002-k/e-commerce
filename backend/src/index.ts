@@ -7,6 +7,7 @@ import cartRoutes from './routes/cart';
 import orderRoutes from './routes/orders';
 import addressRoutes from './routes/addresses';
 import couponRoutes from './routes/coupons';
+import reviewRoutes from './routes/reviews';
 import cors from 'cors';
 
 // Load environment variables
@@ -35,6 +36,7 @@ app.use('/cart', cartRoutes);
 app.use('/orders', orderRoutes);
 app.use('/addresses', addressRoutes);
 app.use('/coupons', couponRoutes);
+app.use('/reviews', reviewRoutes);
 
 
 

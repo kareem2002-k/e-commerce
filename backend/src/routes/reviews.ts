@@ -69,7 +69,9 @@ router.post('/', authenticate, async (req, res) => {
     });
     
     if (!product) {
-      return res.status(404).json({ message: 'Product not found' });
+      res.status(404).json({ message: 'Product not found' });
+
+      return 
     }
     
     // Check if user has purchased the product
@@ -86,7 +88,9 @@ router.post('/', authenticate, async (req, res) => {
     });
     
     if (!hasPurchased) {
-      return res.status(403).json({ message: 'You can only review products you have purchased' });
+      res.status(403).json({ message: 'You can only review products you have purchased' });
+
+      return 
     }
     
     // Check if user has already reviewed this product
@@ -94,20 +98,22 @@ router.post('/', authenticate, async (req, res) => {
       where: {
         productId_userId: {
           productId,
-          userId
+          userId: userId || ''
         }
       }
     });
     
     if (existingReview) {
-      return res.status(400).json({ message: 'You have already reviewed this product' });
+      res.status(400).json({ message: 'You have already reviewed this product' });
+
+      return 
     }
     
     // Create review
     const review = await prisma.review.create({
       data: {
         productId,
-        userId,
+        userId: userId || '',
         rating: parseInt(rating),
         comment
       },
@@ -145,7 +151,9 @@ router.put('/:id', authenticate, async (req, res) => {
     });
     
     if (!review || review.userId !== userId) {
-      return res.status(404).json({ message: 'Review not found' });
+      res.status(404).json({ message: 'Review not found' });
+
+      return 
     }
     
     // Update review
@@ -193,7 +201,9 @@ router.delete('/:id', authenticate, async (req, res) => {
     });
     
     if (!review || (review.userId !== userId && user?.role !== 'ADMIN')) {
-      return res.status(404).json({ message: 'Review not found' });
+      res.status(404).json({ message: 'Review not found' });
+
+      return 
     }
     
     // Delete review

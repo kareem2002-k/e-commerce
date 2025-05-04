@@ -14,6 +14,7 @@ import {
   Clock,
   Package,
   CreditCard,
+  MapPin,
 } from 'lucide-react';
 import { motion } from 'framer-motion';
 import axios from 'axios';
@@ -76,11 +77,7 @@ export default function OrdersPage() {
   const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001';
   
   useEffect(() => {
-    // Redirect if not logged in
-    if (!token) {
-      router.push('/login');
-      return;
-    }
+
     
     fetchOrders();
   }, [token, router]);

@@ -200,6 +200,30 @@ export default function TopBar() {
                     Admin Dashboard
                   </DropdownMenuItem>
                 )}
+                {user?.isAdmin && (
+                  <DropdownMenuItem 
+                    className="cursor-pointer flex items-center focus:bg-purple-50 dark:focus:bg-purple-900/20"
+                    onClick={() => router.push('/admin/coupons')}
+                  >
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      className="mr-2 h-4 w-4 text-purple-600"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    >
+                      <path d="M4 12h16" />
+                      <path d="M4 12a8 8 0 0 1 8-8" />
+                      <path d="M4 12a8 8 0 0 0 8 8" />
+                      <path d="M9 8l3-3 3 3" />
+                      <path d="M9 16l3 3 3-3" />
+                    </svg>
+                    Manage Coupons
+                  </DropdownMenuItem>
+                )}
                 <DropdownMenuItem 
                   className="cursor-pointer text-red-500 focus:text-red-500 flex items-center mt-2 focus:bg-red-50 dark:focus:bg-red-900/20"
                   onClick={handleLogout}
@@ -323,6 +347,21 @@ export default function TopBar() {
                       onClick={() => setMobileMenuOpen(false)}
                     >
                       Admin Dashboard
+                    </Link>
+                  </motion.div>
+                )}
+                {user?.isAdmin && (
+                  <motion.div
+                    initial={{ opacity: 0, x: 50 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: (navItems.length + 0.5) * 0.1 }}
+                  >
+                    <Link
+                      href="/admin/coupons"
+                      className="text-lg font-medium py-2 px-2 block transition-colors rounded-md hover:bg-red-50 dark:hover:bg-red-900/20 text-red-600"
+                      onClick={() => setMobileMenuOpen(false)}
+                    >
+                      Manage Coupons
                     </Link>
                   </motion.div>
                 )}
