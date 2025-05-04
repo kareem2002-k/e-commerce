@@ -76,7 +76,8 @@ export const login = async (req: Request, res: Response) => {
       user: {
         id: user.id,
         email: user.email,
-        name: user.name
+        name: user.name,
+        isAdmin: user.role === 'ADMIN'
       }
     });
   } catch (error) {

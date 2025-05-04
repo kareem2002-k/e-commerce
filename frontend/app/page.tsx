@@ -13,22 +13,19 @@ import { useRouter } from "next/navigation"
 
 export default function Home() {
   const router = useRouter();
-
   const { user, loading } = useAuth();
 
   useEffect(() => {
-    if (!loading) {
-      router.push(user ? "/home" : "/");
+    if (!loading && user) {
+      router.push('/products');
     }
   }, [user, loading, router]);
-
-
 
   return (
     <main>
       <AnimatePresence>{loading && <LoadingScreen />}</AnimatePresence>
 
-      {!loading && (
+   
         <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.5 }}>
           {/* Theme toggle button - fixed position */}
           <div className="fixed top-4 right-4 z-50">
@@ -40,7 +37,6 @@ export default function Home() {
           <Categories />
           <Footer />
         </motion.div>
-      )}
     </main>
   )
 }

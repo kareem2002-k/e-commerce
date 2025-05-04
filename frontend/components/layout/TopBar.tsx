@@ -1,13 +1,14 @@
 "use client";
 
-import { useState } from "react";
-import { useRouter } from "next/navigation";
+import { useState, useEffect } from "react";
+import { useRouter, usePathname } from "next/navigation";
 import Link from "next/link";
-import { motion } from "framer-motion";
-import { ShoppingCart, LogOut, User, Menu, X } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
+import { ShoppingCart, LogOut, User, Menu, X, Zap, Search } from "lucide-react";
 import { useAuth } from "@/context/AuthContext";
 import { Button } from "@/components/ui/button";
 import { Avatar } from "@/components/ui/avatar";
+import { Input } from "@/components/ui/input";
 import {
   Sheet,
   SheetContent,
@@ -24,14 +25,27 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { toast } from "sonner";
-
+import Image from "next/image";
 export default function TopBar() {
   const router = useRouter();
+  const pathname = usePathname();
   const { user, logout } = useAuth();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
+  const [searchTerm, setSearchTerm] = useState("");
   
   // Placeholder cart data (will be replaced with actual cart state)
   const cartItemCount = 0;
+  
+  // Handle scroll effect
+  useEffect(() => {
+    const handleScroll = () => {
+      setScrolled(window.scrollY > 20);
+    };
+    
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
   
   const handleLogout = () => {
     logout();
@@ -45,76 +59,106 @@ export default function TopBar() {
       router.push("/login");
     }, 1500);
   };
+
+  const handleSearch = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (searchTerm.trim()) {
+      router.push(`/products?search=${encodeURIComponent(searchTerm)}`);
+      setSearchTerm("");
+    }
+  };
   
   const navItems = [
-    { name: "Home", href: "/home" },
+    { name: "Home", href: "/" },
     { name: "Products", href: "/products" },
-    // Add more nav items as needed
   ];
 
+  const pageTransition = {
+    type: "spring",
+    stiffness: 300,
+    damping: 30
+  };
+
   return (
-    <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-      <div className="container flex h-16 items-center justify-between">
-        <div className="flex items-center gap-6 md:gap-10">
+    <motion.header 
+      initial={{ y: -100 }}
+      animate={{ y: 0 }}
+      transition={pageTransition}
+      className={`sticky top-0 z-50 w-full backdrop-blur transition-all duration-300 ${
+        scrolled ? "bg-background/80 shadow-md" : "bg-background/50"
+      }`}
+    >
+      <div className="container flex h-16 items-center justify-between gap-2">
+        <div className="flex items-center gap-2 md:gap-6">
           {/* Logo */}
-          <Link href="/home">
-            <span className="hidden md:inline-block font-bold text-xl">VoltEdge</span>
-            <span className="md:hidden font-bold text-xl">VE</span>
+          <Link href="/">
+            <motion.div 
+              className="flex items-center gap-2 font-bold"
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+            >
+              <Image src="/images/logoIconOnly.png" alt="VoltEdge" width={32} height={32} />
+             
+             <span className="text-xl">VoltEdge</span>
+            </motion.div>
           </Link>
           
-          {/* Desktop navigation */}
-          <nav className="hidden md:flex gap-6">
-            {navItems.map((item) => (
-              <Link
-                key={item.href}
-                href={item.href}
-                className="text-sm font-medium transition-colors hover:text-primary"
-              >
-                {item.name}
-              </Link>
-            ))}
-            {user?.isAdmin && (
-              <Link
-                href="/admin/products"
-                className="text-sm font-medium transition-colors hover:text-primary"
-              >
-                Admin
-              </Link>
-            )}
-          </nav>
+    
         </div>
         
         <div className="flex items-center gap-2">
           {/* Theme toggle */}
-          <ThemeToggle />
+          <motion.div
+            whileHover={{ scale: 1.1, rotate: 5 }}
+            whileTap={{ scale: 0.9 }}
+          >
+            <ThemeToggle />
+          </motion.div>
           
           {/* Shopping cart */}
           <Sheet>
             <SheetTrigger asChild>
-              <Button variant="ghost" size="icon" className="relative">
-                <ShoppingCart className="h-5 w-5" />
-                {cartItemCount > 0 && (
-                  <Badge className="absolute -top-1 -right-1 h-5 w-5 flex items-center justify-center p-0 text-xs bg-blue-500">
-                    {cartItemCount}
-                  </Badge>
-                )}
-              </Button>
+              <motion.div
+                whileHover={{ scale: 1.1 }}
+                whileTap={{ scale: 0.9 }}
+              >
+                <Button variant="ghost" size="icon" className="relative">
+                  <ShoppingCart className="h-5 w-5" />
+                  {cartItemCount > 0 && (
+                    <Badge className="absolute -top-1 -right-1 h-5 w-5 flex items-center justify-center p-0 text-xs bg-gradient-to-r from-purple-600 to-fuchsia-600">
+                      {cartItemCount}
+                    </Badge>
+                  )}
+                </Button>
+              </motion.div>
             </SheetTrigger>
-            <SheetContent side="right">
+            <SheetContent side="right" className="border-l border-purple-100 dark:border-purple-900">
               <SheetHeader>
-                <SheetTitle>Your Cart</SheetTitle>
+                <SheetTitle className="flex items-center gap-2">
+                  <ShoppingCart className="h-5 w-5 text-purple-600" />
+                  Your Cart
+                </SheetTitle>
               </SheetHeader>
               <div className="py-6">
                 {cartItemCount === 0 ? (
                   <div className="text-center py-12">
-                    <ShoppingCart className="mx-auto h-12 w-12 text-muted-foreground mb-4" />
-                    <h3 className="text-lg font-medium mb-2">Your cart is empty</h3>
-                    <p className="text-muted-foreground mb-6">
-                      Looks like you haven't added any products to your cart yet.
-                    </p>
-                    <Button onClick={() => router.push('/products')}>
-                      Browse Products
-                    </Button>
+                    <motion.div
+                      initial={{ scale: 0.8, opacity: 0 }}
+                      animate={{ scale: 1, opacity: 1 }}
+                      transition={{ duration: 0.5 }}
+                    >
+                      <ShoppingCart className="mx-auto h-12 w-12 text-muted-foreground mb-4" />
+                      <h3 className="text-lg font-medium mb-2">Your cart is empty</h3>
+                      <p className="text-muted-foreground mb-6">
+                        Looks like you haven't added any products to your cart yet.
+                      </p>
+                      <Button 
+                        onClick={() => router.push('/')}
+                        className="bg-gradient-to-r from-purple-600 to-fuchsia-600 hover:from-purple-700 hover:to-fuchsia-700"
+                      >
+                        Browse Products
+                      </Button>
+                    </motion.div>
                   </div>
                 ) : (
                   // Cart items will be rendered here
@@ -128,35 +172,55 @@ export default function TopBar() {
           <div className="hidden md:flex items-center gap-2">
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button variant="ghost" size="icon" className="relative rounded-full">
-                  <Avatar className="h-8 w-8 border-2 border-primary">
+                <motion.div
+                  whileHover={{ scale: 1.1 }}
+                  whileTap={{ scale: 0.9 }}
+                >
+                  <Button variant="ghost" size="icon" className="relative rounded-full bg-purple-50 dark:bg-purple-900/20">
+                    <Avatar className="h-8 w-8 border-2 border-purple-600">
+                      <User className="h-4 w-4" />
+                    </Avatar>
+                  </Button>
+                </motion.div>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end" className="w-56" sideOffset={8}>
+                <div className="flex items-center justify-start gap-2 p-2 border-b">
+                  <Avatar className="h-8 w-8 border-2 border-purple-600">
                     <User className="h-4 w-4" />
                   </Avatar>
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="end">
-                <div className="flex items-center justify-start gap-2 p-2">
                   <div className="flex flex-col space-y-1 leading-none">
                     {user?.name && <p className="font-medium">{user.name}</p>}
                     {user?.email && <p className="text-sm text-muted-foreground">{user.email}</p>}
                   </div>
                 </div>
                 <DropdownMenuItem 
-                  className="cursor-pointer"
+                  className="cursor-pointer flex items-center mt-2 focus:bg-purple-50 dark:focus:bg-purple-900/20"
                   onClick={() => router.push('/profile')}
                 >
+                  <User className="mr-2 h-4 w-4 text-purple-600" />
                   Profile
                 </DropdownMenuItem>
                 <DropdownMenuItem 
-                  className="cursor-pointer"
+                  className="cursor-pointer flex items-center focus:bg-purple-50 dark:focus:bg-purple-900/20"
                   onClick={() => router.push('/orders')}
                 >
+                  <ShoppingCart className="mr-2 h-4 w-4 text-purple-600" />
                   My Orders
                 </DropdownMenuItem>
+                {user?.isAdmin && (
+                  <DropdownMenuItem 
+                    className="cursor-pointer flex items-center focus:bg-purple-50 dark:focus:bg-purple-900/20"
+                    onClick={() => router.push('/admin/products')}
+                  >
+                    <Zap className="mr-2 h-4 w-4 text-purple-600" />
+                    Admin Dashboard
+                  </DropdownMenuItem>
+                )}
                 <DropdownMenuItem 
-                  className="cursor-pointer text-red-500 focus:text-red-500"
+                  className="cursor-pointer text-red-500 focus:text-red-500 flex items-center mt-2 focus:bg-red-50 dark:focus:bg-red-900/20"
                   onClick={handleLogout}
                 >
+                  <LogOut className="mr-2 h-4 w-4" />
                   Logout
                 </DropdownMenuItem>
               </DropdownMenuContent>
@@ -164,110 +228,181 @@ export default function TopBar() {
           </div>
           
           {/* Mobile menu button */}
-          <Button
-            variant="ghost"
-            size="icon"
+          <motion.div
+            whileHover={{ scale: 1.1 }}
+            whileTap={{ scale: 0.9 }}
             className="md:hidden"
-            onClick={() => setMobileMenuOpen(true)}
           >
-            <Menu className="h-5 w-5" />
-          </Button>
-        </div>
-      </div>
-      
-      {/* Mobile menu */}
-      <div
-        className={`fixed inset-0 z-50 bg-background md:hidden transition-opacity duration-300 ${
-          mobileMenuOpen ? "opacity-100" : "opacity-0 pointer-events-none"
-        }`}
-      >
-        <div className="container h-full flex flex-col">
-          <div className="flex items-center justify-between py-4">
-            <Link href="/home" onClick={() => setMobileMenuOpen(false)}>
-              <span className="font-bold text-xl">VoltEdge</span>
-            </Link>
             <Button
               variant="ghost"
               size="icon"
-              onClick={() => setMobileMenuOpen(false)}
+              onClick={() => setMobileMenuOpen(true)}
             >
-              <X className="h-5 w-5" />
+              <Menu className="h-5 w-5" />
             </Button>
-          </div>
-          
-          <nav className="flex flex-col gap-4 mt-8">
-            {navItems.map((item) => (
-              <Link
-                key={item.href}
-                href={item.href}
-                className="text-lg font-medium py-2 transition-colors hover:text-primary"
-                onClick={() => setMobileMenuOpen(false)}
-              >
-                {item.name}
-              </Link>
-            ))}
-            {user?.isAdmin && (
-              <Link
-                href="/admin/products"
-                className="text-lg font-medium py-2 transition-colors hover:text-primary"
-                onClick={() => setMobileMenuOpen(false)}
-              >
-                Admin
-              </Link>
-            )}
-          </nav>
-          
-          <div className="mt-auto mb-8">
-            <div className="flex flex-col gap-2">
-              <div className="flex items-center gap-2 py-2">
-                <Avatar className="h-8 w-8 border-2 border-primary">
-                  <User className="h-4 w-4" />
-                </Avatar>
-                <div>
-                  {user?.name && <p className="font-medium">{user.name}</p>}
-                  {user?.email && <p className="text-sm text-muted-foreground">{user.email}</p>}
-                </div>
-              </div>
-              
-              <Button
-                variant="outline"
-                className="justify-start"
-                onClick={() => {
-                  router.push('/profile');
-                  setMobileMenuOpen(false);
-                }}
-              >
-                <User className="mr-2 h-4 w-4" />
-                Profile
-              </Button>
-              
-              <Button
-                variant="outline"
-                className="justify-start"
-                onClick={() => {
-                  router.push('/orders');
-                  setMobileMenuOpen(false);
-                }}
-              >
-                <ShoppingCart className="mr-2 h-4 w-4" />
-                My Orders
-              </Button>
-              
-              <Button
-                variant="destructive"
-                className="justify-start mt-4"
-                onClick={() => {
-                  handleLogout();
-                  setMobileMenuOpen(false);
-                }}
-              >
-                <LogOut className="mr-2 h-4 w-4" />
-                Logout
-              </Button>
-            </div>
-          </div>
+          </motion.div>
         </div>
       </div>
-    </header>
+      
+      {/* Mobile search - always visible below navbar */}
+      <div className="md:hidden px-4 pb-2">
+        <form onSubmit={handleSearch} className="flex w-full">
+          <div className="relative flex-grow">
+            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-4 w-4" />
+            <Input
+              placeholder="Search products..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="pl-9 border-r-0 rounded-r-none bg-background"
+            />
+          </div>
+          <Button 
+            type="submit" 
+            className="rounded-l-none bg-gradient-to-r from-purple-600 to-fuchsia-600 hover:from-purple-700 hover:to-fuchsia-700"
+          >
+            <Search className="h-4 w-4" />
+          </Button>
+        </form>
+      </div>
+      
+      {/* Mobile menu */}
+      <AnimatePresence>
+        {mobileMenuOpen && (
+          <motion.div
+            initial={{ x: "100%" }}
+            animate={{ x: 0 }}
+            exit={{ x: "100%" }}
+            transition={pageTransition}
+            className="fixed inset-0 z-50 bg-background md:hidden"
+          >
+            <div className="container h-full flex flex-col">
+              <div className="flex items-center justify-between py-4">
+                <Link href="/" onClick={() => setMobileMenuOpen(false)}>
+                  <div className="flex items-center gap-2 font-bold">
+                    <div className="flex items-center justify-center w-8 h-8 rounded-md bg-gradient-to-r from-purple-600 to-fuchsia-600 text-white">
+                      <Zap className="h-5 w-5" />
+                    </div>
+                    <span className="text-xl">VoltEdge</span>
+                  </div>
+                </Link>
+                <motion.div
+                  whileHover={{ scale: 1.1, rotate: 180 }}
+                  whileTap={{ scale: 0.9 }}
+                >
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    onClick={() => setMobileMenuOpen(false)}
+                  >
+                    <X className="h-5 w-5" />
+                  </Button>
+                </motion.div>
+              </div>
+              
+              <nav className="flex flex-col gap-3 mt-8">
+                {navItems.map((item, index) => {
+                  const isActive = pathname === item.href;
+                  return (
+                    <motion.div
+                      key={item.href}
+                      initial={{ opacity: 0, x: 50 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{ delay: index * 0.1 }}
+                    >
+                      <Link
+                        href={item.href}
+                        className={`text-lg font-medium py-2 px-2 block transition-colors rounded-md ${
+                          isActive 
+                            ? "bg-gradient-to-r from-purple-50 to-fuchsia-50 dark:from-purple-900/20 dark:to-fuchsia-900/20 text-purple-600" 
+                            : "hover:bg-purple-50 dark:hover:bg-purple-900/20 hover:text-purple-600"
+                        }`}
+                        onClick={() => setMobileMenuOpen(false)}
+                      >
+                        {item.name}
+                      </Link>
+                    </motion.div>
+                  );
+                })}
+                {user?.isAdmin && (
+                  <motion.div
+                    initial={{ opacity: 0, x: 50 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: navItems.length * 0.1 }}
+                  >
+                    <Link
+                      href="/admin/products"
+                      className={`text-lg font-medium py-2 px-2 block transition-colors rounded-md ${
+                        pathname?.startsWith('/admin')
+                          ? "bg-red-50 dark:bg-red-900/20 text-red-600"
+                          : "hover:bg-red-50 dark:hover:bg-red-900/20 text-red-600"
+                      }`}
+                      onClick={() => setMobileMenuOpen(false)}
+                    >
+                      Admin Dashboard
+                    </Link>
+                  </motion.div>
+                )}
+              </nav>
+              
+              <div className="mt-auto mb-8">
+                <div className="flex flex-col gap-2">
+                  <div className="flex items-center gap-2 py-2 px-2 bg-gradient-to-r from-purple-50 to-fuchsia-50 dark:from-purple-900/20 dark:to-fuchsia-900/20 rounded-md">
+                    <Avatar className="h-10 w-10 border-2 border-purple-600">
+                      <User className="h-5 w-5" />
+                    </Avatar>
+                    <div>
+                      {user?.name && <p className="font-medium">{user.name}</p>}
+                      {user?.email && <p className="text-sm text-muted-foreground">{user.email}</p>}
+                    </div>
+                  </div>
+                  
+                  <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
+                    <Button
+                      variant="outline"
+                      className="justify-start w-full border-purple-100 dark:border-purple-900/20"
+                      onClick={() => {
+                        router.push('/profile');
+                        setMobileMenuOpen(false);
+                      }}
+                    >
+                      <User className="mr-2 h-4 w-4 text-purple-600" />
+                      Profile
+                    </Button>
+                  </motion.div>
+                  
+                  <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
+                    <Button
+                      variant="outline"
+                      className="justify-start w-full border-purple-100 dark:border-purple-900/20"
+                      onClick={() => {
+                        router.push('/orders');
+                        setMobileMenuOpen(false);
+                      }}
+                    >
+                      <ShoppingCart className="mr-2 h-4 w-4 text-purple-600" />
+                      My Orders
+                    </Button>
+                  </motion.div>
+                  
+                  <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
+                    <Button
+                      variant="destructive"
+                      className="justify-start w-full mt-4"
+                      onClick={() => {
+                        handleLogout();
+                        setMobileMenuOpen(false);
+                      }}
+                    >
+                      <LogOut className="mr-2 h-4 w-4" />
+                      Logout
+                    </Button>
+                  </motion.div>
+                </div>
+              </div>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </motion.header>
   );
 } 

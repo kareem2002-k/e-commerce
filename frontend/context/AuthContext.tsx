@@ -7,7 +7,7 @@ type User = {
   id: string;
   name: string;
   email: string;
-  isAdmin?: boolean;
+  isAdmin: boolean;
 };
 
 type AuthContextType = {
@@ -38,10 +38,21 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     
     if (storedToken && storedUser) {
       setToken(storedToken);
-      setUser(JSON.parse(storedUser));
-      
-      // Configure axios default headers
-      axios.defaults.headers.common['Authorization'] = `Bearer ${storedToken}`;
+      try {
+        const parsedUser = JSON.parse(storedUser);
+        // Ensure isAdmin is a boolean
+        setUser({
+          ...parsedUser,
+          isAdmin: !!parsedUser.isAdmin
+        });
+        
+        // Configure axios default headers
+        axios.defaults.headers.common['Authorization'] = `Bearer ${storedToken}`;
+      } catch (error) {
+        console.error("Error parsing stored user:", error);
+        localStorage.removeItem('user');
+        localStorage.removeItem('auth_token');
+      }
     }
     
     setLoading(false);
