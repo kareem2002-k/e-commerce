@@ -1,28 +1,47 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/context/AuthContext";
 import { Logo } from "@/components/ui/logo";
+import { AnimatePresence } from "framer-motion";
+import { ThemeToggle } from "@/components/ui/theme-toggle";
+import { motion } from "framer-motion";
+import LoadingScreen from "@/components/voltedge/loading-screen";
+import FeaturedProducts from "@/components/voltedge/featured-products";
+import Categories from "@/components/voltedge/categories";
+import Footer from "@/components/voltedge/footer";
+import HeroGeometric from "@/components/kokonutui/hero-geometric";
 
 export default function Home() {
   const router = useRouter();
+
   const { user, loading } = useAuth();
 
   useEffect(() => {
     if (!loading) {
-      // If user is already logged in, redirect to home page
-      // Otherwise, redirect to login page
-      router.push(user ? "/home" : "/login");
+
+      router.push(user ? "/home" : "/");
     }
   }, [user, loading, router]);
 
   return (
-    <div className="flex h-screen w-full flex-col items-center justify-center bg-background">
-      <div className="mb-8">
-        <Logo variant="full" size={60} spinning={true} />
-      </div>
-      <p className="text-muted-foreground mt-4 animate-pulse">Loading...</p>
-    </div>
+    <main>
+      <AnimatePresence>{loading && <LoadingScreen />}</AnimatePresence>
+
+      {!loading && (
+        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.5 }}>
+          {/* Theme toggle button - fixed position */}
+          <div className="fixed top-4 right-4 z-50">
+            <ThemeToggle />
+          </div>
+
+          <HeroGeometric badge="VoltEdge Electronics" title1="Power Your" title2="Digital Lifestyle" />
+          <FeaturedProducts />
+          <Categories />
+          <Footer />
+        </motion.div>
+      )}
+    </main>
   );
 }
