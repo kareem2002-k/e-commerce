@@ -2,7 +2,7 @@ import { Request, Response } from 'express';
 import prisma from '../lib/prisma';
 
 // Get all products with optional filtering
-export const getAllProducts = async (req: Request, res: Response) => {
+export const getAllProducts = async (req: Request, res: Response): Promise<void> => {
   try {
     const { 
       categoryId, 
@@ -61,7 +61,7 @@ export const getAllProducts = async (req: Request, res: Response) => {
 };
 
 // Get product by ID
-export const getProductById = async (req: Request, res: Response) => {
+export const getProductById = async (req: Request, res: Response): Promise<void> => {
   try {
     const { id } = req.params;
     
@@ -85,7 +85,8 @@ export const getProductById = async (req: Request, res: Response) => {
     });
     
     if (!product) {
-      return res.status(404).json({ message: 'Product not found' });
+      res.status(404).json({ message: 'Product not found' });
+      return;
     }
     
     res.json(product);
@@ -96,13 +97,14 @@ export const getProductById = async (req: Request, res: Response) => {
 };
 
 // Create new product (admin only)
-export const createProduct = async (req: Request, res: Response) => {
+export const createProduct = async (req: Request, res: Response): Promise<void> => {
   try {
     const { name, description, sku, price, stock, lowStockThreshold, categoryId, images } = req.body;
     
     // Validate required fields
     if (!name || !sku || price === undefined) {
-      return res.status(400).json({ message: 'Missing required fields: name, sku, and price are required' });
+      res.status(400).json({ message: 'Missing required fields: name, sku, and price are required' });
+      return;
     }
     
     // Check if product with this SKU already exists
@@ -111,7 +113,8 @@ export const createProduct = async (req: Request, res: Response) => {
     });
     
     if (existingProduct) {
-      return res.status(400).json({ message: 'A product with this SKU already exists' });
+      res.status(400).json({ message: 'A product with this SKU already exists' });
+      return;
     }
     
     // Create product in a transaction to handle images
@@ -158,7 +161,7 @@ export const createProduct = async (req: Request, res: Response) => {
 };
 
 // Update product (admin only)
-export const updateProduct = async (req: Request, res: Response) => {
+export const updateProduct = async (req: Request, res: Response): Promise<void> => {
   try {
     const { id } = req.params;
     const { name, description, sku, price, stock, lowStockThreshold, categoryId, images } = req.body;
@@ -169,7 +172,8 @@ export const updateProduct = async (req: Request, res: Response) => {
     });
     
     if (!existingProduct) {
-      return res.status(404).json({ message: 'Product not found' });
+      res.status(404).json({ message: 'Product not found' });
+      return;
     }
     
     // Check SKU uniqueness if changed
@@ -179,7 +183,8 @@ export const updateProduct = async (req: Request, res: Response) => {
       });
       
       if (productWithSku) {
-        return res.status(400).json({ message: 'A product with this SKU already exists' });
+        res.status(400).json({ message: 'A product with this SKU already exists' });
+        return;
       }
     }
     
@@ -236,7 +241,7 @@ export const updateProduct = async (req: Request, res: Response) => {
 };
 
 // Delete product (admin only)
-export const deleteProduct = async (req: Request, res: Response) => {
+export const deleteProduct = async (req: Request, res: Response): Promise<void> => {
   try {
     const { id } = req.params;
     
@@ -246,7 +251,8 @@ export const deleteProduct = async (req: Request, res: Response) => {
     });
     
     if (!existingProduct) {
-      return res.status(404).json({ message: 'Product not found' });
+      res.status(404).json({ message: 'Product not found' });
+      return;
     }
     
     // Delete product (cascade will delete images)

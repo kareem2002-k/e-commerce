@@ -3,10 +3,11 @@ import prisma from '../lib/prisma';
 import { OrderStatus, PaymentStatus } from '../generated/prisma';
 
 // Get user's orders
-export const getUserOrders = async (req: Request, res: Response) => {
+export const getUserOrders = async (req: Request, res: Response): Promise<void> => {
   try {
     if (!req.userId) {
-      return res.status(401).json({ message: 'Not authenticated' });
+      res.status(401).json({ message: 'Not authenticated' });
+      return;
     }
 
     const { page = 1, limit = 10 } = req.query;
@@ -54,10 +55,11 @@ export const getUserOrders = async (req: Request, res: Response) => {
 };
 
 // Get order by ID
-export const getOrderById = async (req: Request, res: Response) => {
+export const getOrderById = async (req: Request, res: Response): Promise<void> => {
   try {
     if (!req.userId) {
-      return res.status(401).json({ message: 'Not authenticated' });
+      res.status(401).json({ message: 'Not authenticated' });
+      return;
     }
 
     const { id } = req.params;
@@ -81,7 +83,8 @@ export const getOrderById = async (req: Request, res: Response) => {
     });
 
     if (!order) {
-      return res.status(404).json({ message: 'Order not found' });
+      res.status(404).json({ message: 'Order not found' });
+      return;
     }
 
     // Check if the order belongs to the user or if the user is an admin
@@ -90,7 +93,8 @@ export const getOrderById = async (req: Request, res: Response) => {
     });
 
     if (order.userId !== req.userId && user?.role !== 'ADMIN') {
-      return res.status(403).json({ message: 'Not authorized to view this order' });
+      res.status(403).json({ message: 'Not authorized to view this order' });
+      return;
     }
 
     res.json(order);
@@ -101,19 +105,21 @@ export const getOrderById = async (req: Request, res: Response) => {
 };
 
 // Create a new order
-export const createOrder = async (req: Request, res: Response) => {
+export const createOrder = async (req: Request, res: Response): Promise<void> => {
   try {
     if (!req.userId) {
-      return res.status(401).json({ message: 'Not authenticated' });
+      res.status(401).json({ message: 'Not authenticated' });
+      return;
     }
 
     const { shippingAddressId, billingAddressId, paymentMethod, couponCodes = [] } = req.body;
 
     // Validate required fields
     if (!shippingAddressId || !billingAddressId || !paymentMethod) {
-      return res.status(400).json({ 
+      res.status(400).json({ 
         message: 'Missing required fields: shippingAddressId, billingAddressId, and paymentMethod are required' 
       });
+      return;
     }
 
     // Get user's cart
@@ -129,7 +135,8 @@ export const createOrder = async (req: Request, res: Response) => {
     });
 
     if (!cart || cart.cartItems.length === 0) {
-      return res.status(400).json({ message: 'Cart is empty' });
+      res.status(400).json({ message: 'Cart is empty' });
+      return;
     }
 
     // Verify addresses belong to the user
@@ -143,11 +150,13 @@ export const createOrder = async (req: Request, res: Response) => {
     ]);
 
     if (!shippingAddress) {
-      return res.status(400).json({ message: 'Invalid shipping address' });
+      res.status(400).json({ message: 'Invalid shipping address' });
+      return;
     }
 
     if (!billingAddress) {
-      return res.status(400).json({ message: 'Invalid billing address' });
+      res.status(400).json({ message: 'Invalid billing address' });
+      return;
     }
 
     // Check for valid coupons
@@ -268,10 +277,11 @@ export const createOrder = async (req: Request, res: Response) => {
 };
 
 // Update order status (admin only)
-export const updateOrderStatus = async (req: Request, res: Response) => {
+export const updateOrderStatus = async (req: Request, res: Response): Promise<void> => {
   try {
     if (!req.userId) {
-      return res.status(401).json({ message: 'Not authenticated' });
+      res.status(401).json({ message: 'Not authenticated' });
+      return;
     }
 
     const { id } = req.params;
@@ -283,7 +293,8 @@ export const updateOrderStatus = async (req: Request, res: Response) => {
     });
 
     if (user?.role !== 'ADMIN') {
-      return res.status(403).json({ message: 'Not authorized to update order status' });
+      res.status(403).json({ message: 'Not authorized to update order status' });
+      return;
     }
 
     // Check if order exists
@@ -292,17 +303,20 @@ export const updateOrderStatus = async (req: Request, res: Response) => {
     });
 
     if (!order) {
-      return res.status(404).json({ message: 'Order not found' });
+      res.status(404).json({ message: 'Order not found' });
+      return;
     }
 
     // Validate order status if provided
     if (orderStatus && !Object.values(OrderStatus).includes(orderStatus as OrderStatus)) {
-      return res.status(400).json({ message: 'Invalid order status' });
+      res.status(400).json({ message: 'Invalid order status' });
+      return;
     }
 
     // Validate payment status if provided
     if (paymentStatus && !Object.values(PaymentStatus).includes(paymentStatus as PaymentStatus)) {
-      return res.status(400).json({ message: 'Invalid payment status' });
+      res.status(400).json({ message: 'Invalid payment status' });
+      return;
     }
 
     // Update the order
@@ -336,10 +350,11 @@ export const updateOrderStatus = async (req: Request, res: Response) => {
 };
 
 // Get all orders (admin only)
-export const getAllOrders = async (req: Request, res: Response) => {
+export const getAllOrders = async (req: Request, res: Response): Promise<void> => {
   try {
     if (!req.userId) {
-      return res.status(401).json({ message: 'Not authenticated' });
+      res.status(401).json({ message: 'Not authenticated' });
+      return;
     }
 
     // Verify user is admin
@@ -348,7 +363,8 @@ export const getAllOrders = async (req: Request, res: Response) => {
     });
 
     if (user?.role !== 'ADMIN') {
-      return res.status(403).json({ message: 'Not authorized to view all orders' });
+      res.status(403).json({ message: 'Not authorized to view all orders' });
+      return;
     }
 
     const { 

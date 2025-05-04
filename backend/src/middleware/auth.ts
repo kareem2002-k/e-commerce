@@ -1,15 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
 import { verifyToken } from '../utils/auth';
 
-// Extend Express Request interface to include userId
-declare global {
-  namespace Express {
-    interface Request {
-      userId?: string;
-    }
-  }
-}
-
 export const authenticate = (req: Request, res: Response, next: NextFunction): void => {
   try {
     // Get token from header
@@ -33,6 +24,7 @@ export const authenticate = (req: Request, res: Response, next: NextFunction): v
     req.userId = decoded.userId;
     next();
   } catch (error) {
+    console.error('Authentication error:', error);
     res.status(500).json({ message: 'Server error' });
   }
 }; 
