@@ -1,24 +1,24 @@
-"use client"
+"use client";
 
-import { useState, useCallback, memo } from "react"
-import { motion } from "framer-motion"
-import Link from "next/link"
-import Image from "next/image"
-import { useRouter } from "next/navigation"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { Checkbox } from "@/components/ui/checkbox"
-import { EyeIcon, EyeOffIcon, ArrowLeft } from "lucide-react"
-import { ThemeToggle } from "@/components/theme-toggle"
-import LoadingScreen from "@/components/voltedge/loading-screen"
-import { useForm } from "react-hook-form"
-import { z } from "zod"
-import { zodResolver } from "@hookform/resolvers/zod"
-import { useAuth } from "@/context/AuthContext"
-import { AuthRedirect } from "@/components/auth/AuthRedirect"
-import { toast } from "sonner"
-import { cn } from "@/lib/utils"
+import { useState, useCallback, memo } from "react";
+import { motion } from "framer-motion";
+import Link from "next/link";
+import Image from "next/image";
+import { useRouter } from "next/navigation";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Checkbox } from "@/components/ui/checkbox";
+import { EyeIcon, EyeOffIcon, ArrowLeft } from "lucide-react";
+import { ThemeToggle } from "@/components/theme-toggle";
+import LoadingScreen from "@/components/voltedge/loading-screen";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useAuth } from "@/context/AuthContext";
+import { AuthRedirect } from "@/components/auth/AuthRedirect";
+import { toast } from "sonner";
+import { cn } from "@/lib/utils";
 import {
   Form,
   FormControl,
@@ -26,26 +26,8 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "@/components/ui/form"
-
-// Define form schema
-const registerSchema = z
-  .object({
-    name: z.string().min(2, { message: "Name must be at least 2 characters" }),
-    email: z.string().email({ message: "Please enter a valid email address" }),
-    password: z
-      .string()
-      .min(6, { message: "Password must be at least 6 characters" }),
-    confirmPassword: z
-      .string()
-      .min(6, { message: "Password must be at least 6 characters" }),
-  })
-  .refine((data) => data.password === data.confirmPassword, {
-    message: "Passwords do not match",
-    path: ["confirmPassword"],
-  })
-
-type RegisterFormValues = z.infer<typeof registerSchema>
+} from "@/components/ui/form";
+import { RegisterFormValues, registerSchema } from "@/types";
 
 function ElegantShape({
   className,
@@ -55,12 +37,12 @@ function ElegantShape({
   rotate = 0,
   gradient = "from-white/[0.08]",
 }: {
-  className?: string
-  delay?: number
-  width?: number
-  height?: number
-  rotate?: number
-  gradient?: string
+  className?: string;
+  delay?: number;
+  width?: number;
+  height?: number;
+  rotate?: number;
+  gradient?: string;
 }) {
   return (
     <motion.div
@@ -105,23 +87,23 @@ function ElegantShape({
             "backdrop-blur-[2px] border-2 border-white/[0.15] dark:border-white/[0.15] border-gray-200/50",
             "shadow-[0_8px_32px_0_rgba(255,255,255,0.1)]",
             "after:absolute after:inset-0 after:rounded-full",
-            "after:bg-[radial-gradient(circle_at_50%_50%,rgba(255,255,255,0.2),transparent_70%)]",
+            "after:bg-[radial-gradient(circle_at_50%_50%,rgba(255,255,255,0.2),transparent_70%)]"
           )}
         />
       </motion.div>
     </motion.div>
-  )
+  );
 }
 
 // Memoized form component to prevent unnecessary re-renders
-const RegisterFormContent = memo(function RegisterFormContent({ 
-  form, 
-  isLoading, 
-  onSubmit, 
+const RegisterFormContent = memo(function RegisterFormContent({
+  form,
+  isLoading,
+  onSubmit,
   handleKeyDown,
   showPassword,
-  setShowPassword
-}: { 
+  setShowPassword,
+}: {
   form: any;
   isLoading: boolean;
   onSubmit: (data: RegisterFormValues) => void;
@@ -131,13 +113,13 @@ const RegisterFormContent = memo(function RegisterFormContent({
 }) {
   return (
     <Form {...form}>
-      <form 
+      <form
         onSubmit={(e) => {
           e.preventDefault();
           form.handleSubmit((data: RegisterFormValues) => {
             onSubmit(data);
           })(e);
-        }} 
+        }}
         className="space-y-4 mb-6"
       >
         <FormField
@@ -251,11 +233,17 @@ const RegisterFormContent = memo(function RegisterFormContent({
             className="text-sm text-gray-600 dark:text-gray-400"
           >
             I agree to the{" "}
-            <Link href="/terms" className="text-blue-600 dark:text-blue-400 hover:underline">
+            <Link
+              href="/terms"
+              className="text-blue-600 dark:text-blue-400 hover:underline"
+            >
               Terms of Service
             </Link>{" "}
             and{" "}
-            <Link href="/privacy" className="text-blue-600 dark:text-blue-400 hover:underline">
+            <Link
+              href="/privacy"
+              className="text-blue-600 dark:text-blue-400 hover:underline"
+            >
               Privacy Policy
             </Link>
           </Label>
@@ -282,14 +270,14 @@ const RegisterFormContent = memo(function RegisterFormContent({
         </motion.div>
       </form>
     </Form>
-  )
-})
+  );
+});
 
 export default function RegisterPage() {
-  const router = useRouter()
-  const { register, error, clearError } = useAuth()
-  const [isLoading, setIsLoading] = useState(false)
-  const [showPassword, setShowPassword] = useState(false)
+  const router = useRouter();
+  const { register, error, clearError } = useAuth();
+  const [isLoading, setIsLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
 
   // Initialize React Hook Form
   const form = useForm<RegisterFormValues>({
@@ -302,36 +290,36 @@ export default function RegisterPage() {
     },
     mode: "onBlur",
     reValidateMode: "onBlur",
-  })
+  });
 
   // Form submission handler - memoized to prevent re-renders
   const onSubmit = useCallback(
     async (values: RegisterFormValues) => {
       try {
-        setIsLoading(true)
-        await register(values.name, values.email, values.password)
+        setIsLoading(true);
+        await register(values.name, values.email, values.password);
         toast.success("Registration successful", {
           description: "Your account has been created successfully.",
-        })
-        router.push("/home")
+        });
+        router.push("/home");
       } catch (err) {
         toast.error("Registration failed", {
           description: error || "Failed to create account. Please try again.",
-        })
-        clearError()
+        });
+        clearError();
       } finally {
-        setIsLoading(false)
+        setIsLoading(false);
       }
     },
     [register, router, error, clearError]
-  )
+  );
 
   // Prevent form submission when pressing Enter in inputs - memoized to prevent re-renders
   const handleKeyDown = useCallback((e: React.KeyboardEvent) => {
     if (e.key === "Enter" && e.target instanceof HTMLInputElement) {
-      e.preventDefault()
+      e.preventDefault();
     }
-  }, [])
+  }, []);
 
   const fadeUpVariants = {
     hidden: { opacity: 0, y: 30 },
@@ -344,11 +332,11 @@ export default function RegisterPage() {
         ease: [0.25, 0.4, 0.25, 1],
       },
     }),
-  }
+  };
 
   if (isLoading && false) {
     // Only show loading screen on prolonged operations if needed
-    return <LoadingScreen message="Creating your account..." />
+    return <LoadingScreen message="Creating your account..." />;
   }
 
   return (
@@ -445,10 +433,10 @@ export default function RegisterPage() {
               initial="hidden"
               animate="visible"
             >
-              <RegisterFormContent 
-                form={form} 
-                isLoading={isLoading} 
-                onSubmit={onSubmit} 
+              <RegisterFormContent
+                form={form}
+                isLoading={isLoading}
+                onSubmit={onSubmit}
                 handleKeyDown={handleKeyDown}
                 showPassword={showPassword}
                 setShowPassword={setShowPassword}
@@ -476,5 +464,5 @@ export default function RegisterPage() {
         </div>
       </div>
     </AuthRedirect>
-  )
+  );
 }
