@@ -21,12 +21,12 @@ export default function AddToCartButton({
   variant = 'default',
   size = 'default'
 }: AddToCartButtonProps) {
-  const { addToCart, loading } = useCart();
+  const { addToCart, addingToCart } = useCart();
   const [quantity, setQuantity] = useState(1);
   const [added, setAdded] = useState(false);
   
   const handleAddToCart = async () => {
-    if (loading) return;
+    if (addingToCart) return;
     
     await addToCart(productId, quantity);
     
@@ -55,11 +55,11 @@ export default function AddToCartButton({
         size="icon"
         className={className}
         onClick={handleAddToCart}
-        disabled={loading || stock === 0 || added}
+        disabled={addingToCart || stock === 0 || added}
       >
         {added ? (
           <Check className="h-4 w-4" />
-        ) : loading ? (
+        ) : addingToCart ? (
           <div className="h-4 w-4 animate-spin rounded-full border-2 border-current border-t-transparent" />
         ) : (
           <ShoppingCart className="h-4 w-4" />
@@ -77,7 +77,7 @@ export default function AddToCartButton({
           size="icon" 
           className="h-full rounded-r-none"
           onClick={decreaseQuantity}
-          disabled={quantity <= 1 || loading}
+          disabled={quantity <= 1 || addingToCart}
         >
           <Minus className="h-4 w-4" />
         </Button>
@@ -91,7 +91,7 @@ export default function AddToCartButton({
           size="icon" 
           className="h-full rounded-l-none"
           onClick={increaseQuantity}
-          disabled={quantity >= stock || loading}
+          disabled={quantity >= stock || addingToCart}
         >
           <Plus className="h-4 w-4" />
         </Button>
@@ -107,7 +107,7 @@ export default function AddToCartButton({
           size={size}
           className={`relative ${className}`}
           onClick={handleAddToCart}
-          disabled={loading || stock === 0 || added}
+          disabled={addingToCart || stock === 0 || added}
         >
           {stock === 0 ? (
             "Out of Stock"
@@ -116,7 +116,7 @@ export default function AddToCartButton({
               <Check className="mr-2 h-4 w-4" />
               Added to Cart
             </>
-          ) : loading ? (
+          ) : addingToCart ? (
             <>
               <div className="mr-2 h-4 w-4 animate-spin rounded-full border-2 border-current border-t-transparent" />
               Adding...

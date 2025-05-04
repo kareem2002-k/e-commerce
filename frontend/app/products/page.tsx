@@ -24,6 +24,7 @@ import LoadingScreen from "@/components/voltedge/loading-screen";
 import { toast } from "sonner";
 import { Product } from "@/types";
 import { useProductsAndCategories } from "@/hooks/useProducts";
+import AddToCartButton from "@/components/cart/AddToCartButton";
 
 
 // Loading animation for products
@@ -458,18 +459,11 @@ export default function ProductsPage() {
                         whileTap={{ scale: 0.95 }}
                         className="w-full" 
                       >
-                        <Button 
-                          onClick={(e) => addToCart(e, product)} 
+                        <AddToCartButton 
+                          productId={product.id} 
+                          stock={product.stock}
                           className="w-full bg-blue-500 hover:bg-blue-600 text-white group overflow-hidden relative btn-lightning"
-                        >
-                          <span className="relative flex items-center justify-center">
-                            <ShoppingCart className="mr-2 h-4 w-4 group-hover:rotate-12 transition-transform" />
-                            Add to Cart
-                          </span>
-                          <span className="absolute inset-0 pointer-events-none opacity-0 group-hover:opacity-100">
-                            <span className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:animate-[shine_1s_ease_forwards]" />
-                          </span>
-                        </Button>
+                        />
                       </motion.div>
                     </CardFooter>
                   </Card>

@@ -11,9 +11,19 @@ import { formatCurrency } from '@/lib/utils';
 import Link from 'next/link';
 
 export default function CartItems({ onClose }: { onClose?: () => void }) {
-  const { cart, loading, removeCartItem, updateCartItem, totalPrice, itemCount } = useCart();
+  const { 
+    cart, 
+    loading, 
+    updatingCart, 
+    removingFromCart, 
+    removeCartItem, 
+    updateCartItem, 
+    totalPrice, 
+    itemCount 
+  } = useCart();
 
-  if (loading) {
+  // Only show loading indicator on initial cart fetch, not for individual item operations
+  if (loading && !cart) {
     return (
       <div className="flex items-center justify-center py-12">
         <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-purple-600"></div>
@@ -72,7 +82,7 @@ export default function CartItems({ onClose }: { onClose?: () => void }) {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, x: -100 }}
-              className="flex items-center gap-4 py-4 border-b"
+              className={`flex items-center gap-4 py-4 border-b ${removingFromCart[item.id] ? 'opacity-50' : ''}`}
             >
               <div className="relative w-20 h-20 bg-gray-100 dark:bg-gray-800 rounded-md overflow-hidden">
                 {item.product.images && item.product.images.length > 0 ? (
@@ -107,9 +117,13 @@ export default function CartItems({ onClose }: { onClose?: () => void }) {
                     size="icon"
                     className="h-7 w-7 rounded-full"
                     onClick={() => updateCartItem(item.id, item.quantity - 1)}
-                    disabled={item.quantity <= 1}
+                    disabled={item.quantity <= 1 || updatingCart[item.id]}
                   >
-                    <Minus className="h-3 w-3" />
+                    {updatingCart[item.id] ? (
+                      <div className="h-3 w-3 animate-spin rounded-full border-2 border-current border-t-transparent" />
+                    ) : (
+                      <Minus className="h-3 w-3" />
+                    )}
                   </Button>
                   
                   <span className="text-sm font-medium w-6 text-center">
@@ -121,8 +135,13 @@ export default function CartItems({ onClose }: { onClose?: () => void }) {
                     size="icon"
                     className="h-7 w-7 rounded-full"
                     onClick={() => updateCartItem(item.id, item.quantity + 1)}
+                    disabled={updatingCart[item.id]}
                   >
-                    <Plus className="h-3 w-3" />
+                    {updatingCart[item.id] ? (
+                      <div className="h-3 w-3 animate-spin rounded-full border-2 border-current border-t-transparent" />
+                    ) : (
+                      <Plus className="h-3 w-3" />
+                    )}
                   </Button>
                   
                   <Button
@@ -130,8 +149,13 @@ export default function CartItems({ onClose }: { onClose?: () => void }) {
                     size="icon"
                     className="h-7 w-7 rounded-full text-red-500 hover:text-red-700 hover:bg-red-50 dark:hover:bg-red-900/20 ml-2"
                     onClick={() => removeCartItem(item.id)}
+                    disabled={removingFromCart[item.id]}
                   >
-                    <Trash2 className="h-3 w-3" />
+                    {removingFromCart[item.id] ? (
+                      <div className="h-3 w-3 animate-spin rounded-full border-2 border-current border-t-transparent" />
+                    ) : (
+                      <Trash2 className="h-3 w-3" />
+                    )}
                   </Button>
                 </div>
               </div>
