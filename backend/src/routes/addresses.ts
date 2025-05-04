@@ -33,7 +33,9 @@ router.get('/:id', async (req, res) => {
     });
     
     if (!address || address.userId !== userId) {
-      return res.status(404).json({ message: 'Address not found' });
+      res.status(404).json({ message: 'Address not found' });
+
+      return 
     }
     
     res.json(address);
@@ -99,7 +101,9 @@ router.put('/:id', async (req, res) => {
     });
     
     if (!address || address.userId !== userId) {
-      return res.status(404).json({ message: 'Address not found' });
+      res.status(404).json({ message: 'Address not found' });
+
+      return 
     }
     
     const updatedAddress = await prisma.address.update({
@@ -134,7 +138,9 @@ router.delete('/:id', async (req, res) => {
     });
     
     if (!address || address.userId !== userId) {
-      return res.status(404).json({ message: 'Address not found' });
+      res.status(404).json({ message: 'Address not found' });
+
+      return 
     }
     
     // Check if address is used in orders
@@ -148,7 +154,9 @@ router.delete('/:id', async (req, res) => {
     });
     
     if (ordersUsingAddress > 0) {
-      return res.status(400).json({ message: 'This address is used in orders and cannot be deleted' });
+      res.status(400).json({ message: 'This address is used in orders and cannot be deleted' });
+
+      return 
     }
     
     await prisma.address.delete({

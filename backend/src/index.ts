@@ -5,6 +5,8 @@ import productRoutes from './routes/products';
 import categoryRoutes from './routes/categories';
 import cartRoutes from './routes/cart';
 import orderRoutes from './routes/orders';
+import addressRoutes from './routes/addresses';
+import couponRoutes from './routes/coupons';
 import cors from 'cors';
 
 // Load environment variables
@@ -31,6 +33,9 @@ app.use('/products', productRoutes);
 app.use('/categories', categoryRoutes);
 app.use('/cart', cartRoutes);
 app.use('/orders', orderRoutes);
+app.use('/addresses', addressRoutes);
+app.use('/coupons', couponRoutes);
+
 
 
 // Start server

@@ -15,19 +15,25 @@ router.get('/validate/:code', async (req, res) => {
     });
     
     if (!coupon) {
-      return res.status(404).json({ valid: false, message: 'Coupon not found' });
+      res.status(404).json({ valid: false, message: 'Coupon not found' });
+
+      return  
     }
     
     const now = new Date();
     
     // Check if coupon is valid
     if (now < coupon.validFrom || now > coupon.validUntil) {
-      return res.status(400).json({ valid: false, message: 'Coupon is not valid at this time' });
+      res.status(400).json({ valid: false, message: 'Coupon is not valid at this time' });
+
+      return 
     }
     
     // Check if coupon has exceeded usage limit
     if (coupon.usageLimit && coupon.usedCount >= coupon.usageLimit) {
-      return res.status(400).json({ valid: false, message: 'Coupon usage limit has been reached' });
+      res.status(400).json({ valid: false, message: 'Coupon usage limit has been reached' });
+
+      return 
     }
     
     // Return valid coupon
@@ -88,7 +94,9 @@ router.get('/:id', async (req, res) => {
     });
     
     if (!coupon) {
-      return res.status(404).json({ message: 'Coupon not found' });
+      res.status(404).json({ message: 'Coupon not found' });
+
+      return 
     }
     
     res.json(coupon);
@@ -116,7 +124,9 @@ router.post('/', async (req, res) => {
     });
     
     if (existingCoupon) {
-      return res.status(400).json({ message: 'Coupon code already exists' });
+      res.status(400).json({ message: 'Coupon code already exists' });
+
+      return 
     }
     
     // Create coupon
@@ -188,13 +198,17 @@ router.delete('/:id', async (req, res) => {
     });
     
     if (!coupon) {
-      return res.status(404).json({ message: 'Coupon not found' });
+      res.status(404).json({ message: 'Coupon not found' });
+
+      return 
     }
     
     if (coupon.orders.length > 0) {
-      return res.status(400).json({ 
+      res.status(400).json({ 
         message: 'This coupon has been used in orders and cannot be deleted. Consider updating validUntil instead.' 
       });
+
+      return 
     }
     
     // Delete coupon
