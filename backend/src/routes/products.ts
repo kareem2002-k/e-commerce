@@ -7,7 +7,7 @@ const router = express.Router();
 
 // Public routes
 // Get all products
-router.get('/', async (req, res) => {
+router.get('/', authenticate, async (req, res) => {
   try {
     const products = await prisma.product.findMany({
       include: {
@@ -21,7 +21,7 @@ router.get('/', async (req, res) => {
   }
 });
 
-router.get('/:id', async (req, res) => {
+router.get('/:id', authenticate, async (req, res) => {
   const id = req.params.id;
 
   try {
@@ -33,8 +33,10 @@ router.get('/:id', async (req, res) => {
       }
     });
 
-    console.log(product);
-
+    if (!product) {
+      res.status(404).json({ message: 'Product not found' });
+      return;
+    }
 
     res.json(product);
   } catch (error) {

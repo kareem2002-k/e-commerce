@@ -1,59 +1,79 @@
-import { NextResponse } from 'next/server';
+import { NextResponse } from "next/server";
 
-export async function GET() {
+export async function GET(request: Request) {
   try {
-    const response = await fetch('http://localhost:3001/products');
+    // EXTRACT BEARER TOKEN FROM HEADER 
+    const authHeader = request.headers.get("Authorization");
+    const token = authHeader ? authHeader.split(" ")[1] : null;
+    // Forward authorization header from original request
+    const response = await fetch("http://localhost:3001/products", {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
     if (!response.ok) {
-      return NextResponse.json({ error: 'Failed to fetch products' }, { status: response.status });
+      return NextResponse.json(
+        { error: "Failed to fetch products" },
+        { status: response.status }
+      );
     }
     const data = await response.json();
     return NextResponse.json(data);
   } catch (error) {
-    console.error('Error fetching products:', error);
-    return NextResponse.json({ error: 'Failed to fetch products' }, { status: 500 });
+    console.error("Error fetching products:", error);
+    return NextResponse.json(
+      { error: "Failed to fetch products" },
+      { status: 500 }
+    );
   }
 }
 
 export async function POST(request: Request) {
   try {
     // Forward authorization header from original request
-    const authHeader = request.headers.get('Authorization');
-    
+    const authHeader = request.headers.get("Authorization");
+
     const body = await request.json();
     const headers: Record<string, string> = {
-      'Content-Type': 'application/json',
+      "Content-Type": "application/json",
     };
-    
+
     // Add auth header if it exists
     if (authHeader) {
-      headers['Authorization'] = authHeader;
+      headers["Authorization"] = authHeader;
     }
-    
-    const response = await fetch('http://localhost:3001/products', {
-      method: 'POST',
-      headers,
+
+    const response = await fetch("http://localhost:3001/products", {
+      method: "POST",
+      headers: headers,
+
       body: JSON.stringify(body),
     });
-    
+
+    console.log(response);
+
     if (!response.ok) {
       const errorText = await response.text();
       let errorData;
       try {
         errorData = JSON.parse(errorText);
       } catch (e) {
-        console.error('Error parsing response:', errorText);
+        console.error("Error parsing response:", errorText);
         return NextResponse.json(
-          { error: `Server error: ${response.status}` }, 
+          { error: `Server error: ${response.status}` },
           { status: response.status }
         );
       }
       return NextResponse.json(errorData, { status: response.status });
     }
-    
+
     const data = await response.json();
     return NextResponse.json(data, { status: 201 });
   } catch (error) {
-    console.error('Error creating product:', error);
-    return NextResponse.json({ error: 'Failed to create product' }, { status: 500 });
+    console.error("Error creating product:", error);
+    return NextResponse.json(
+      { error: "Failed to create product" },
+      { status: 500 }
+    );
   }
-} 
+}

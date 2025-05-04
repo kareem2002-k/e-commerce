@@ -31,13 +31,22 @@ router.get('/', async (req, res) => {
     if (!cart) {
       cart = await prisma.cart.create({
         data: {
-          userId
-        },
+          user: { connect: { id: userId } }
+                },
         include: {
-          cartItems: true
+          cartItems: {
+            include: {
+              product: {
+                include: {
+                  images: true
+                }
+              }
+            }
+          }
         }
       });
     }
+        
     
     res.json(cart);
   } catch (error) {
@@ -59,7 +68,7 @@ router.post('/items', async (req, res) => {
     if (!cart) {
       cart = await prisma.cart.create({
         data: {
-          userId
+          user: { connect: { id: userId } }
         }
       });
     }
@@ -70,7 +79,8 @@ router.post('/items', async (req, res) => {
     });
 
     if (!product) {
-      return res.status(404).json({ message: 'Product not found' });
+      res.status(404).json({ message: 'Product not found' });
+      return;
     }
     
     // Check if item already exists in cart
@@ -103,7 +113,8 @@ router.post('/items', async (req, res) => {
         data: { updatedAt: new Date() }
       });
       
-      return res.json(updatedCartItem);
+      res.json(updatedCartItem);
+      return;
     }
     
     // Create new cart item
@@ -148,7 +159,8 @@ router.put('/items/:id', async (req, res) => {
     });
 
     if (!cartItem || cartItem.cart.userId !== userId) {
-      return res.status(404).json({ message: 'Cart item not found' });
+      res.status(404).json({ message: 'Cart item not found' });
+      return;
     }
     
     // Delete item if quantity is 0
@@ -163,7 +175,8 @@ router.put('/items/:id', async (req, res) => {
         data: { updatedAt: new Date() }
       });
       
-      return res.json({ message: 'Item removed from cart' });
+      res.json({ message: 'Item removed from cart' });
+      return;
     }
     
     // Update quantity
@@ -204,7 +217,8 @@ router.delete('/items/:id', async (req, res) => {
     });
 
     if (!cartItem || cartItem.cart.userId !== userId) {
-      return res.status(404).json({ message: 'Cart item not found' });
+      res.status(404).json({ message: 'Cart item not found' });
+      return;
     }
     
     // Delete cart item
@@ -235,7 +249,8 @@ router.delete('/', async (req, res) => {
     });
 
     if (!cart) {
-      return res.status(404).json({ message: 'Cart not found' });
+      res.status(404).json({ message: 'Cart not found' });
+      return;
     }
     
     // Delete all cart items

@@ -5,6 +5,8 @@ import "./globals.css"
 import { ThemeProvider } from "@/components/theme-provider"
 import { Toaster } from "react-hot-toast"
 import { AuthProvider } from "@/context/AuthContext"
+import { CartProvider } from "@/context/CartContext"
+import { Toaster as SonnerToaster } from "sonner"
 const inter = Inter({ subsets: ["latin"] })
 
 export const metadata: Metadata = {
@@ -23,8 +25,11 @@ export default function RootLayout({
       <body className={inter.className}>
           <ThemeProvider attribute="class" defaultTheme="dark" enableSystem disableTransitionOnChange>
           <AuthProvider>
-            {children}  
-            <Toaster position="bottom-right" />
+            <CartProvider>
+              {children}  
+              <Toaster position="bottom-right" />
+              <SonnerToaster position="bottom-right" />
+            </CartProvider>
           </AuthProvider>
         </ThemeProvider>
       </body>

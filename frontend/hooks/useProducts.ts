@@ -1,20 +1,32 @@
 import { useState, useEffect } from "react";
 import { Product } from "@/types";
+import { useAuth } from "@/context/AuthContext";
 
 // Hook to fetch all products
 export function useProducts() {
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<Error | null>(null);
+  const { token } = useAuth();
 
   useEffect(() => {
     fetchProducts();
-  }, []);
+  }, [token]);
 
   const fetchProducts = async () => {
     try {
+      // Don't attempt to fetch if no token is available
+      if (!token) {
+        setLoading(false);
+        return;
+      }
+      
       setLoading(true);
-      const response = await fetch('/api/products');
+      const response = await fetch('/api/products', {
+        headers: {
+          'Authorization': `Bearer ${token}`,
+        },
+      });
       if (!response.ok) throw new Error('Failed to fetch products');
       const data = await response.json();
       setProducts(data);
@@ -34,17 +46,28 @@ export function useProduct(productId: string | undefined) {
   const [product, setProduct] = useState<Product | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<Error | null>(null);
+  const { token } = useAuth();
 
   useEffect(() => {
     if (productId) {
       fetchProduct(productId);
     }
-  }, [productId]);
+  }, [productId, token]);
 
   const fetchProduct = async (id: string) => {
     try {
+      // Don't attempt to fetch if no token is available
+      if (!token) {
+        setLoading(false);
+        return;
+      }
+
       setLoading(true);
-      const response = await fetch(`/api/products/${id}`);
+      const response = await fetch(`/api/products/${id}`, {
+        headers: {
+          'Authorization': `Bearer ${token}`,
+        },
+      });
       if (!response.ok) {
         if (response.status === 404) {
           setError(new Error('Product not found'));
@@ -71,6 +94,7 @@ export function useCategories(products?: Product[]) {
   const [categories, setCategories] = useState<{id: string, name: string}[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<Error | null>(null);
+  const { token } = useAuth();
 
   // Extract categories from products if provided
   useEffect(() => {
@@ -79,7 +103,7 @@ export function useCategories(products?: Product[]) {
     } else {
       fetchCategories();
     }
-  }, [products]);
+  }, [products, token]);
 
   const extractCategories = (productData: Product[]) => {
     try {
@@ -103,10 +127,20 @@ export function useCategories(products?: Product[]) {
   // If products aren't provided, fetch categories directly
   const fetchCategories = async () => {
     try {
+      // Don't attempt to fetch if no token is available
+      if (!token) {
+        setLoading(false);
+        return;
+      }
+
       setLoading(true);
       // First try to fetch from a dedicated categories endpoint if available
       try {
-        const response = await fetch('/api/categories');
+        const response = await fetch('/api/categories', {
+          headers: {
+            'Authorization': `Bearer ${token}`,
+          },
+        });
         if (response.ok) {
           const data = await response.json();
           setCategories(data);
@@ -118,7 +152,11 @@ export function useCategories(products?: Product[]) {
       }
 
       // Fallback: fetch products and extract categories
-      const response = await fetch('/api/products');
+      const response = await fetch('/api/products', {
+        headers: {
+          'Authorization': `Bearer ${token}`,
+        },
+      });
       if (!response.ok) throw new Error('Failed to fetch products for categories');
       const data = await response.json();
       extractCategories(data);

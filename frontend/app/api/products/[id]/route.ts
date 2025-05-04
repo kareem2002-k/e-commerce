@@ -6,9 +6,17 @@ export async function GET(
 ) {
   try {
     // Await params before accessing its properties
+      // EXTRACT BEARER TOKEN FROM HEADER 
+      const authHeader = request.headers.get("Authorization");
+      const token = authHeader ? authHeader.split(" ")[1] : null;
+
     const id = (await params).id;
-    const response = await fetch(`http://localhost:3001/products/${id}`);
-    
+    const response = await fetch(`http://localhost:3001/products/${id}`, {
+      headers: {
+        'Authorization': `Bearer ${token}`,
+      },
+    });
+
     if (!response.ok) {
       return NextResponse.json({ error: 'Product not found' }, { status: response.status });
     }
@@ -25,12 +33,13 @@ export async function PUT(
   request: Request,
   { params }: { params: { id: string } }
 ) {
-  try {
+  try { 
     // Await params before accessing its properties
     const id = (await params).id;
-    // Forward authorization header from original request
-    const authHeader = request.headers.get('Authorization');
-    
+    // EXTRACT BEARER TOKEN FROM HEADER 
+    const authHeader = request.headers.get("Authorization");
+    const token = authHeader ? authHeader.split(" ")[1] : null;
+        
     const body = await request.json();
     const headers: Record<string, string> = {
       'Content-Type': 'application/json',
@@ -77,8 +86,9 @@ export async function DELETE(
   try {
     // Await params before accessing its properties
     const id = (await params).id;
-    // Forward authorization header from original request
+    // EXTRACT BEARER TOKEN FROM HEADER 
     const authHeader = request.headers.get('Authorization');
+    const token = authHeader ? authHeader.split(" ")[1] : null;
     
     const headers: Record<string, string> = {};
     

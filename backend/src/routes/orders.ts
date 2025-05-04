@@ -65,7 +65,9 @@ router.get('/:id', async (req, res) => {
     });
     
     if (!order) {
-      return res.status(404).json({ message: 'Order not found' });
+      
+       res.status(404).json({ message: 'Order not found' });
+       return;
     }
     
     // Check if user owns the order or is an admin
@@ -74,7 +76,8 @@ router.get('/:id', async (req, res) => {
     });
     
     if (order.userId !== userId && user?.role !== 'ADMIN') {
-      return res.status(403).json({ message: 'Not authorized to view this order' });
+      res.status(403).json({ message: 'Not authorized to view this order' });
+      return;
     }
     
     res.json(order);
@@ -107,7 +110,8 @@ router.post('/', async (req, res) => {
     });
     
     if (!cart || cart.cartItems.length === 0) {
-      return res.status(400).json({ message: 'Cart is empty' });
+      res.status(400).json({ message: 'Cart is empty' });
+      return;
     }
     
     // Verify addresses belong to user
@@ -126,7 +130,8 @@ router.post('/', async (req, res) => {
     });
     
     if (!shippingAddress || !billingAddress) {
-      return res.status(400).json({ message: 'Invalid addresses' });
+      res.status(400).json({ message: 'Invalid addresses' });
+      return;
     }
     
     // Calculate total amount
@@ -136,7 +141,8 @@ router.post('/', async (req, res) => {
     for (const item of cart.cartItems) {
       // Verify product is in stock
       if (item.product.stock < item.quantity) {
-        return res.status(400).json({ message: `Insufficient stock for ${item.product.name}` });
+        res.status(400).json({ message: `Insufficient stock for ${item.product.name}` });
+        return;
       }
       
       const itemTotal = item.product.price * item.quantity;
@@ -159,7 +165,7 @@ router.post('/', async (req, res) => {
     }
     
     // Apply coupons if provided
-    let coupons = [];
+    let coupons: any[] = [];
     if (couponCodes && couponCodes.length > 0) {
       coupons = await prisma.coupon.findMany({
         where: {
@@ -206,10 +212,16 @@ router.post('/', async (req, res) => {
     // Create order
     const order = await prisma.order.create({
       data: {
-        userId,
+        user: {
+          connect: { id: userId }
+        },
         totalAmount,
-        shippingAddressId,
-        billingAddressId,
+        shippingAddress: {
+          connect: { id: shippingAddressId }
+        },
+        billingAddress: {
+          connect: { id: billingAddressId }
+        },
         paymentMethod,
         paymentStatus: 'PENDING',
         orderStatus: 'PENDING',
@@ -273,17 +285,20 @@ router.post('/:id/cancel', async (req, res) => {
     });
     
     if (!order) {
-      return res.status(404).json({ message: 'Order not found' });
+      res.status(404).json({ message: 'Order not found' });
+      return;
     }
     
     // Check if user owns the order
     if (order.userId !== userId) {
-      return res.status(403).json({ message: 'Not authorized to cancel this order' });
+      res.status(403).json({ message: 'Not authorized to cancel this order' });
+      return;
     }
     
     // Check if order can be cancelled
     if (!['PENDING', 'CONFIRMED'].includes(order.orderStatus)) {
-      return res.status(400).json({ message: 'Cannot cancel this order' });
+        res.status(400).json({ message: 'Cannot cancel this order' });
+      return;
     }
     
     // Restore product stock

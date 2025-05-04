@@ -6,6 +6,7 @@ import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
 import { ShoppingCart, LogOut, User, Menu, X, Zap, Search } from "lucide-react";
 import { useAuth } from "@/context/AuthContext";
+import { useCart } from "@/context/CartContext";
 import { Button } from "@/components/ui/button";
 import { Avatar } from "@/components/ui/avatar";
 import { Input } from "@/components/ui/input";
@@ -26,16 +27,16 @@ import { Badge } from "@/components/ui/badge";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { toast } from "sonner";
 import Image from "next/image";
+import CartItems from "@/components/cart/CartItems";
+
 export default function TopBar() {
   const router = useRouter();
   const pathname = usePathname();
   const { user, logout } = useAuth();
+  const { itemCount } = useCart();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
-  
-  // Placeholder cart data (will be replaced with actual cart state)
-  const cartItemCount = 0;
   
   // Handle scroll effect
   useEffect(() => {
@@ -124,10 +125,16 @@ export default function TopBar() {
               >
                 <Button variant="ghost" size="icon" className="relative">
                   <ShoppingCart className="h-5 w-5" />
-                  {cartItemCount > 0 && (
-                    <Badge className="absolute -top-1 -right-1 h-5 w-5 flex items-center justify-center p-0 text-xs bg-gradient-to-r from-purple-600 to-fuchsia-600">
-                      {cartItemCount}
-                    </Badge>
+                  {itemCount > 0 && (
+                    <motion.div
+                      initial={{ scale: 0, opacity: 0 }}
+                      animate={{ scale: 1, opacity: 1 }}
+                      transition={{ type: "spring", stiffness: 500, damping: 15 }}
+                    >
+                      <Badge className="absolute -top-1 -right-1 h-5 w-5 flex items-center justify-center p-0 text-xs bg-gradient-to-r from-purple-600 to-fuchsia-600">
+                        {itemCount}
+                      </Badge>
+                    </motion.div>
                   )}
                 </Button>
               </motion.div>
@@ -139,31 +146,8 @@ export default function TopBar() {
                   Your Cart
                 </SheetTitle>
               </SheetHeader>
-              <div className="py-6">
-                {cartItemCount === 0 ? (
-                  <div className="text-center py-12">
-                    <motion.div
-                      initial={{ scale: 0.8, opacity: 0 }}
-                      animate={{ scale: 1, opacity: 1 }}
-                      transition={{ duration: 0.5 }}
-                    >
-                      <ShoppingCart className="mx-auto h-12 w-12 text-muted-foreground mb-4" />
-                      <h3 className="text-lg font-medium mb-2">Your cart is empty</h3>
-                      <p className="text-muted-foreground mb-6">
-                        Looks like you haven't added any products to your cart yet.
-                      </p>
-                      <Button 
-                        onClick={() => router.push('/')}
-                        className="bg-gradient-to-r from-purple-600 to-fuchsia-600 hover:from-purple-700 hover:to-fuchsia-700"
-                      >
-                        Browse Products
-                      </Button>
-                    </motion.div>
-                  </div>
-                ) : (
-                  // Cart items will be rendered here
-                  <div>Cart items go here</div>
-                )}
+              <div className="py-6 flex flex-col h-[calc(100vh-8rem)]">
+                <CartItems onClose={() => document.body.click()} />
               </div>
             </SheetContent>
           </Sheet>

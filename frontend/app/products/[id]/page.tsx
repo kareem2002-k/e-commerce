@@ -30,7 +30,7 @@ import {
 import { Product } from "@/types";
 import { useProduct } from "@/hooks/useProducts";
 import { toast } from "sonner";
-import React from "react";
+import AddToCartButton from "@/components/cart/AddToCartButton";
 
 export default function ProductDetail() {
   const params = useParams<{ id: string }>();
@@ -38,24 +38,15 @@ export default function ProductDetail() {
   const { user } = useAuth();
   const [quantity, setQuantity] = useState(1);
 
-  // Extract id from params using React.use() for future compatibility
-  // This approach works both with current Next.js versions and future ones
   const id = params.id;
-
-  // Use the product hook to fetch product data
   const { product, loading, error } = useProduct(id);
 
-  console.log(product)
-
-
-  // Use useEffect for navigation instead of during render
   useEffect(() => {
     if (error?.message === "Product not found") {
       router.push("/products");
     }
   }, [error, router]);
 
-  // Calculate average rating if reviews exist
   const averageRating = product?.reviews?.length
     ? (
         product.reviews.reduce((acc, review) => acc + review.rating, 0) /
@@ -63,32 +54,12 @@ export default function ProductDetail() {
       ).toFixed(1)
     : null;
 
-  // Add to cart functionality
-  const addToCart = () => {
-    if (!product) return;
-
-    // TODO: Implement actual cart functionality
-    toast.success(`Added ${quantity} of ${product.name} to cart`, {
-      description: "Item has been added to your shopping cart",
-      action: {
-        label: "View Cart",
-        onClick: () => console.log("View cart clicked"),
-      },
-    });
-  };
-
   return (
     <ProtectedRoute>
       <div className="min-h-screen bg-background">
         <TopBar />
-
-        <main className="container mx-auto px-4 py-8">
-          {/* Back button */}
-          <Button
-            variant="ghost"
-            onClick={() => router.back()}
-            className="mb-6"
-          >
+        <main className="container mx-auto px-4 py-6">
+          <Button variant="ghost" onClick={() => router.back()} className="mb-6">
             <ChevronLeft className="mr-2 h-4 w-4" />
             Back to Products
           </Button>
@@ -107,28 +78,32 @@ export default function ProductDetail() {
               </div>
             </div>
           ) : product ? (
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-              {/* Image gallery */}
-              <div>
-                {product.images && product.images.length > 0 ? (
-                  <Carousel className="w-full">
-                    <CarouselContent>
-                      {product.images.map((image) => (
-                        <CarouselItem key={image.id}>
-                          <div className="relative h-[400px] bg-gray-100 dark:bg-gray-800 rounded-lg overflow-hidden">
-                            <Image
-                              src={image.url}
-                              alt={image.altText || product.name}
-                              fill
-                              className="object-contain p-4"
-                            />
-                          </div>
-                        </CarouselItem>
-                      ))}
-                    </CarouselContent>
-                    <CarouselPrevious />
-                    <CarouselNext />
-                  </Carousel>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
+              {/* Image Section */}
+              <div className="relative w-full">
+                {product.images?.length ? (
+                  <div className="relative">
+                    <Carousel className="w-full">
+                      <CarouselContent>
+                        {product.images.map((image) => (
+                          <CarouselItem key={image.id}>
+                            <div className="relative h-[400px] bg-gray-100 dark:bg-gray-800 rounded-lg overflow-hidden">
+                              <Image
+                                src={image.url}
+                                alt={image.altText || product.name}
+                                fill
+                                className="object-contain p-4"
+                              />
+                            </div>
+                          </CarouselItem>
+                        ))}
+                      </CarouselContent>
+                      <div className="absolute inset-0 flex items-center justify-between px-2">
+                        <CarouselPrevious className="bg-white/80 dark:bg-black/40 rounded-full shadow-md" />
+                        <CarouselNext className="bg-white/80 dark:bg-black/40 rounded-full shadow-md" />
+                      </div>
+                    </Carousel>
+                  </div>
                 ) : (
                   <div className="flex items-center justify-center h-[400px] bg-gray-100 dark:bg-gray-800 rounded-lg">
                     <ShoppingCart className="h-16 w-16 text-muted-foreground" />
@@ -136,29 +111,21 @@ export default function ProductDetail() {
                 )}
               </div>
 
-              {/* Product details */}
-              <div>
-                <div className="flex items-center mb-2">
+              {/* Product Details */}
+              <div className="flex flex-col">
+                <div className="flex flex-wrap items-center mb-2 gap-2">
                   {product.category && (
-                    <Badge
-                      variant="outline"
-                      className="text-blue-500 border-blue-200"
-                    >
+                    <Badge variant="outline" className="text-blue-500 border-blue-200">
                       {product.category.name}
                     </Badge>
                   )}
                   {product.stock <= product.lowStockThreshold && (
-                    <Badge className="ml-2 bg-red-500">
-                      Only {product.stock} left
-                    </Badge>
+                    <Badge className="bg-red-500">Only {product.stock} left</Badge>
                   )}
                 </div>
 
-                <h1 className="text-3xl font-bold mb-2">{product.name}</h1>
+                <h1 className="text-2xl md:text-3xl font-bold mb-2">{product.name}</h1>
 
-                <button onClick={() => console.log(product)}>Click me</button>
-
-                {/* Rating */}
                 {averageRating && (
                   <div className="flex items-center mb-4">
                     <div className="flex">
@@ -181,60 +148,30 @@ export default function ProductDetail() {
                   </div>
                 )}
 
-                <p className="text-2xl font-bold mb-4">
-                  ${product.price}
-                </p>
+                <p className="text-lg md:text-2xl font-bold mb-4">${product.price}</p>
+                <p className="text-muted-foreground mb-6">{product.description}</p>
 
-                <div className="mb-6">
-                  <p className="text-muted-foreground">{product.description}</p>
-                </div>
-
-                <div className="flex items-center mb-6">
-                  <span className="mr-4">SKU: {product.sku}</span>
+                <div className="flex flex-wrap items-center justify-between gap-4 mb-6">
+                  <span className="text-sm text-muted-foreground">SKU: {product.sku}</span>
                   <span
-                    className={
+                    className={`text-sm font-medium ${
                       product.stock > 0 ? "text-green-500" : "text-red-500"
-                    }
+                    }`}
                   >
                     {product.stock > 0 ? "In Stock" : "Out of Stock"}
                   </span>
                 </div>
 
-                {/* Quantity selector */}
-                <div className="flex items-center mb-6">
-                  <span className="mr-4">Quantity:</span>
-                  <Button
-                    variant="outline"
-                    size="icon"
-                    onClick={() => setQuantity(Math.max(1, quantity - 1))}
-                    disabled={product.stock === 0}
-                  >
-                    -
-                  </Button>
-                  <span className="mx-4 min-w-8 text-center">{quantity}</span>
-                  <Button
-                    variant="outline"
-                    size="icon"
-                    onClick={() =>
-                      setQuantity(Math.min(product.stock, quantity + 1))
-                    }
-                    disabled={product.stock === 0 || quantity >= product.stock}
-                  >
-                    +
-                  </Button>
+                {/* Add to Cart */}
+                <div className="mb-6">
+                  <AddToCartButton
+                    productId={product.id}
+                    stock={product.stock}
+                    className="w-full h-12 text-lg bg-gradient-to-r from-blue-600 to-fuchsia-600 hover:from-blue-700 hover:to-fuchsia-700"
+                  />
                 </div>
 
-                {/* Add to cart button */}
-                <Button
-                  onClick={addToCart}
-                  className="w-full h-12 text-lg mb-6"
-                  disabled={product.stock === 0}
-                >
-                  <ShoppingCart className="mr-2 h-5 w-5" />
-                  {product.stock > 0 ? "Add to Cart" : "Out of Stock"}
-                </Button>
-
-                {/* Shipping info */}
+                {/* Shipping Info */}
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 my-8">
                   <Card>
                     <CardContent className="flex items-center p-4">
@@ -256,13 +193,10 @@ export default function ProductDetail() {
                   </Card>
                 </div>
 
-                {/* Admin button */}
                 {user?.isAdmin && (
                   <Button
                     variant="outline"
-                    onClick={() =>
-                      router.push(`/admin/products/edit/${product.id}`)
-                    }
+                    onClick={() => router.push(`/admin/products/edit/${product.id}`)}
                     className="w-full mt-4"
                   >
                     Edit Product
@@ -274,8 +208,7 @@ export default function ProductDetail() {
             <div className="text-center py-12">
               <h3 className="text-xl font-medium">Product not found</h3>
               <p className="text-muted-foreground mt-2">
-                The product you are looking for does not exist or has been
-                removed.
+                The product you are looking for does not exist or has been removed.
               </p>
               <Button className="mt-6" onClick={() => router.push("/products")}>
                 Back to Products
@@ -283,7 +216,7 @@ export default function ProductDetail() {
             </div>
           )}
 
-          {/* Reviews section */}
+          {/* Reviews */}
           {product && product.reviews && product.reviews.length > 0 && (
             <div className="mt-12">
               <h2 className="text-2xl font-bold mb-6">Customer Reviews</h2>
