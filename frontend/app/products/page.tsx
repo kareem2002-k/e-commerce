@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import { ShoppingCart, Search, Sparkles, SlidersHorizontal, Zap } from "lucide-react";
@@ -23,6 +23,7 @@ import { Badge } from "@/components/ui/badge";
 import LoadingScreen from "@/components/voltedge/loading-screen";
 import { toast } from "sonner";
 import { Product } from "@/types";
+import { useProductsAndCategories } from "@/hooks/useProducts";
 
 
 // Loading animation for products
@@ -48,42 +49,13 @@ export default function ProductsPage() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const { user } = useAuth();
-  const [products, setProducts] = useState<Product[]>([]);
-  const [categories, setCategories] = useState<{id: string, name: string}[]>([]);
-  const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState(searchParams?.get("search") || "");
   const [selectedCategory, setSelectedCategory] = useState<string>("all");
   const [showFilters, setShowFilters] = useState(false);
   const [searchFocused, setSearchFocused] = useState(false);
   
-  // Fetch products
-  useEffect(() => {
-    const fetchProducts = async () => {
-      try {
-        const response = await fetch('/api/products');
-        if (!response.ok) throw new Error('Failed to fetch products');
-        const data = await response.json();
-        setProducts(data);
-        
-        // Extract unique categories
-        const uniqueCategories = Array.from(
-          new Set(data.map((product: Product) => 
-            product.category ? JSON.stringify(product.category) : null
-          ))
-        )
-        .filter(Boolean)
-        .map(cat => JSON.parse(cat as string));
-        
-        setCategories(uniqueCategories);
-        setLoading(false);
-      } catch (error) {
-        console.error('Error fetching products:', error);
-        setLoading(false);
-      }
-    };
-    
-    fetchProducts();
-  }, []);
+  // Use our custom hook for products and categories
+  const { products, categories, loading, error } = useProductsAndCategories();
   
   // Filtered products
   const filteredProducts = products.filter(product => {
@@ -150,6 +122,20 @@ export default function ProductsPage() {
 
   if (loading) {
     return <LoadingScreen message="Loading products..." />;
+  }
+
+  if (error) {
+    return (
+      <div className="flex items-center justify-center h-screen">
+        <div className="text-center p-8 max-w-md">
+          <h2 className="text-2xl font-bold text-red-500 mb-4">Error Loading Products</h2>
+          <p className="text-gray-600 dark:text-gray-300 mb-6">{error.message}</p>
+          <Button onClick={() => window.location.reload()}>
+            Try Again
+          </Button>
+        </div>
+      </div>
+    );
   }
 
   return (
