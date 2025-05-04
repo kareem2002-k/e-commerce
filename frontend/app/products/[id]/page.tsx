@@ -1,9 +1,16 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { useRouter } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { motion } from "framer-motion";
-import { ShoppingCart, ChevronLeft, Star, Truck, ShieldCheck, RotateCcw } from "lucide-react";
+import {
+  ShoppingCart,
+  ChevronLeft,
+  Star,
+  Truck,
+  ShieldCheck,
+  RotateCcw,
+} from "lucide-react";
 import { useAuth } from "@/context/AuthContext";
 import { ProtectedRoute } from "@/components/auth/ProtectedRoute";
 import { Button } from "@/components/ui/button";
@@ -21,66 +28,71 @@ import {
   CarouselPrevious,
 } from "@/components/ui/carousel";
 import { Product } from "@/types";
+import { useProduct } from "@/hooks/useProducts";
+import { toast } from "sonner";
+import React from "react";
 
-
-export default function ProductDetail({ params }: { params: { id: string } }) {
+export default function ProductDetail() {
+  const params = useParams<{ id: string }>();
   const router = useRouter();
   const { user } = useAuth();
-  const [product, setProduct] = useState<Product | null>(null);
-  const [loading, setLoading] = useState(true);
   const [quantity, setQuantity] = useState(1);
-  
+
+  // Extract id from params using React.use() for future compatibility
+  // This approach works both with current Next.js versions and future ones
+  const id = params.id;
+
+  // Use the product hook to fetch product data
+  const { product, loading, error } = useProduct(id);
+
+  console.log(product)
+
+
+  // Use useEffect for navigation instead of during render
   useEffect(() => {
-    const fetchProduct = async () => {
-      try {
-        const response = await fetch(`/api/products/${params.id}`);
-        if (!response.ok) {
-          if (response.status === 404) {
-            router.push('/products');
-            return;
-          }
-          throw new Error('Failed to fetch product');
-        }
-        const data = await response.json();
-        setProduct(data);
-        setLoading(false);
-      } catch (error) {
-        console.error('Error fetching product:', error);
-        setLoading(false);
-      }
-    };
-    
-    fetchProduct();
-  }, [params.id, router]);
-  
+    if (error?.message === "Product not found") {
+      router.push("/products");
+    }
+  }, [error, router]);
+
   // Calculate average rating if reviews exist
-  const averageRating = product?.reviews?.length 
-    ? (product.reviews.reduce((acc, review) => acc + review.rating, 0) / product.reviews.length).toFixed(1)
+  const averageRating = product?.reviews?.length
+    ? (
+        product.reviews.reduce((acc, review) => acc + review.rating, 0) /
+        product.reviews.length
+      ).toFixed(1)
     : null;
-  
-  // Add to cart functionality (placeholder for now)
+
+  // Add to cart functionality
   const addToCart = () => {
     if (!product) return;
-    console.log(`Added ${quantity} of product ${product.id} to cart`);
+
     // TODO: Implement actual cart functionality
+    toast.success(`Added ${quantity} of ${product.name} to cart`, {
+      description: "Item has been added to your shopping cart",
+      action: {
+        label: "View Cart",
+        onClick: () => console.log("View cart clicked"),
+      },
+    });
   };
 
   return (
     <ProtectedRoute>
       <div className="min-h-screen bg-background">
         <TopBar />
-        
+
         <main className="container mx-auto px-4 py-8">
           {/* Back button */}
-          <Button 
-            variant="ghost" 
+          <Button
+            variant="ghost"
             onClick={() => router.back()}
             className="mb-6"
           >
             <ChevronLeft className="mr-2 h-4 w-4" />
             Back to Products
           </Button>
-          
+
           {loading ? (
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
               <Skeleton className="h-[400px] w-full rounded-lg" />
@@ -123,56 +135,71 @@ export default function ProductDetail({ params }: { params: { id: string } }) {
                   </div>
                 )}
               </div>
-              
+
               {/* Product details */}
               <div>
                 <div className="flex items-center mb-2">
                   {product.category && (
-                    <Badge variant="outline" className="text-blue-500 border-blue-200">
+                    <Badge
+                      variant="outline"
+                      className="text-blue-500 border-blue-200"
+                    >
                       {product.category.name}
                     </Badge>
                   )}
                   {product.stock <= product.lowStockThreshold && (
-                    <Badge className="ml-2 bg-red-500">Only {product.stock} left</Badge>
+                    <Badge className="ml-2 bg-red-500">
+                      Only {product.stock} left
+                    </Badge>
                   )}
                 </div>
-                
+
                 <h1 className="text-3xl font-bold mb-2">{product.name}</h1>
-                
+
+                <button onClick={() => console.log(product)}>Click me</button>
+
                 {/* Rating */}
                 {averageRating && (
                   <div className="flex items-center mb-4">
                     <div className="flex">
-                      {Array(5).fill(0).map((_, i) => (
-                        <Star
-                          key={i}
-                          className={`h-4 w-4 ${
-                            i < Math.floor(Number(averageRating))
-                              ? "text-yellow-400 fill-yellow-400"
-                              : "text-gray-300 dark:text-gray-600"
-                          }`}
-                        />
-                      ))}
+                      {Array(5)
+                        .fill(0)
+                        .map((_, i) => (
+                          <Star
+                            key={i}
+                            className={`h-4 w-4 ${
+                              i < Math.floor(Number(averageRating))
+                                ? "text-yellow-400 fill-yellow-400"
+                                : "text-gray-300 dark:text-gray-600"
+                            }`}
+                          />
+                        ))}
                     </div>
                     <span className="ml-2 text-sm text-muted-foreground">
                       {averageRating} ({product.reviews?.length} reviews)
                     </span>
                   </div>
                 )}
-                
-                <p className="text-2xl font-bold mb-4">${product.price.toFixed(2)}</p>
-                
+
+                <p className="text-2xl font-bold mb-4">
+                  ${product.price}
+                </p>
+
                 <div className="mb-6">
                   <p className="text-muted-foreground">{product.description}</p>
                 </div>
-                
+
                 <div className="flex items-center mb-6">
                   <span className="mr-4">SKU: {product.sku}</span>
-                  <span className={product.stock > 0 ? "text-green-500" : "text-red-500"}>
+                  <span
+                    className={
+                      product.stock > 0 ? "text-green-500" : "text-red-500"
+                    }
+                  >
                     {product.stock > 0 ? "In Stock" : "Out of Stock"}
                   </span>
                 </div>
-                
+
                 {/* Quantity selector */}
                 <div className="flex items-center mb-6">
                   <span className="mr-4">Quantity:</span>
@@ -188,13 +215,15 @@ export default function ProductDetail({ params }: { params: { id: string } }) {
                   <Button
                     variant="outline"
                     size="icon"
-                    onClick={() => setQuantity(Math.min(product.stock, quantity + 1))}
+                    onClick={() =>
+                      setQuantity(Math.min(product.stock, quantity + 1))
+                    }
                     disabled={product.stock === 0 || quantity >= product.stock}
                   >
                     +
                   </Button>
                 </div>
-                
+
                 {/* Add to cart button */}
                 <Button
                   onClick={addToCart}
@@ -204,7 +233,7 @@ export default function ProductDetail({ params }: { params: { id: string } }) {
                   <ShoppingCart className="mr-2 h-5 w-5" />
                   {product.stock > 0 ? "Add to Cart" : "Out of Stock"}
                 </Button>
-                
+
                 {/* Shipping info */}
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 my-8">
                   <Card>
@@ -226,12 +255,14 @@ export default function ProductDetail({ params }: { params: { id: string } }) {
                     </CardContent>
                   </Card>
                 </div>
-                
+
                 {/* Admin button */}
                 {user?.isAdmin && (
-                  <Button 
+                  <Button
                     variant="outline"
-                    onClick={() => router.push(`/admin/products/edit/${product.id}`)}
+                    onClick={() =>
+                      router.push(`/admin/products/edit/${product.id}`)
+                    }
                     className="w-full mt-4"
                   >
                     Edit Product
@@ -243,17 +274,15 @@ export default function ProductDetail({ params }: { params: { id: string } }) {
             <div className="text-center py-12">
               <h3 className="text-xl font-medium">Product not found</h3>
               <p className="text-muted-foreground mt-2">
-                The product you are looking for does not exist or has been removed.
+                The product you are looking for does not exist or has been
+                removed.
               </p>
-              <Button 
-                className="mt-6"
-                onClick={() => router.push('/products')}
-              >
+              <Button className="mt-6" onClick={() => router.push("/products")}>
                 Back to Products
               </Button>
             </div>
           )}
-          
+
           {/* Reviews section */}
           {product && product.reviews && product.reviews.length > 0 && (
             <div className="mt-12">
@@ -266,16 +295,18 @@ export default function ProductDetail({ params }: { params: { id: string } }) {
                         <div>
                           <p className="font-medium">{review.user.name}</p>
                           <div className="flex">
-                            {Array(5).fill(0).map((_, i) => (
-                              <Star
-                                key={i}
-                                className={`h-4 w-4 ${
-                                  i < review.rating
-                                    ? "text-yellow-400 fill-yellow-400"
-                                    : "text-gray-300 dark:text-gray-600"
-                                }`}
-                              />
-                            ))}
+                            {Array(5)
+                              .fill(0)
+                              .map((_, i) => (
+                                <Star
+                                  key={i}
+                                  className={`h-4 w-4 ${
+                                    i < review.rating
+                                      ? "text-yellow-400 fill-yellow-400"
+                                      : "text-gray-300 dark:text-gray-600"
+                                  }`}
+                                />
+                              ))}
                           </div>
                         </div>
                       </div>
@@ -290,4 +321,4 @@ export default function ProductDetail({ params }: { params: { id: string } }) {
       </div>
     </ProtectedRoute>
   );
-} 
+}

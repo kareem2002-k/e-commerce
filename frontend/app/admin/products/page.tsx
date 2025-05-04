@@ -767,7 +767,7 @@ export default function AdminProductsPage() {
                     </div>
                   </TableCell>
                   <TableCell>{product.sku}</TableCell>
-                  <TableCell className="font-mono">${product.price.toFixed(2)}</TableCell>
+                  <TableCell className="font-mono">${product.price}</TableCell>
                   <TableCell>
                     <div className="flex items-center">
                       {product.stock}

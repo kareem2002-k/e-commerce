@@ -5,7 +5,8 @@ export async function GET(
   { params }: { params: { id: string } }
 ) {
   try {
-    const id = params.id;
+    // Await params before accessing its properties
+    const id = (await params).id;
     const response = await fetch(`http://localhost:3001/products/${id}`);
     
     if (!response.ok) {
@@ -25,7 +26,8 @@ export async function PUT(
   { params }: { params: { id: string } }
 ) {
   try {
-    const id = params.id;
+    // Await params before accessing its properties
+    const id = (await params).id;
     // Forward authorization header from original request
     const authHeader = request.headers.get('Authorization');
     
@@ -73,7 +75,8 @@ export async function DELETE(
   { params }: { params: { id: string } }
 ) {
   try {
-    const id = params.id;
+    // Await params before accessing its properties
+    const id = (await params).id;
     // Forward authorization header from original request
     const authHeader = request.headers.get('Authorization');
     

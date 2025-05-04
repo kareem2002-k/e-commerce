@@ -29,6 +29,43 @@ export function useProducts() {
   return { products, loading, error, refetch: fetchProducts };
 }
 
+// Hook to fetch a single product by ID
+export function useProduct(productId: string | undefined) {
+  const [product, setProduct] = useState<Product | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<Error | null>(null);
+
+  useEffect(() => {
+    if (productId) {
+      fetchProduct(productId);
+    }
+  }, [productId]);
+
+  const fetchProduct = async (id: string) => {
+    try {
+      setLoading(true);
+      const response = await fetch(`/api/products/${id}`);
+      if (!response.ok) {
+        if (response.status === 404) {
+          setError(new Error('Product not found'));
+          setLoading(false);
+          return;
+        }
+        throw new Error('Failed to fetch product');
+      }
+      const data = await response.json();
+      setProduct(data);
+      setLoading(false);
+    } catch (error) {
+      console.error('Error fetching product:', error);
+      setError(error instanceof Error ? error : new Error('Unknown error'));
+      setLoading(false);
+    }
+  };
+
+  return { product, loading, error, refetch: (id: string) => fetchProduct(id) };
+}
+
 // Hook to fetch product categories
 export function useCategories(products?: Product[]) {
   const [categories, setCategories] = useState<{id: string, name: string}[]>([]);

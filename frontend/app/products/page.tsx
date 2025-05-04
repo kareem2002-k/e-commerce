@@ -449,7 +449,7 @@ export default function ProductsPage() {
                         className="font-bold text-xl text-blue-600 dark:text-blue-400"
                         whileHover={{ scale: 1.05 }}
                       >
-                        ${product.price.toFixed(2)}
+                        ${product.price}
                       </motion.p>
                     </CardContent>
                     <CardFooter className="p-4 pt-0 bg-white dark:bg-gray-800">
