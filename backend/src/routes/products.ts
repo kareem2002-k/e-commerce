@@ -36,7 +36,7 @@ router.get('/:id', async (req, res) => {
     console.log(product);
 
 
-    res.json({ product });
+    res.json(product);
   } catch (error) {
     res.status(500).json({ message: 'Error fetching product' });
   }
