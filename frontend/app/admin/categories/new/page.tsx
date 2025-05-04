@@ -23,14 +23,9 @@ import { toast } from "sonner";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { useGet, usePost } from "@/hooks/useApiFetch";
 import DataLoader from "@/components/ui/data-loader";
+import { Category } from "@/types";
 
-type Category = {
-  id: string;
-  name: string;
-  description: string | null;
-  parentId: string | null;
-  parent?: Category | null;
-};
+
 
 export default function AddCategoryPage() {
   const router = useRouter();

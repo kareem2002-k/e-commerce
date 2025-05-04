@@ -26,21 +26,10 @@ import { toast } from "sonner";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { Category, ProductImage } from "@/types";
+  
 
-type Category = {
-  id: string;
-  name: string;
-  description: string | null;
-  parentId: string | null;
-};
 
-type ProductImage = {
-  id?: string;
-  url: string;
-  altText: string;
-  file?: File;
-  isNew?: boolean;
-};
 
 export default function AddProductPage() {
   const router = useRouter();

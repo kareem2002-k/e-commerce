@@ -20,37 +20,8 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from "@/components/ui/carousel";
+import { Product } from "@/types";
 
-// Product type based on backend schema
-type Product = {
-  id: string;
-  name: string;
-  description: string;
-  price: number;
-  stock: number;
-  sku: string;
-  lowStockThreshold: number;
-  categoryId: string;
-  category: {
-    id: string;
-    name: string;
-  };
-  images: {
-    id: string;
-    url: string;
-    altText: string;
-  }[];
-  reviews?: {
-    id: string;
-    rating: number;
-    comment: string;
-    userId: string;
-    user: {
-      id: string;
-      name: string;
-    };
-  }[];
-};
 
 export default function ProductDetail({ params }: { params: { id: string } }) {
   const router = useRouter();

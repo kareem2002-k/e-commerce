@@ -35,17 +35,7 @@ import { toast } from "sonner";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import React from "react";
-
-type Category = {
-  id: string;
-  name: string;
-  description: string | null;
-  parentId: string | null;
-  parent?: Category | null;
-  children?: Category[];
-  productsCount?: number;
-};
-
+import { Category } from "@/types";
 export default function CategoriesPage() {
   const router = useRouter();
   const { user } = useAuth();

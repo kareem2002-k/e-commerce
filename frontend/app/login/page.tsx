@@ -27,16 +27,8 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
+import { LoginFormValues, loginSchema } from "@/types";
 
-// Define form schema
-const loginSchema = z.object({
-  email: z.string().email({ message: "Please enter a valid email address" }),
-  password: z
-    .string()
-    .min(6, { message: "Password must be at least 6 characters" }),
-});
-
-type LoginFormValues = z.infer<typeof loginSchema>;
 
 function ElegantShape({
   className,

@@ -22,27 +22,8 @@ import Image from "next/image";
 import { Badge } from "@/components/ui/badge";
 import LoadingScreen from "@/components/voltedge/loading-screen";
 import { toast } from "sonner";
+import { Product } from "@/types";
 
-// Product type based on backend schema
-type Product = {
-  id: string;
-  name: string;
-  description: string;
-  price: number;
-  stock: number;
-  sku: string;
-  lowStockThreshold: number;
-  categoryId: string;
-  category: {
-    id: string;
-    name: string;
-  };
-  images: {
-    id: string;
-    url: string;
-    altText: string;
-  }[];
-};
 
 // Loading animation for products
 const shimmer = (w: number, h: number) => `

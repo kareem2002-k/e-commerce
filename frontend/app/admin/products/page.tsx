@@ -58,34 +58,10 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import Image from "next/image";
 import { useGet } from "@/hooks/useApiFetch";
 import DataLoader from "@/components/ui/data-loader";
+import { Category, Product } from "@/types";
 
-// Product type based on backend schema
-type Product = {
-  id: string;
-  name: string;
-  description: string;
-  price: number;
-  stock: number;
-  sku: string;
-  lowStockThreshold: number;
-  categoryId: string;
-  category: {
-    id: string;
-    name: string;
-  };
-  images: {
-    id: string;
-    url: string;
-    altText: string;
-  }[];
-};
 
-type Category = {
-  id: string;
-  name: string;
-  description: string | null;
-  parentId: string | null;
-};
+
 
 export default function AdminProductsPage() {
   const router = useRouter();
@@ -141,7 +117,7 @@ export default function AdminProductsPage() {
       
       setStats(prev => ({
         ...prev,
-        totalProducts: productsState.data.length,
+        totalProducts: productsState.data?.length ?? 0,
         lowStockProducts: lowStockCount,
         totalValue
       }));
@@ -153,11 +129,10 @@ export default function AdminProductsPage() {
       setCategories(categoriesState.data);
       setStats(prev => ({
         ...prev,
-        totalCategories: categoriesState.data.length
+        totalCategories: categoriesState.data?.length ?? 0
       }));
     }
   }, [categoriesState.data, categoriesState.isSuccess]);
-  
   // Combined loading state
   useEffect(() => {
     setLoading(productsState.loading || categoriesState.loading);
