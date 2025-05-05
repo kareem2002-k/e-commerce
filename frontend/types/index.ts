@@ -47,6 +47,12 @@ export type Product = {
       name: string;
     };
   }[];
+  rating?: number; // Overall product rating
+  brand?: string; // Product brand name
+  createdAt?: string; // When the product was created
+  isNew?: boolean; // Whether this is a new product
+  isSale?: boolean; // Whether this product is on sale
+  tags?: string[]; // Product tags
 };
 
 // Define form schema

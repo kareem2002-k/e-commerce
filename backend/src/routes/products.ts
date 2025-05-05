@@ -21,6 +21,86 @@ router.get('/', authenticate, async (req, res) => {
   }
 });
 
+// Search products with filters
+router.get('/search', authenticate, async (req, res) => {
+  try {
+    const {
+      q = '',
+      category,
+      minPrice,
+      maxPrice,
+      brands,
+      sortBy = 'relevance',
+    } = req.query;
+
+    // Build the where clause
+    const where: any = {};
+    
+    // Search term filter
+    if (q) {
+      where.OR = [
+        { name: { contains: q as string, mode: 'insensitive' } },
+        { description: { contains: q as string, mode: 'insensitive' } },
+      ];
+    }
+    
+    // Category filter
+    if (category && category !== 'All Categories') {
+      where.category = {
+        name: category as string
+      };
+    }
+    
+    // Price range filter
+    if (minPrice || maxPrice) {
+      where.price = {};
+      if (minPrice) where.price.gte = parseFloat(minPrice as string);
+      if (maxPrice) where.price.lte = parseFloat(maxPrice as string);
+    }
+    
+    // Brands filter
+    if (brands) {
+      const brandsList = (brands as string).split(',');
+      where.brand = {
+        in: brandsList
+      };
+    }
+    
+    // Build the orderBy object
+    let orderBy: any = {};
+    switch (sortBy) {
+      case 'price_asc':
+        orderBy = { price: 'asc' };
+        break;
+      case 'price_desc':
+        orderBy = { price: 'desc' };
+        break;
+      case 'newest':
+        orderBy = { createdAt: 'desc' };
+        break;
+      case 'rating_desc':
+        orderBy = { rating: 'desc' };
+        break;
+      default:
+        orderBy = { name: 'asc' }; // Default sorting
+    }
+    
+    const products = await prisma.product.findMany({
+      where,
+      orderBy,
+      include: {
+        category: true,
+        images: true
+      }
+    });
+    
+    res.json(products);
+  } catch (error) {
+    console.error('Search error:', error);
+    res.status(500).json({ message: 'Error searching products' });
+  }
+});
+
 router.get('/:id', authenticate, async (req, res) => {
   const id = req.params.id;
 
@@ -48,7 +128,7 @@ router.get('/:id', authenticate, async (req, res) => {
 // Create new product
 router.post('/', authenticate, requireAdmin, async (req, res) => {
   try {
-    const { name, description, sku, price, stock, lowStockThreshold, categoryId, images } = req.body;
+    const { name, description, sku, price, stock, lowStockThreshold, categoryId, images, brand } = req.body;
     
     const product = await prisma.product.create({
       data: {
@@ -93,7 +173,8 @@ router.put('/:id', authenticate, requireAdmin, async (req, res) => {
         price: parseFloat(price),
         stock: parseInt(stock),
         lowStockThreshold: parseInt(lowStockThreshold),
-        categoryId
+        categoryId,
+        
       },
       include: {
         category: true,
