@@ -9,6 +9,8 @@ import { cn } from "@/lib/utils"
 import { useProductsAndCategories } from "@/hooks/useProducts"
 import { useState, useEffect } from "react"
 import { Product } from "@/types"
+import { useLoading } from "@/components/voltedge/loading-provider"
+import SectionLoading from "@/components/voltedge/section-loading"
 
 // Extending the Product type for local use to include createdAt
 interface ProductWithDate extends Product {
@@ -18,6 +20,16 @@ interface ProductWithDate extends Product {
 export default function HomePage() {
   const { products, categories, loading, error } = useProductsAndCategories()
   const [newArrivals, setNewArrivals] = useState<ProductWithDate[]>([])
+  const { startLoading, stopLoading } = useLoading()
+
+  // Handle initial page data loading
+  useEffect(() => {
+    if (loading) {
+      startLoading("Loading products...")
+    } else {
+      stopLoading()
+    }
+  }, [loading, startLoading, stopLoading])
 
   useEffect(() => {
     if (products && products.length > 0) {
@@ -88,12 +100,20 @@ export default function HomePage() {
       {/* Categories */}
       <section>
         <h2 className="text-2xl font-bold mb-6">Shop by Category</h2>
-        <CategoryGrid categories={categories} loading={loading} />
+        {loading ? (
+          <SectionLoading message="Loading categories..." />
+        ) : (
+          <CategoryGrid categories={categories} loading={false} />
+        )}
       </section>
 
       {/* Featured Products */}
       <section>
-        <FeaturedProducts products={products} loading={loading} />
+        {loading ? (
+          <SectionLoading message="Loading featured products..." />
+        ) : (
+          <FeaturedProducts products={products} loading={false} />
+        )}
       </section>
 
       {/* Deals Banner */}
@@ -105,11 +125,7 @@ export default function HomePage() {
       <section>
         <h2 className="text-2xl font-bold mb-6">New Arrivals</h2>
         {loading ? (
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-            {[1, 2, 3, 4].map((i) => (
-              <div key={i} className="aspect-square rounded-xl bg-muted/50 animate-pulse" />
-            ))}
-          </div>
+          <SectionLoading message="Loading new arrivals..." />
         ) : error ? (
           <p className="text-red-500">Error loading products</p>
         ) : (

@@ -6,6 +6,7 @@ import { ProductCard } from "@/components/product-card"
 import { Button } from "@/components/ui/button"
 import { ChevronLeft, ChevronRight } from "lucide-react"
 import { Product } from "@/types"
+import SectionLoading from "@/components/voltedge/section-loading"
 
 // Default products for fallback
 const defaultProducts = [
@@ -121,11 +122,7 @@ export function FeaturedProducts({ products, loading }: FeaturedProductsProps = 
           </div>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-          {[1, 2, 3, 4].map((i) => (
-            <div key={i} className="aspect-[3/4] rounded-xl bg-muted/50 animate-pulse" />
-          ))}
-        </div>
+        <SectionLoading message="Loading featured products..." />
       </div>
     )
   }

@@ -1,6 +1,7 @@
 import Link from "next/link"
 import { Laptop, Smartphone, Headphones, Watch, Camera, Tv, Speaker, Gamepad2 } from "lucide-react"
 import { cn } from "@/lib/utils"
+import SectionLoading from "@/components/voltedge/section-loading"
 
 // Icon mapping for categories
 const iconMap: Record<string, any> = {
@@ -92,19 +93,7 @@ interface CategoryGridProps {
 export function CategoryGrid({ categories, loading }: CategoryGridProps = {}) {
   // If loading or no categories provided, render skeleton or fallback
   if (loading) {
-    return (
-      <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-        {Array(8).fill(0).map((_, index) => (
-          <div 
-            key={index}
-            className="flex flex-col items-center justify-center p-6 rounded-lg animate-pulse"
-          >
-            <div className="h-16 w-16 rounded-full bg-muted mb-3" />
-            <div className="h-4 w-24 bg-muted rounded" />
-          </div>
-        ))}
-      </div>
-    )
+    return <SectionLoading message="Loading categories..." size="small" />
   }
 
   // Use provided categories or fall back to default ones
