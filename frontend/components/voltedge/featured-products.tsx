@@ -7,6 +7,7 @@ import { Card, CardContent, CardFooter } from "@/components/ui/card"
 import { ShoppingCart, Star } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { useTheme } from "next-themes"
+import { useRouter } from "next/navigation"
 
 function GeometricShape({
   className,
@@ -113,7 +114,7 @@ const products = [
 export default function FeaturedProducts() {
   const { theme } = useTheme()
   const isDark = theme !== "light"
-
+  const router = useRouter();
   return (
     <section
       className={`py-20 ${isDark ? "bg-gradient-to-b from-[#030303] to-[#050a14]" : "bg-gradient-to-b from-gray-50 to-gray-100"} relative overflow-hidden`}
@@ -216,17 +217,7 @@ export default function FeaturedProducts() {
                   </div>
                   <div className={`text-xl font-bold ${isDark ? "text-white" : "text-gray-800"}`}>${product.price}</div>
                 </CardContent>
-                <CardFooter className="p-4 pt-0">
-                  <motion.div whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }} className="w-full">
-                    <Button className="w-full bg-blue-500 hover:bg-blue-600 text-white relative overflow-hidden group">
-                      <motion.span className="absolute inset-0 w-full h-full bg-gradient-to-r from-blue-400 to-blue-600 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-                      <motion.span className="relative flex items-center justify-center">
-                        <ShoppingCart className="mr-2 h-4 w-4 group-hover:scale-110 transition-transform duration-300" />
-                        Add to Cart
-                      </motion.span>
-                    </Button>
-                  </motion.div>
-                </CardFooter>
+               
               </Card>
             </motion.div>
           ))}
@@ -237,6 +228,7 @@ export default function FeaturedProducts() {
             <Button
               size="lg"
               variant="outline"
+              onClick={() => router.push('/home/products')}
               className={`${isDark ? "text-white border-white/20 hover:bg-white/5" : "text-gray-800 border-gray-300 hover:bg-gray-100/50"} rounded-full px-8 relative overflow-hidden group`}
             >
               <motion.span

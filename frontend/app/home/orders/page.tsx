@@ -77,8 +77,6 @@ export default function OrdersPage() {
   const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001';
   
   useEffect(() => {
-
-    
     fetchOrders();
   }, [token, router]);
   
@@ -168,14 +166,19 @@ export default function OrdersPage() {
   
   if (loading) {
     return (
-      <div className="container py-16 flex justify-center">
+      <div className="flex justify-center py-16">
         <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-purple-600"></div>
       </div>
     );
   }
   
   return (
-    <div className="container max-w-4xl py-10">
+    <motion.div
+      initial={{ opacity: 0, y: 10 }}
+      animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0, y: -10 }}
+      transition={{ duration: 0.3 }}
+    >
       <h1 className="text-3xl font-bold mb-8">My Orders</h1>
       
       {orders.length === 0 ? (
@@ -195,7 +198,7 @@ export default function OrdersPage() {
             </p>
             
             <Button
-              onClick={() => router.push('/products')}
+              onClick={() => router.push('/home/products')}
               className="bg-gradient-to-r from-blue-600 to-fuchsia-600 hover:from-blue-700 hover:to-fuchsia-700"
             >
               Browse Products
@@ -338,7 +341,7 @@ export default function OrdersPage() {
                 <Button
                   variant="outline"
                   size="sm"
-                  onClick={() => router.push(`/products`)}
+                  onClick={() => router.push(`/home/products`)}
                 >
                   <ExternalLink className="h-4 w-4 mr-2" /> 
                   Buy Again
@@ -366,6 +369,6 @@ export default function OrdersPage() {
           ))}
         </div>
       )}
-    </div>
+    </motion.div>
   );
 }

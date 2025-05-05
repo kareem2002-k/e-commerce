@@ -100,7 +100,7 @@ export default function AdminProductsPage() {
       toast.error("Unauthorized access", {
         description: "You do not have permission to view this page."
       });
-      router.push('/home');
+      router.push('/home/products');
     }
   }, [user, router]);
   

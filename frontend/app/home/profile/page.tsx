@@ -30,6 +30,7 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
+import { motion } from 'framer-motion';
 
 interface Address {
   id: string;
@@ -194,14 +195,24 @@ export default function ProfilePage() {
   
   if (!user) {
     return (
-      <div className="container py-10 text-center">
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        exit={{ opacity: 0 }}
+        className="py-10 text-center"
+      >
         <p>Please log in to view your profile</p>
-      </div>
+      </motion.div>
     );
   }
   
   return (
-    <div className="container max-w-5xl py-10">
+    <motion.div
+      initial={{ opacity: 0, y: 10 }}
+      animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0, y: -10 }}
+      transition={{ duration: 0.3 }}
+    >
       <h1 className="text-3xl font-bold mb-8">My Profile</h1>
       
       <Tabs defaultValue="profile">
@@ -432,6 +443,6 @@ export default function ProfilePage() {
           </DialogFooter>
         </DialogContent>
       </Dialog>
-    </div>
+    </motion.div>
   );
 } 

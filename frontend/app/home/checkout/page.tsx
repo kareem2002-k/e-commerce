@@ -148,7 +148,7 @@ export default function CheckoutPage() {
   useEffect(() => {
     if (!cartLoading && (!cart || cart.cartItems.length === 0) && !orderPlaced) {
       toast.info('Your cart is empty');
-      router.push('/products');
+      router.push('/home/products');
     }
   }, [cart, cartLoading, router, orderPlaced]);
   
@@ -209,61 +209,64 @@ export default function CheckoutPage() {
   // If order is placed, show success message
   if (orderPlaced) {
     return (
-      <div className="container max-w-4xl py-10">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
-          className="flex flex-col items-center text-center py-12"
-        >
-          <div className="w-20 h-20 rounded-full bg-green-100 dark:bg-green-900/20 flex items-center justify-center mb-6">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              className="h-10 w-10 text-green-600"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M5 13l4 4L19 7"
-              />
-            </svg>
-          </div>
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5 }}
+        className="flex flex-col items-center text-center py-12"
+      >
+        <div className="w-20 h-20 rounded-full bg-green-100 dark:bg-green-900/20 flex items-center justify-center mb-6">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            className="h-10 w-10 text-green-600"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M5 13l4 4L19 7"
+            />
+          </svg>
+        </div>
+        
+        <h1 className="text-3xl font-bold mb-2">Thank You for Your Order!</h1>
+        <p className="text-muted-foreground mb-8 max-w-lg">
+          Your order has been placed successfully. You will receive an email confirmation shortly.
+        </p>
+        
+        <div className="bg-muted p-4 rounded-md mb-8 inline-block">
+          <p className="text-sm">Order Reference: <span className="font-bold">{orderId.slice(0, 8)}</span></p>
+        </div>
+        
+        <div className="flex gap-4">
+          <Button
+            variant="outline"
+            onClick={() => router.push('/home/products')}
+          >
+            Continue Shopping
+          </Button>
           
-          <h1 className="text-3xl font-bold mb-2">Thank You for Your Order!</h1>
-          <p className="text-muted-foreground mb-8 max-w-lg">
-            Your order has been placed successfully. You will receive an email confirmation shortly.
-          </p>
-          
-          <div className="bg-muted p-4 rounded-md mb-8 inline-block">
-            <p className="text-sm">Order Reference: <span className="font-bold">{orderId.slice(0, 8)}</span></p>
-          </div>
-          
-          <div className="flex gap-4">
-            <Button
-              variant="outline"
-              onClick={() => router.push('/products')}
-            >
-              Continue Shopping
-            </Button>
-            
-            <Button
-              onClick={() => router.push('/orders')}
-              className="bg-gradient-to-r from-blue-600 to-fuchsia-600 hover:from-blue-700 hover:to-fuchsia-700"
-            >
-              View My Orders
-            </Button>
-          </div>
-        </motion.div>
-      </div>
+          <Button
+            onClick={() => router.push('/home/orders')}
+            className="bg-gradient-to-r from-blue-600 to-fuchsia-600 hover:from-blue-700 hover:to-fuchsia-700"
+          >
+            View My Orders
+          </Button>
+        </div>
+      </motion.div>
     );
   }
   
   return (
-    <div className="container max-w-6xl py-10">
+    <motion.div
+      initial={{ opacity: 0, y: 10 }}
+      animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0, y: -10 }}
+      transition={{ duration: 0.3 }}
+    >
       <h1 className="text-3xl font-bold mb-8">Checkout</h1>
       
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
@@ -304,7 +307,7 @@ export default function CheckoutPage() {
                   <p className="text-muted-foreground mb-4">No addresses found</p>
                   <Button 
                     variant="outline" 
-                    onClick={() => router.push('/profile')}
+                    onClick={() => router.push('/home/profile')}
                   >
                     Add New Address
                   </Button>
@@ -348,7 +351,7 @@ export default function CheckoutPage() {
                   <p className="text-muted-foreground mb-4">No addresses found</p>
                   <Button 
                     variant="outline" 
-                    onClick={() => router.push('/profile')}
+                    onClick={() => router.push('/home/profile')}
                   >
                     Add New Address
                   </Button>
@@ -591,6 +594,6 @@ export default function CheckoutPage() {
           </Card>
         </div>
       </div>
-    </div>
+    </motion.div>
   );
 } 

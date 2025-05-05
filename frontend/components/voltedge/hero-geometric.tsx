@@ -7,6 +7,7 @@ import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 import { ArrowRight, Zap } from "lucide-react"
 import { useTheme } from "next-themes"
+import { useRouter } from "next/navigation"
 
 const pacifico = Pacifico({
   subsets: ["latin"],
@@ -91,6 +92,7 @@ export default function HeroGeometric({
 }) {
   const { theme } = useTheme()
   const isDark = theme !== "light"
+  const router = useRouter();
 
   const fadeUpVariants = {
     hidden: { opacity: 0, y: 30 },
@@ -215,6 +217,7 @@ export default function HeroGeometric({
               <Button
                 size="lg"
                 className="bg-blue-500 hover:bg-blue-600 text-white rounded-full px-8 w-full sm:w-auto relative overflow-hidden group"
+                onClick={() => router.push('/login')}
               >
                 <motion.span className="absolute inset-0 w-full h-full bg-gradient-to-r from-blue-400 to-blue-600 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                 <motion.span className="relative flex items-center">
@@ -229,6 +232,7 @@ export default function HeroGeometric({
                 size="lg"
                 variant="outline"
                 className={`${isDark ? "text-white border-white/20 hover:bg-white/5" : "text-gray-800 border-gray-400 hover:bg-gray-100/80"} rounded-full px-8 w-full sm:w-auto relative overflow-hidden group`}
+                onClick={() => router.push('#categories')}
               >
                 <motion.span
                   className={`absolute inset-0 w-full h-full bg-gradient-to-r ${isDark ? "from-blue-500/10 to-cyan-500/10" : "from-blue-500/15 to-cyan-500/15"} opacity-0 group-hover:opacity-100 transition-opacity duration-300`}

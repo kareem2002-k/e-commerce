@@ -17,7 +17,7 @@ export default function Home() {
 
   useEffect(() => {
     if (!loading && user) {
-      router.push('/products');
+      router.push('/home/products');
     }
   }, [user, loading, router]);
 
@@ -34,6 +34,7 @@ export default function Home() {
 
           <HeroGeometric badge="VoltEdge Electronics" title1="Power Your" title2="Digital Lifestyle" />
           <FeaturedProducts />
+          <div id="categories"></div>
           <Categories />
           <Footer />
         </motion.div>
