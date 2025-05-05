@@ -71,19 +71,6 @@ export default function ProductsPage() {
     router.push(`/products/${productId}`);
   };
   
-  // Add to cart functionality
-  const addToCart = (e: React.MouseEvent, product: Product) => {
-    e.stopPropagation();
-    const { name } = product;
-    toast.success(`Added ${name} to cart`, {
-      description: "Item has been added to your shopping cart",
-      action: {
-        label: "View Cart",
-        onClick: () => console.log("View cart clicked")
-      }
-    });
-  };
-
   // Animation variants
   const containerVariants = {
     hidden: { opacity: 0 },

@@ -164,6 +164,11 @@ export default function CheckoutPage() {
       return;
     }
     
+    if (!cart || cart.cartItems.length === 0) {
+      toast.error('Your cart is empty');
+      return;
+    }
+    
     try {
       setPlacingOrder(true);
       
@@ -173,7 +178,11 @@ export default function CheckoutPage() {
           shippingAddressId: selectedShippingAddressId,
           billingAddressId: selectedBillingAddressId,
           paymentMethod,
-          couponCode: appliedCoupon?.code // Include coupon code if applied
+          couponCode: appliedCoupon?.code,
+          cartItems: cart.cartItems.map(item => ({
+            productId: item.productId,
+            quantity: item.quantity
+          }))
         },
         { headers: { Authorization: `Bearer ${token}` } }
       );

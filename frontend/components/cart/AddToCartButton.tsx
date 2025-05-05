@@ -1,10 +1,12 @@
 "use client";
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useCart } from '@/context/CartContext';
 import { Button } from '@/components/ui/button';
 import { ShoppingCart, Plus, Minus, Check } from 'lucide-react';
 import { motion } from 'framer-motion';
+import { Product } from '@/types';
+import { useAuth } from '@/context/AuthContext';
 
 interface AddToCartButtonProps {
   productId: string;
@@ -12,6 +14,7 @@ interface AddToCartButtonProps {
   className?: string;
   variant?: 'default' | 'outline' | 'destructive' | 'secondary' | 'ghost' | 'link';
   size?: 'default' | 'sm' | 'lg' | 'icon';
+  product?: Product; // Add optional product prop to pass product details directly
 }
 
 export default function AddToCartButton({
@@ -19,16 +22,86 @@ export default function AddToCartButton({
   stock,
   className = "",
   variant = 'default',
-  size = 'default'
+  size = 'default',
+  product: initialProduct,
 }: AddToCartButtonProps) {
   const { addToCart, addingToCart } = useCart();
   const [quantity, setQuantity] = useState(1);
   const [added, setAdded] = useState(false);
+  const [product, setProduct] = useState<Product | null>(initialProduct || null);
+  const { token } = useAuth();
+
+  // Fetch product details if not provided as prop
+  useEffect(() => {
+    if (initialProduct) {
+      setProduct(initialProduct);
+      return;
+    }
+    
+    const fetchProduct = async () => {
+      try { 
+        const response = await fetch(`/api/products/${productId}`, {
+          headers: {
+            'Authorization': `Bearer ${token}`
+          }
+        });
+        if (response.ok) {
+          const data = await response.json();
+          setProduct(data);
+        } else {
+          console.error('Failed to fetch product details, status:', response.status);
+        }
+      } catch (error) {
+        console.error('Error fetching product details:', error);
+      }
+    };
+    
+    fetchProduct();
+  }, [productId, token, initialProduct]);
   
   const handleAddToCart = async () => {
     if (addingToCart) return;
     
-    await addToCart(productId, quantity);
+    // Either use the product from state or attempt one last fetch
+    if (!product) {
+      try {
+        // One last attempt to fetch product details if not available
+        const response = await fetch(`/api/products/${productId}`, {
+          headers: {
+            'Authorization': `Bearer ${token}`
+          }
+        });
+        if (response.ok) {
+          const data = await response.json();
+          setProduct(data);
+          await addToCart(productId, quantity, data);
+        } else {
+          // Fallback with minimal details
+          const fallbackProduct = {
+            id: productId,
+            name: 'Product',
+            price: 0,
+            description: '',
+            images: []
+          };
+          await addToCart(productId, quantity, fallbackProduct);
+        }
+      } catch (err) {
+        console.error('Failed to add product to cart:', err);
+        // Fallback with minimal details
+        const fallbackProduct = {
+          id: productId,
+          name: 'Product',
+          price: 0,
+          description: '',
+          images: []
+        };
+        await addToCart(productId, quantity, fallbackProduct);
+      }
+    } else {
+      // Use existing product data
+      await addToCart(productId, quantity, product);
+    }
     
     // Show success animation
     setAdded(true);

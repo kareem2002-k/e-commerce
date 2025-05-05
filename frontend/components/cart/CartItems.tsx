@@ -85,7 +85,7 @@ export default function CartItems({ onClose }: { onClose?: () => void }) {
               className={`flex items-center gap-4 py-4 border-b ${removingFromCart[item.id] ? 'opacity-50' : ''}`}
             >
               <div className="relative w-20 h-20 bg-gray-100 dark:bg-gray-800 rounded-md overflow-hidden">
-                {item.product.images && item.product.images.length > 0 ? (
+                {item.product.images && item.product.images.length > 0 && item.product.images[0].url ? (
                   <Image
                     src={item.product.images[0].url}
                     alt={item.product.name}

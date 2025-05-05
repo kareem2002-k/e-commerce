@@ -55,7 +55,6 @@ interface CartContextType {
   updateCartItem: (itemId: string, quantity: number) => Promise<void>;
   removeCartItem: (itemId: string) => Promise<void>;
   clearCart: () => Promise<void>;
-  syncCartWithServer: () => Promise<boolean>;
   itemCount: number;
   totalPrice: number;
   isLocalCart: boolean;
@@ -69,14 +68,12 @@ const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001';
 export function CartProvider({ children }: { children: React.ReactNode }) {
   const [cart, setCart] = useState<Cart | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
-  const [syncingCart, setSyncingCart] = useState<boolean>(false);
-  const [initialLoad, setInitialLoad] = useState<boolean>(true);
   const [addingToCart, setAddingToCart] = useState<boolean>(false);
   const [updatingCart, setUpdatingCart] = useState<Record<string, boolean>>({});
   const [removingFromCart, setRemovingFromCart] = useState<Record<string, boolean>>({});
   const [error, setError] = useState<string | null>(null);
   const [isLocalCart, setIsLocalCart] = useState<boolean>(true);
-  const { user, token } = useAuth();
+  const { user } = useAuth();
 
   // Calculate total items in cart
   const itemCount = cart?.cartItems?.reduce((total, item) => total + item.quantity, 0) || 0;
@@ -96,7 +93,6 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
   const getGuestId = (): string => {
     let guestId = localStorage.getItem('guestId');
     if (!guestId) {
-      // Use timestamp + random string instead of UUID library
       guestId = `guest-${Date.now()}-${Math.random().toString(36).substring(2)}`;
       localStorage.setItem('guestId', guestId);
     }
@@ -127,26 +123,6 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
     }
   };
 
-  // Convert server cart to local cart format
-  const serverCartToLocalCart = (serverCart: Cart): LocalCart => {
-    return {
-      id: serverCart.id,
-      cartItems: serverCart.cartItems.map(item => ({
-        id: item.id,
-        productId: item.productId,
-        quantity: item.quantity,
-        product: {
-          id: item.product.id,
-          name: item.product.name,
-          price: item.product.price,
-          description: item.product.description,
-          images: item.product.images
-        }
-      })),
-      lastSynced: new Date().toISOString()
-    };
-  };
-
   // Convert local cart to server format
   const localCartToServerFormat = (localCart: LocalCart): Cart => {
     return {
@@ -159,45 +135,26 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
   // Generate a temporary ID for optimistic updates
   const generateTempId = () => `temp-${Date.now()}-${Math.random().toString(36).substring(2)}`;
 
-  // Fetch cart from localStorage, fallback to API only if needed
+  // Fetch cart from localStorage
   const fetchCart = async () => {
-    // Always load from localStorage first
-    const localCart = loadLocalCart();
-    
-    if (localCart) {
-      setCart(localCartToServerFormat(localCart));
-      setInitialLoad(false);
-      return;
-    }
-    
-    // Only if no local cart exists and user is logged in, try server
-    if (!token) {
-      // Initialize an empty cart
-      const newCart: LocalCart = {
-        id: generateTempId(),
-        cartItems: []
-      };
-      saveLocalCart(newCart);
-      setCart(localCartToServerFormat(newCart));
-      setInitialLoad(false);
-      setIsLocalCart(true);
-      return;
-    }
-
-    // No local cart but user is logged in - get from server once
     setLoading(true);
-
+    
     try {
-      const response = await axios.get(`${API_URL}/cart`, {
-        headers: { Authorization: `Bearer ${token}` }
-      });
+      // Always load from localStorage first
+      const localCart = loadLocalCart();
       
-      const serverCart = response.data;
+      if (localCart) {
+        setCart(localCartToServerFormat(localCart));
+      } else {
+        // Initialize an empty cart
+        const newCart: LocalCart = {
+          id: generateTempId(),
+          cartItems: []
+        };
+        saveLocalCart(newCart);
+        setCart(localCartToServerFormat(newCart));
+      }
       
-      // Save to local storage
-      saveLocalCart(serverCartToLocalCart(serverCart));
-      setCart(serverCart);
-      setIsLocalCart(false);
       setError(null);
     } catch (err) {
       // Create an empty cart if fetch fails
@@ -207,73 +164,10 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
       };
       saveLocalCart(newCart);
       setCart(localCartToServerFormat(newCart));
-      setError('Failed to fetch cart from server');
+      setError('Failed to load cart');
       console.error('Error fetching cart:', err);
-      setIsLocalCart(true);
     } finally {
       setLoading(false);
-      setInitialLoad(false);
-    }
-  };
-
-  // Sync the local cart with the server (only when explicitly called or during checkout)
-  const syncCartWithServer = async (): Promise<boolean> => {
-    if (!token || !user) {
-      return false; // Can't sync without authentication
-    }
-    
-    const localCart = loadLocalCart();
-    if (!localCart) {
-      return false; // No cart to sync
-    }
-    
-    setSyncingCart(true);
-    
-    try {
-      // First get server cart
-      const response = await axios.get(`${API_URL}/cart`, {
-        headers: { Authorization: `Bearer ${token}` }
-      });
-      
-      const serverCart = response.data;
-      
-      // Clear server cart first (easier than calculating differences)
-      await axios.delete(
-        `${API_URL}/cart`,
-        { headers: { Authorization: `Bearer ${token}` } }
-      );
-      
-      // Add all local items to server
-      for (const item of localCart.cartItems) {
-        await axios.post(
-          `${API_URL}/cart/items`,
-          { 
-            productId: item.productId, 
-            quantity: item.quantity 
-          },
-          { headers: { Authorization: `Bearer ${token}` } }
-        );
-      }
-      
-      // Get updated server cart
-      const updatedResponse = await axios.get(`${API_URL}/cart`, {
-        headers: { Authorization: `Bearer ${token}` }
-      });
-      
-      // Update local with server state
-      const updatedServerCart = updatedResponse.data;
-      saveLocalCart(serverCartToLocalCart(updatedServerCart));
-      setCart(updatedServerCart);
-      setIsLocalCart(false);
-      
-      toast.success('Cart synchronized with server');
-      return true;
-    } catch (err) {
-      console.error('Error syncing cart with server:', err);
-      toast.error('Failed to sync cart with server');
-      return false;
-    } finally {
-      setSyncingCart(false);
     }
   };
 
@@ -297,12 +191,21 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
           quantity,
           product: {
             id: productId,
-            name: productDetails.name || 'Loading...',
-            price: productDetails.price || 0,
+            name: productDetails.name || 'Product',
+            price: typeof productDetails.price === 'number' ? productDetails.price : 0,
             description: productDetails.description || '',
-            images: productDetails.images || [{url: ''}]
+            images: Array.isArray(productDetails.images) && productDetails.images.length > 0 
+              ? productDetails.images.map(img => ({ 
+                  url: img.url || '' 
+                }))
+              : []
           }
         });
+      } else {
+        console.error('No product details provided for new cart item');
+        toast.error('Could not add item to cart: missing product details');
+        setAddingToCart(false);
+        return;
       }
       
       // Save to localStorage
@@ -310,7 +213,6 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
       
       // Update state with local cart
       setCart(localCartToServerFormat(localCart));
-      setIsLocalCart(true);
       
       toast.success('Item added to cart');
     } catch (err) {
@@ -348,7 +250,6 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
       
       // Update state with local cart
       setCart(localCartToServerFormat(localCart));
-      setIsLocalCart(true);
     } catch (err) {
       console.error('Error updating cart item:', err);
       toast.error('Failed to update cart item');
@@ -375,7 +276,6 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
       
       // Update state with local cart
       setCart(localCartToServerFormat(localCart));
-      setIsLocalCart(true);
       
       toast.success('Item removed from cart');
     } catch (err) {
@@ -395,7 +295,6 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
       
       // Update state
       setCart({ id: generateTempId(), userId: user?.id || getGuestId(), cartItems: [] });
-      setIsLocalCart(true);
       
       toast.success('Cart cleared');
     } catch (err) {
@@ -406,7 +305,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
 
   // Handle user login - merge guest cart with user cart
   useEffect(() => {
-    if (user && token) {
+    if (user) {
       // Check if we have a guest cart to migrate
       const guestId = localStorage.getItem('guestId');
       if (guestId) {
@@ -440,7 +339,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
     
     // Always load cart from local storage on auth change
     fetchCart();
-  }, [user, token]);
+  }, [user]);
 
   const value = {
     cart,
@@ -454,10 +353,9 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
     updateCartItem,
     removeCartItem,
     clearCart,
-    syncCartWithServer,
     itemCount,
     totalPrice,
-    isLocalCart
+    isLocalCart: true // Always true since we're using local cart only
   };
 
   return <CartContext.Provider value={value}>{children}</CartContext.Provider>;

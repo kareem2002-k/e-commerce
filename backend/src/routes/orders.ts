@@ -94,23 +94,13 @@ router.post('/', async (req, res) => {
       shippingAddressId, 
       billingAddressId, 
       paymentMethod, 
-      couponCodes 
+      couponCode,
+      cartItems 
     } = req.body;
     
-    // Get user's cart
-    const cart = await prisma.cart.findUnique({
-      where: { userId },
-      include: {
-        cartItems: {
-          include: {
-            product: true
-          }
-        }
-      }
-    });
-    
-    if (!cart || cart.cartItems.length === 0) {
-      res.status(400).json({ message: 'Cart is empty' });
+    // Validate cart items
+    if (!cartItems || !Array.isArray(cartItems) || cartItems.length === 0) {
+      res.status(400).json({ message: 'Cart is empty or invalid' });
       return;
     }
     
@@ -138,40 +128,48 @@ router.post('/', async (req, res) => {
     let totalAmount = 0;
     const orderItems = [];
     
-    for (const item of cart.cartItems) {
-      // Verify product is in stock
-      if (item.product.stock < item.quantity) {
-        res.status(400).json({ message: `Insufficient stock for ${item.product.name}` });
+    for (const item of cartItems) {
+      // Get product details from database to ensure accuracy and prevent tampering
+      const product = await prisma.product.findUnique({
+        where: { id: item.productId }
+      });
+      
+      if (!product) {
+        res.status(400).json({ message: `Product not found: ${item.productId}` });
         return;
       }
       
-      const itemTotal = item.product.price * item.quantity;
+      // Verify product is in stock
+      if (product.stock < item.quantity) {
+        res.status(400).json({ message: `Insufficient stock for ${product.name}` });
+        return;
+      }
+      
+      const itemTotal = product.price * item.quantity;
       totalAmount += itemTotal;
       
       orderItems.push({
-        productId: item.product.id,
-        unitPrice: item.product.price,
+        productId: product.id,
+        unitPrice: product.price,
         quantity: item.quantity,
         totalPrice: itemTotal
       });
       
       // Update product stock
       await prisma.product.update({
-        where: { id: item.product.id },
+        where: { id: product.id },
         data: {
-          stock: item.product.stock - item.quantity
+          stock: product.stock - item.quantity
         }
       });
     }
     
-    // Apply coupons if provided
-    let coupons: any[] = [];
-    if (couponCodes && couponCodes.length > 0) {
-      coupons = await prisma.coupon.findMany({
+    // Apply coupon if provided
+    let appliedCoupon = null;
+    if (couponCode) {
+      appliedCoupon = await prisma.coupon.findFirst({
         where: {
-          code: {
-            in: couponCodes
-          },
+          code: couponCode,
           validFrom: {
             lte: new Date()
           },
@@ -181,12 +179,12 @@ router.post('/', async (req, res) => {
         }
       });
       
-      // Apply discount
-      for (const coupon of coupons) {
-        if (coupon.discountType === 'FIXED') {
-          totalAmount -= coupon.discountValue;
+      if (appliedCoupon) {
+        // Apply discount
+        if (appliedCoupon.discountType === 'FIXED') {
+          totalAmount -= appliedCoupon.discountValue;
         } else {
-          totalAmount -= (totalAmount * coupon.discountValue / 100);
+          totalAmount -= (totalAmount * appliedCoupon.discountValue / 100);
         }
         
         // Ensure total amount doesn't go below 0
@@ -194,9 +192,9 @@ router.post('/', async (req, res) => {
         
         // Update coupon usage
         await prisma.coupon.update({
-          where: { id: coupon.id },
+          where: { id: appliedCoupon.id },
           data: {
-            usedCount: coupon.usedCount + 1
+            usedCount: appliedCoupon.usedCount + 1
           }
         });
       }
@@ -227,9 +225,9 @@ router.post('/', async (req, res) => {
         orderStatus: 'PENDING',
         shippingCost,
         taxAmount,
-        coupons: {
-          connect: coupons.map(coupon => ({ id: coupon.id }))
-        },
+        coupons: appliedCoupon ? {
+          connect: [{ id: appliedCoupon.id }]
+        } : undefined,
         orderItems: {
           create: orderItems
         }
@@ -250,19 +248,9 @@ router.post('/', async (req, res) => {
       }
     });
     
-    // Clear cart
-    await prisma.cartItem.deleteMany({
-      where: { cartId: cart.id }
-    });
-    
-    // Update cart timestamp
-    await prisma.cart.update({
-      where: { id: cart.id },
-      data: { updatedAt: new Date() }
-    });
-    
     res.status(201).json(order);
   } catch (error) {
+    console.error('Error creating order:', error);
     res.status(500).json({ message: 'Error creating order' });
   }
 });
