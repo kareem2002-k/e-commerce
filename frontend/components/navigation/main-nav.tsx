@@ -31,7 +31,7 @@ export function MainNav() {
     <NavigationMenu>
       <NavigationMenuList>
         <NavigationMenuItem>
-          <Link href="/" legacyBehavior passHref>
+          <Link href="/home" legacyBehavior passHref>
             <NavigationMenuLink className={navigationMenuTriggerStyle()}>Home</NavigationMenuLink>
           </Link>
         </NavigationMenuItem>
@@ -43,7 +43,7 @@ export function MainNav() {
                 <ListItem
                   key={category.id}
                   title={category.name}
-                  href={`/search?category=${category.id}`}
+                  href={`/home/products/${category.id}`}
                   icon={<Laptop  className="h-6 w-6 text-voltBlue-500" />}
                 >
                 
@@ -53,12 +53,12 @@ export function MainNav() {
           </NavigationMenuContent>
         </NavigationMenuItem>
         <NavigationMenuItem>
-          <Link href="/search?tag=deals" legacyBehavior passHref>
+          <Link href="/home/deals" legacyBehavior passHref>
             <NavigationMenuLink className={navigationMenuTriggerStyle()}>Deals</NavigationMenuLink>
           </Link>
         </NavigationMenuItem>
         <NavigationMenuItem>
-          <Link href="/support" legacyBehavior passHref>
+          <Link href="/home/support" legacyBehavior passHref>
             <NavigationMenuLink className={navigationMenuTriggerStyle()}>Support</NavigationMenuLink>
           </Link>
         </NavigationMenuItem>

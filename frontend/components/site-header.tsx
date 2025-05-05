@@ -13,11 +13,13 @@ import { Search, ShoppingCart, Menu } from "lucide-react"
 import { useState } from "react"
 import { cn } from "@/lib/utils"
 import { useMediaQuery } from "@/hooks/use-media-query"
-import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
+import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet"
 import { MobileNav } from "@/components/navigation/mobile-nav"
-import { CartDrawer } from "@/components/cart/cart-drawer"
-import { useCart } from "@/components/cart/cart-provider"
+import { useCart } from "@/context/CartContext"
 import { ThemeToggle } from "./theme-toggle"
+import CartItems from "@/components/cart/CartItems"
+import { motion } from "framer-motion"
+import { Badge } from "@/components/ui/badge"
 
 /**
  * The main header component for the site.
@@ -29,7 +31,7 @@ export function SiteHeader() {
   const [searchTerm, setSearchTerm] = useState("")
   const isDesktop = useMediaQuery("(min-width: 768px)")
   const router = useRouter()
-  const { isCartOpen, toggleCart, openCart, closeCart } = useCart()
+  const { itemCount } = useCart()
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault()
@@ -91,18 +93,47 @@ export function SiteHeader() {
             )}
           </div>
 
-          <Button variant="ghost" size="icon" onClick={toggleCart}>
-            <ShoppingCart className="h-5 w-5" />
-            <span className="sr-only">Cart</span>
-          </Button>
+          {/* Shopping cart */}
+          <Sheet>
+            <SheetTrigger asChild>
+              <motion.div
+                whileHover={{ scale: 1.1 }}
+                whileTap={{ scale: 0.9 }}
+              >
+                <Button variant="ghost" size="icon" className="relative">
+                  <ShoppingCart className="h-5 w-5" />
+                  {itemCount > 0 && (
+                    <motion.div
+                      initial={{ scale: 0, opacity: 0 }}
+                      animate={{ scale: 1, opacity: 1 }}
+                      transition={{ type: "spring", stiffness: 500, damping: 15 }}
+                    >
+                      <Badge className="absolute -top-1 -right-1 h-5 w-5 flex items-center justify-center p-0 text-xs bg-gradient-to-r from-purple-600 to-fuchsia-600">
+                        {itemCount}
+                      </Badge>
+                    </motion.div>
+                  )}
+                </Button>
+              </motion.div>
+            </SheetTrigger>
+            <SheetContent side="right" className="border-l border-purple-100 dark:border-purple-900">
+              <SheetHeader>
+                <SheetTitle className="flex items-center gap-2">
+                  <ShoppingCart className="h-5 w-5 text-purple-600" />
+                  Your Cart
+                </SheetTitle>
+              </SheetHeader>
+              <div className="py-6 flex flex-col h-[calc(100vh-8rem)]">
+                <CartItems onClose={() => document.body.click()} />
+              </div>
+            </SheetContent>
+          </Sheet>
 
           <ThemeToggle />
 
           <UserNav />
         </div>
       </div>
-
-      <CartDrawer open={isCartOpen} onOpenChange={(open) => (open ? openCart() : closeCart())} />
     </header>
   )
 }

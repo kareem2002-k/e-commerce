@@ -20,7 +20,7 @@ export function MobileNav() {
   return (
     <div className="flex h-full flex-col">
       <div className="flex items-center border-b px-6 py-4">
-        <Link href="/" className="flex items-center gap-2" onClick={() => setOpen(false)}>
+        <Link href="/home" className="flex items-center gap-2" onClick={() => setOpen(false)}>
           <Image
             src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/logoIconOnly-Xo8UDfSNWE2m0mop6klaWzyUx0pDi1.png"
             alt="VoltEdge"
@@ -32,7 +32,7 @@ export function MobileNav() {
       </div>
       <ScrollArea className="flex-1 px-6 py-4">
         <div className="flex flex-col gap-4">
-          <Link href="/" className="text-lg font-medium" onClick={() => setOpen(false)}>
+          <Link href="/home" className="text-lg font-medium" onClick={() => setOpen(false)}>
             Home
           </Link>
 
@@ -63,19 +63,19 @@ export function MobileNav() {
           </div>
 
           <SheetClose asChild>
-            <Link href="/search?tag=deals" className="text-lg font-medium">
+            <Link href="/home/deals" className="text-lg font-medium">
               Deals
             </Link>
           </SheetClose>
 
           <SheetClose asChild>
-            <Link href="/support" className="text-lg font-medium">
+            <Link href="/home/support" className="text-lg font-medium">
               Support
             </Link>
           </SheetClose>
 
           <SheetClose asChild>
-            <Link href="/orders" className="text-lg font-medium">
+            <Link href="/home/orders" className="text-lg font-medium">
               My Orders
             </Link>
           </SheetClose>
