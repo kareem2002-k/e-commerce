@@ -15,6 +15,8 @@ import {
   navigationMenuTriggerStyle,
 } from "@/components/ui/navigation-menu"
 import { productCategories } from "@/config/categories"
+import { useProductsAndCategories } from "@/hooks/useProducts"
+import { Laptop } from "lucide-react"
 
 /**
  * Main navigation component for desktop view.
@@ -23,6 +25,8 @@ import { productCategories } from "@/config/categories"
 export function MainNav() {
   const pathname = usePathname()
 
+  // Fet the avlable categories from the database
+  const { categories, loading } = useProductsAndCategories()
   return (
     <NavigationMenu>
       <NavigationMenuList>
@@ -35,14 +39,14 @@ export function MainNav() {
           <NavigationMenuTrigger>Products</NavigationMenuTrigger>
           <NavigationMenuContent>
             <ul className="grid w-[400px] gap-3 p-4 md:w-[500px] md:grid-cols-2 lg:w-[600px]">
-              {productCategories.map((category) => (
+              {categories.map((category) => (
                 <ListItem
-                  key={category.title}
-                  title={category.title}
-                  href={category.href}
-                  icon={<category.icon className="h-6 w-6 text-voltBlue-500" />}
+                  key={category.id}
+                  title={category.name}
+                  href={`/search?category=${category.id}`}
+                  icon={<Laptop  className="h-6 w-6 text-voltBlue-500" />}
                 >
-                  {category.description}
+                
                 </ListItem>
               ))}
             </ul>

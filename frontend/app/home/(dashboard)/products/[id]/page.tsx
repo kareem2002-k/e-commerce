@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import Image from "next/image"
 import Link from "next/link"
 import { motion } from "framer-motion"
@@ -11,92 +11,88 @@ import { Separator } from "@/components/ui/separator"
 import { ProductReviews } from "@/components/product-reviews"
 import { RelatedProducts } from "@/components/related-products"
 import { ProductSpecifications } from "@/components/product-specifications"
+import AddToCartButton from "@/components/cart/AddToCartButton"
 import {
   ChevronRight,
   Heart,
-  Minus,
-  Plus,
   Share2,
-  ShoppingCart,
   Star,
   Truck,
   ShieldCheck,
   RotateCcw,
   Zap,
+  Loader2,
 } from "lucide-react"
 import { cn } from "@/lib/utils"
+import { useProduct } from "@/hooks/useProducts"
+import { Product } from "@/types"
+import { useParams } from "next/navigation"
 
-// Mock product data
-const product = {
-  id: "1",
-  name: "VoltEdge Pro Laptop",
-  description:
-    "Experience unparalleled performance with the VoltEdge Pro Laptop. Featuring a stunning 15.6-inch 4K display, powerful processor, and all-day battery life, this laptop is perfect for professionals and creatives alike.",
-  price: 1299.99,
-  originalPrice: 1499.99,
-  rating: 4.8,
-  reviewCount: 124,
-  stock: 15,
-  sku: "VE-PL-001",
-  category: "Laptops",
-  tags: ["laptop", "gaming", "professional", "high-performance"],
-  images: [
-    "/placeholder.svg?height=600&width=600",
-    "/placeholder.svg?height=600&width=600&text=Side+View",
-    "/placeholder.svg?height=600&width=600&text=Back+View",
-    "/placeholder.svg?height=600&width=600&text=Keyboard",
-  ],
-  colors: [
-    { name: "Space Gray", value: "#343434" },
-    { name: "Silver", value: "#E0E0E0" },
-    { name: "Midnight Blue", value: "#1A365D" },
-  ],
-  specifications: {
-    processor: "Intel Core i7-12700H",
-    memory: "16GB DDR5",
-    storage: "512GB NVMe SSD",
-    display: "15.6-inch 4K (3840 x 2160) IPS",
-    graphics: "NVIDIA GeForce RTX 3060 6GB",
-    battery: "70Wh, up to 10 hours",
-    ports: "2x USB-C, 2x USB-A, HDMI, 3.5mm audio",
-    wireless: "Wi-Fi 6E, Bluetooth 5.2",
-    dimensions: "14.1 x 9.7 x 0.7 inches",
-    weight: "4.2 lbs (1.9 kg)",
-    operatingSystem: "Windows 11 Pro",
-    warranty: "1-year limited warranty",
-  },
-  features: [
-    "Ultra-fast performance with latest-gen processor",
-    "Stunning 4K display with 100% sRGB color accuracy",
-    "All-day battery life for productivity on the go",
-    "Advanced cooling system for sustained performance",
-    "Backlit keyboard with customizable RGB lighting",
-    "Premium aluminum unibody construction",
-  ],
-  isNew: true,
-  isSale: true,
+// Extend the Product type with additional properties used in this page
+interface ExtendedProduct extends Product {
+  colors?: { name: string; value: string }[];
+  originalPrice?: number;
+  isNew?: boolean;
+  isSale?: boolean;
+  rating?: number;
+  reviewCount?: number;
+  features?: string[];
+  specifications?: Record<string, string>;
+  tags?: string[];
 }
 
-export default function ProductPage({ params }: { params: { id: string } }) {
+export default function ProductPage() {
   const [selectedImage, setSelectedImage] = useState(0)
-  const [selectedColor, setSelectedColor] = useState(product.colors[0])
-  const [quantity, setQuantity] = useState(1)
+  const [selectedColor, setSelectedColor] = useState<{ name: string; value: string } | null>(null)
+  const params = useParams<{ id: string }>();
+
+  const { product: fetchedProduct, loading, error } = useProduct(params.id)
+
+
+
+  // Cast product to extended type
+  const product = fetchedProduct as ExtendedProduct | null
+
+  useEffect(() => {
+    if (product?.colors && product.colors.length > 0) {
+      setSelectedColor(product.colors[0])
+    }
+  }, [product])
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center min-h-[400px]">
+        <Loader2 className="h-8 w-8 animate-spin text-voltBlue-500" />
+      </div>
+    )
+  }
+
+  if (error) {
+    return (
+      <div className="flex flex-col items-center justify-center min-h-[400px] space-y-4">
+        <h2 className="text-xl font-semibold">Error loading product</h2>
+        <p className="text-muted-foreground">{error.message}</p>
+        <Button asChild>
+          <Link href="/products">Return to Products</Link>
+        </Button>
+      </div>
+    )
+  }
+
+  if (!product) {
+    return (
+      <div className="flex flex-col items-center justify-center min-h-[400px] space-y-4">
+        <h2 className="text-xl font-semibold">Product not found</h2>
+        <Button asChild>
+          <Link href="/products">Return to Products</Link>
+        </Button>
+      </div>
+    )
+  }
 
   const discount = product.originalPrice
     ? Math.round(((product.originalPrice - product.price) / product.originalPrice) * 100)
     : 0
-
-  const incrementQuantity = () => {
-    if (quantity < product.stock) {
-      setQuantity(quantity + 1)
-    }
-  }
-
-  const decrementQuantity = () => {
-    if (quantity > 1) {
-      setQuantity(quantity - 1)
-    }
-  }
 
   return (
     <div className="space-y-8">
@@ -109,10 +105,14 @@ export default function ProductPage({ params }: { params: { id: string } }) {
         <Link href="/products" className="hover:text-foreground">
           Products
         </Link>
-        <ChevronRight className="h-4 w-4 mx-2" />
-        <Link href={`/products/${product.category.toLowerCase()}`} className="hover:text-foreground">
-          {product.category}
-        </Link>
+        {product.category && (
+          <>
+            <ChevronRight className="h-4 w-4 mx-2" />
+            <Link href={`/products/${product.category.name.toLowerCase()}`} className="hover:text-foreground">
+              {product.category.name}
+            </Link>
+          </>
+        )}
         <ChevronRight className="h-4 w-4 mx-2" />
         <span className="text-foreground font-medium truncate">{product.name}</span>
       </nav>
@@ -129,38 +129,50 @@ export default function ProductPage({ params }: { params: { id: string } }) {
               transition={{ duration: 0.3 }}
               className="h-full w-full"
             >
-              <Image
-                src={product.images[selectedImage] || "/placeholder.svg"}
-                alt={product.name}
-                fill
-                className="object-contain p-4"
-                priority
-              />
+              {product.images && product.images.length > 0 ? (
+                <Image
+                  src={product.images[selectedImage]?.url || "/placeholder.svg"}
+                  alt={product.images[selectedImage]?.altText || product.name}
+                  fill
+                  className="object-contain p-4"
+                  priority
+                />
+              ) : (
+                <Image
+                  src="/placeholder.svg"
+                  alt={product.name}
+                  fill
+                  className="object-contain p-4"
+                  priority
+                />
+              )}
             </motion.div>
             <div className="absolute left-4 top-4 flex flex-col gap-1">
               {product.isNew && <Badge className="bg-voltBlue-500 hover:bg-voltBlue-600">New</Badge>}
               {product.isSale && <Badge variant="destructive">-{discount}%</Badge>}
             </div>
           </div>
-          <div className="flex gap-4 overflow-auto pb-2">
-            {product.images.map((image, index) => (
-              <button
-                key={index}
-                className={cn(
-                  "relative h-20 w-20 flex-shrink-0 overflow-hidden rounded-md border",
-                  selectedImage === index ? "ring-2 ring-voltBlue-500" : "",
-                )}
-                onClick={() => setSelectedImage(index)}
-              >
-                <Image
-                  src={image || "/placeholder.svg"}
-                  alt={`${product.name} - View ${index + 1}`}
-                  fill
-                  className="object-cover"
-                />
-              </button>
-            ))}
-          </div>
+          {product.images && product.images.length > 0 && (
+            <div className="flex gap-4 overflow-auto pb-2">
+              {product.images.map((image, index) => (
+                <button
+                  key={index}
+                  className={cn(
+                    "relative h-20 w-20 flex-shrink-0 overflow-hidden rounded-md border",
+                    selectedImage === index ? "ring-2 ring-voltBlue-500" : "",
+                  )}
+                  onClick={() => setSelectedImage(index)}
+                >
+                  <Image
+                    src={image.url || "/placeholder.svg"}
+                    alt={image.altText || `${product.name} - View ${index + 1}`}
+                    fill
+                    className="object-cover"
+                  />
+                </button>
+              ))}
+            </div>
+          )}
         </div>
 
         {/* Product Info */}
@@ -176,18 +188,22 @@ export default function ProductPage({ params }: { params: { id: string } }) {
                       key={i}
                       className={cn(
                         "h-5 w-5",
-                        i < Math.floor(product.rating)
+                        i < Math.floor(product.rating || 0)
                           ? "fill-voltBlue-500 text-voltBlue-500"
                           : "fill-muted text-muted",
                       )}
                     />
                   ))}
-                <span className="ml-2 text-sm font-medium">{product.rating}</span>
+                <span className="ml-2 text-sm font-medium">{product.rating || 0}</span>
               </div>
               <Separator orientation="vertical" className="h-5" />
-              <span className="text-sm text-muted-foreground">{product.reviewCount} reviews</span>
-              <Separator orientation="vertical" className="h-5" />
-              <span className="text-sm text-muted-foreground">SKU: {product.sku}</span>
+              <span className="text-sm text-muted-foreground">{product.reviewCount || 0} reviews</span>
+              {product.sku && (
+                <>
+                  <Separator orientation="vertical" className="h-5" />
+                  <span className="text-sm text-muted-foreground">SKU: {product.sku}</span>
+                </>
+              )}
             </div>
           </div>
 
@@ -196,7 +212,7 @@ export default function ProductPage({ params }: { params: { id: string } }) {
             {product.originalPrice && (
               <span className="text-lg text-muted-foreground line-through">${product.originalPrice.toFixed(2)}</span>
             )}
-            {product.isSale && (
+            {product.isSale && product.originalPrice && (
               <Badge variant="destructive">Save ${(product.originalPrice - product.price).toFixed(2)}</Badge>
             )}
           </div>
@@ -204,71 +220,38 @@ export default function ProductPage({ params }: { params: { id: string } }) {
           <p className="text-muted-foreground">{product.description}</p>
 
           <div className="space-y-4">
-            <div>
-              <h3 className="font-medium mb-2">Color</h3>
-              <div className="flex gap-3">
-                {product.colors.map((color) => (
-                  <button
-                    key={color.name}
-                    className={cn(
-                      "h-8 w-8 rounded-full border-2",
-                      selectedColor.name === color.name ? "border-voltBlue-500" : "border-transparent",
-                    )}
-                    style={{ backgroundColor: color.value }}
-                    onClick={() => setSelectedColor(color)}
-                    title={color.name}
-                  >
-                    <span className="sr-only">{color.name}</span>
-                  </button>
-                ))}
-              </div>
-              <p className="mt-1 text-sm text-muted-foreground">Selected: {selectedColor.name}</p>
-            </div>
-
-            <div>
-              <h3 className="font-medium mb-2">Quantity</h3>
-              <div className="flex items-center">
-                <Button
-                  variant="outline"
-                  size="icon"
-                  className="rounded-r-none"
-                  onClick={decrementQuantity}
-                  disabled={quantity <= 1}
-                >
-                  <Minus className="h-4 w-4" />
-                  <span className="sr-only">Decrease quantity</span>
-                </Button>
-                <div className="flex-1 border-y px-4 py-2 text-center">
-                  <span className="text-sm font-medium">{quantity}</span>
+            {product.colors && product.colors.length > 0 && selectedColor && (
+              <div>
+                <h3 className="font-medium mb-2">Color</h3>
+                <div className="flex gap-3">
+                  {product.colors.map((color) => (
+                    <button
+                      key={color.name}
+                      className={cn(
+                        "h-8 w-8 rounded-full border-2",
+                        selectedColor.name === color.name ? "border-voltBlue-500" : "border-transparent",
+                      )}
+                      style={{ backgroundColor: color.value }}
+                      onClick={() => setSelectedColor(color)}
+                      title={color.name}
+                    >
+                      <span className="sr-only">{color.name}</span>
+                    </button>
+                  ))}
                 </div>
-                <Button
-                  variant="outline"
-                  size="icon"
-                  className="rounded-l-none"
-                  onClick={incrementQuantity}
-                  disabled={quantity >= product.stock}
-                >
-                  <Plus className="h-4 w-4" />
-                  <span className="sr-only">Increase quantity</span>
-                </Button>
+                <p className="mt-1 text-sm text-muted-foreground">Selected: {selectedColor.name}</p>
               </div>
-              <p className="mt-1 text-sm text-muted-foreground">
-                {product.stock > 0 ? (
-                  <>
-                    <span className="text-green-600 dark:text-green-400 font-medium">In Stock</span> - {product.stock}{" "}
-                    units available
-                  </>
-                ) : (
-                  <span className="text-red-600 dark:text-red-400 font-medium">Out of Stock</span>
-                )}
-              </p>
-            </div>
+            )}
 
             <div className="flex flex-wrap gap-4 pt-2">
-              <Button size="lg" className="flex-1 sm:flex-none">
-                <ShoppingCart className="mr-2 h-5 w-5" />
-                Add to Cart
-              </Button>
+              <AddToCartButton 
+                productId={product.id} 
+                stock={product.stock} 
+                product={product as Product}
+                size="lg"
+                className="flex-1 sm:flex-none"
+              />
+              
               <Button size="lg" variant="outline" className="flex-1 sm:flex-none">
                 <Heart className="mr-2 h-5 w-5" />
                 Add to Wishlist
@@ -311,32 +294,36 @@ export default function ProductPage({ params }: { params: { id: string } }) {
         <TabsList className="grid w-full grid-cols-3 lg:w-auto lg:grid-cols-none lg:flex">
           <TabsTrigger value="features">Features</TabsTrigger>
           <TabsTrigger value="specifications">Specifications</TabsTrigger>
-          <TabsTrigger value="reviews">Reviews ({product.reviewCount})</TabsTrigger>
+          <TabsTrigger value="reviews">Reviews ({product.reviewCount || 0})</TabsTrigger>
         </TabsList>
         <TabsContent value="features" className="mt-4 space-y-4">
           <div className="rounded-lg border bg-card p-6">
             <h3 className="text-xl font-semibold mb-4">Key Features</h3>
-            <ul className="space-y-3">
-              {product.features.map((feature, index) => (
-                <li key={index} className="flex items-start gap-2">
-                  <Zap className="h-5 w-5 text-voltBlue-500 mt-0.5 flex-shrink-0" />
-                  <span>{feature}</span>
-                </li>
-              ))}
-            </ul>
+            {product.features && product.features.length > 0 ? (
+              <ul className="space-y-3">
+                {product.features.map((feature, index) => (
+                  <li key={index} className="flex items-start gap-2">
+                    <Zap className="h-5 w-5 text-voltBlue-500 mt-0.5 flex-shrink-0" />
+                    <span>{feature}</span>
+                  </li>
+                ))}
+              </ul>
+            ) : (
+              <p className="text-muted-foreground">No features listed for this product.</p>
+            )}
           </div>
         </TabsContent>
         <TabsContent value="specifications" className="mt-4">
-          <ProductSpecifications specifications={product.specifications} />
+          <ProductSpecifications specifications={product.specifications || {}} />
         </TabsContent>
         <TabsContent value="reviews" className="mt-4">
-          <ProductReviews productId={params.id} rating={product.rating} reviewCount={product.reviewCount} />
+          <ProductReviews productId={params.id} rating={product.rating || 0} reviewCount={product.reviewCount || 0} />
         </TabsContent>
       </Tabs>
 
       {/* Related Products */}
       <section className="mt-12">
-        <RelatedProducts category={product.category} currentProductId={params.id} />
+        <RelatedProducts category={product.category.name} currentProductId={params.id} />
       </section>
     </div>
   )

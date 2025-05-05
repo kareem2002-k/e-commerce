@@ -1,11 +1,43 @@
+"use client"
+
 import { CategoryGrid } from "@/components/category-grid"
 import { DealsBanner } from "@/components/deals-banner"
 import { FeaturedProducts } from "@/components/featured-products"
 import { Button } from "@/components/ui/button"
 import { Zap } from "lucide-react"
 import { cn } from "@/lib/utils"
+import { useProductsAndCategories } from "@/hooks/useProducts"
+import { useState, useEffect } from "react"
+import { Product } from "@/types"
+
+// Extending the Product type for local use to include createdAt
+interface ProductWithDate extends Product {
+  createdAt?: string;
+}
 
 export default function HomePage() {
+  const { products, categories, loading, error } = useProductsAndCategories()
+  const [newArrivals, setNewArrivals] = useState<ProductWithDate[]>([])
+
+  useEffect(() => {
+    if (products && products.length > 0) {
+      // For demonstration, sort by ID as fallback if createdAt doesn't exist
+      // In a real app, ensure your Product type includes createdAt from the API
+      const sortedProducts = [...products].sort((a, b) => {
+        // Type assertion to work with our extended interface
+        const productA = a as ProductWithDate;
+        const productB = b as ProductWithDate;
+        
+        if (productA.createdAt && productB.createdAt) {
+          return new Date(productB.createdAt).getTime() - new Date(productA.createdAt).getTime()
+        }
+        // Fallback to sorting by ID for demo purposes
+        return b.id.localeCompare(a.id)
+      })
+      setNewArrivals(sortedProducts.slice(0, 4))
+    }
+  }, [products])
+
   return (
     <div className="space-y-10">
       {/* Hero Section - Updated with darker background */}
@@ -37,7 +69,7 @@ export default function HomePage() {
             </p>
 
             <div className="flex flex-wrap gap-4">
-              <Button size="lg" className="rounded-full bg-voltBlue-500 hover:bg-voltBlue-600 text-white">
+              <Button size="lg" className="rounded-full  bg-voltBlue-500 hover:bg-voltBlue-600 text-white">
                 Shop Now
               </Button>
               <Button size="lg" variant="outline" className="rounded-full border-voltBlue-400 text-voltBlue-100">
@@ -56,12 +88,12 @@ export default function HomePage() {
       {/* Categories */}
       <section>
         <h2 className="text-2xl font-bold mb-6">Shop by Category</h2>
-        <CategoryGrid />
+        <CategoryGrid categories={categories} loading={loading} />
       </section>
 
       {/* Featured Products */}
       <section>
-        <FeaturedProducts />
+        <FeaturedProducts products={products} loading={loading} />
       </section>
 
       {/* Deals Banner */}
@@ -72,21 +104,46 @@ export default function HomePage() {
       {/* New Arrivals */}
       <section>
         <h2 className="text-2xl font-bold mb-6">New Arrivals</h2>
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-          {/* We would map through new arrivals here, but for simplicity we'll just show a placeholder */}
-          <div className="aspect-square rounded-xl bg-muted/50 flex items-center justify-center">
-            <span className="text-muted-foreground">Product 1</span>
+        {loading ? (
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+            {[1, 2, 3, 4].map((i) => (
+              <div key={i} className="aspect-square rounded-xl bg-muted/50 animate-pulse" />
+            ))}
           </div>
-          <div className="aspect-square rounded-xl bg-muted/50 flex items-center justify-center">
-            <span className="text-muted-foreground">Product 2</span>
+        ) : error ? (
+          <p className="text-red-500">Error loading products</p>
+        ) : (
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+            {newArrivals.length > 0 ? (
+              newArrivals.map((product) => (
+                <div 
+                  key={product.id} 
+                  className="group rounded-xl overflow-hidden border border-border hover:border-voltBlue-300 transition-all"
+                >
+                  <div className="aspect-square overflow-hidden bg-muted">
+                    {product.images && product.images.length > 0 ? (
+                      <img 
+                        src={product.images[0].url} 
+                        alt={product.images[0].altText} 
+                        className="w-full h-full object-cover transition-transform group-hover:scale-105"
+                      />
+                    ) : (
+                      <div className="w-full h-full flex items-center justify-center bg-muted">
+                        <span className="text-muted-foreground">No image</span>
+                      </div>
+                    )}
+                  </div>
+                  <div className="p-4">
+                    <h3 className="font-medium truncate">{product.name}</h3>
+                    <p className="text-voltBlue-600 mt-1">${product.price.toFixed(2)}</p>
+                  </div>
+                </div>
+              ))
+            ) : (
+              <p className="col-span-full text-center text-muted-foreground">No new arrivals found</p>
+            )}
           </div>
-          <div className="aspect-square rounded-xl bg-muted/50 flex items-center justify-center">
-            <span className="text-muted-foreground">Product 3</span>
-          </div>
-          <div className="aspect-square rounded-xl bg-muted/50 flex items-center justify-center">
-            <span className="text-muted-foreground">Product 4</span>
-          </div>
-        </div>
+        )}
       </section>
     </div>
   )

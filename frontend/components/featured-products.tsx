@@ -5,8 +5,10 @@ import { motion } from "framer-motion"
 import { ProductCard } from "@/components/product-card"
 import { Button } from "@/components/ui/button"
 import { ChevronLeft, ChevronRight } from "lucide-react"
+import { Product } from "@/types"
 
-const featuredProducts = [
+// Default products for fallback
+const defaultProducts = [
   {
     id: "1",
     name: "VoltEdge Pro Laptop",
@@ -66,10 +68,34 @@ const featuredProducts = [
   },
 ]
 
-export function FeaturedProducts() {
+interface FeaturedProductsProps {
+  products?: Product[];
+  loading?: boolean;
+}
+
+export function FeaturedProducts({ products, loading }: FeaturedProductsProps = {}) {
   const [currentIndex, setCurrentIndex] = useState(0)
   const productsPerPage = 4
-  const totalPages = Math.ceil(featuredProducts.length / productsPerPage)
+  
+  // Format real products to match our UI or use default products
+  const displayProducts = !loading && products && products.length > 0
+    ? products.map(product => ({
+        id: product.id,
+        name: product.name,
+        category: product.category.name,
+        price: product.price,
+        // For demo purposes, set a fake original price for some products to display as "on sale"
+        originalPrice: Math.random() > 0.5 ? product.price * 1.2 : undefined,
+        rating: 4 + Math.random(),
+        image: product.images && product.images.length > 0 
+          ? product.images[0].url 
+          : "/placeholder.svg?height=300&width=300",
+        isNew: Math.random() > 0.7, // Randomly mark some products as new for demo
+        isSale: Math.random() > 0.5, // Randomly mark some products as on sale for demo
+      }))
+    : defaultProducts
+  
+  const totalPages = Math.ceil(displayProducts.length / productsPerPage)
 
   const handlePrevious = () => {
     setCurrentIndex((prev) => (prev === 0 ? totalPages - 1 : prev - 1))
@@ -79,7 +105,33 @@ export function FeaturedProducts() {
     setCurrentIndex((prev) => (prev === totalPages - 1 ? 0 : prev + 1))
   }
 
-  const visibleProducts = [...featuredProducts, ...featuredProducts].slice(
+  // Show loading state
+  if (loading) {
+    return (
+      <div className="relative">
+        <div className="flex items-center justify-between mb-6">
+          <h2 className="text-2xl font-bold">Featured Products</h2>
+          <div className="flex gap-2">
+            <Button variant="outline" size="icon" disabled className="rounded-full">
+              <ChevronLeft className="h-4 w-4" />
+            </Button>
+            <Button variant="outline" size="icon" disabled className="rounded-full">
+              <ChevronRight className="h-4 w-4" />
+            </Button>
+          </div>
+        </div>
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+          {[1, 2, 3, 4].map((i) => (
+            <div key={i} className="aspect-[3/4] rounded-xl bg-muted/50 animate-pulse" />
+          ))}
+        </div>
+      </div>
+    )
+  }
+
+  // Duplicate products to create continuous carousel effect
+  const visibleProducts = [...displayProducts, ...displayProducts].slice(
     currentIndex * productsPerPage,
     currentIndex * productsPerPage + productsPerPage,
   )
