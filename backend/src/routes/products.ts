@@ -162,8 +162,14 @@ router.post('/', authenticate, requireAdmin, async (req, res) => {
 router.put('/:id', authenticate, requireAdmin, async (req, res) => {
   try {
     const { id } = req.params;
-    const { name, description, sku, price, stock, lowStockThreshold, categoryId } = req.body;
+    const { name, description, sku, price, stock, lowStockThreshold, categoryId, images } = req.body;
     
+    // First, delete all existing images for this product
+    await prisma.image.deleteMany({
+      where: { productId: id }
+    });
+    
+    // Then update the product with new data including new images
     const updatedProduct = await prisma.product.update({
       where: { id },
       data: {
@@ -174,7 +180,13 @@ router.put('/:id', authenticate, requireAdmin, async (req, res) => {
         stock: parseInt(stock),
         lowStockThreshold: parseInt(lowStockThreshold),
         categoryId,
-        
+        // Create new images
+        images: images ? {
+          create: images.map((image: { url: string; altText: string }) => ({
+            url: image.url,
+            altText: image.altText
+          }))
+        } : undefined
       },
       include: {
         category: true,
@@ -184,6 +196,7 @@ router.put('/:id', authenticate, requireAdmin, async (req, res) => {
     
     res.json(updatedProduct);
   } catch (error) {
+    console.error('Error updating product:', error);
     res.status(500).json({ message: 'Error updating product' });
   }
 });

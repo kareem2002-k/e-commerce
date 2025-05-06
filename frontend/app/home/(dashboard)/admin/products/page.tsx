@@ -384,7 +384,6 @@ export default function AdminProductsPage() {
   return (
     <ProtectedRoute>
       <div className="min-h-screen ">
-        <TopBar />
         
         {/* Lightning effect background */}
         <div className="absolute top-0 left-0 right-0 h-[300px]z-10 pointer-events-none" />
