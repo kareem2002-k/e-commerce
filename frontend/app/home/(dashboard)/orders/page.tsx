@@ -507,10 +507,10 @@ export default function OrdersPage() {
                 <div className="space-y-2">
                   <p>
                     <span className="font-medium">Method:</span> {currentOrder.paymentMethod === 'CREDIT_CARD' ? 'Credit Card' : 'Cash on Delivery'}
-                  </p>
-                  <p>
+                    </p>
+                    <p>
                     <span className="font-medium">Status:</span> {getStatusText(currentOrder.paymentStatus)}
-                  </p>
+                    </p>
                 </div>
               </div>
             </div>
@@ -534,7 +534,7 @@ export default function OrdersPage() {
                 ) : (
                   'Cancel Order'
                 )}
-              </Button>
+            </Button>
             )}
           </CardFooter>
         </Card>

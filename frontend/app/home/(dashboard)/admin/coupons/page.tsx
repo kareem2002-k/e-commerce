@@ -63,7 +63,7 @@ interface Coupon {
 }
 
 export default function AdminCouponsPage() {
-  const { user, token, isAdmin } = useAuth();
+  const { user, token  } = useAuth();
   const [coupons, setCoupons] = useState<Coupon[]>([]);
   const [loading, setLoading] = useState(true);
   const [openCouponDialog, setOpenCouponDialog] = useState(false);
@@ -88,7 +88,7 @@ export default function AdminCouponsPage() {
   // Fetch coupons
   useEffect(() => {
     const fetchCoupons = async () => {
-      if (!token || !isAdmin) return;
+      if (!token || !user?.isAdmin) return;
       
       try {
         setLoading(true);
@@ -106,7 +106,7 @@ export default function AdminCouponsPage() {
     };
     
     fetchCoupons();
-  }, [token, isAdmin]);
+  }, [token, user?.isAdmin]);
   
   // Fetch coupon details
   const fetchCouponDetails = async (id: string) => {
@@ -171,7 +171,7 @@ export default function AdminCouponsPage() {
   
   // Save coupon (create or update)
   const handleSaveCoupon = async () => {
-    if (!token || !isAdmin) {
+    if (!token || !user?.isAdmin) {
       toast.error('You must be an admin');
       return;
     }
@@ -236,7 +236,7 @@ export default function AdminCouponsPage() {
   
   // Delete coupon
   const handleDeleteCoupon = async (id: string) => {
-    if (!token || !isAdmin) {
+    if (!token || !user?.isAdmin) {
       toast.error('You must be an admin');
       return;
     }
@@ -286,7 +286,7 @@ export default function AdminCouponsPage() {
     });
   };
   
-  if (!user || !isAdmin) {
+  if (!user || !user?.isAdmin) {
     return (
       <div className="container py-10 text-center">
         <p>You need admin privileges to access this page.</p>

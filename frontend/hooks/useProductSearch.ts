@@ -1,9 +1,9 @@
 "use client"
 
-import { useState, useEffect, useCallback } from "react"
+import { useState, useEffect, useCallback, useRef } from "react"
 import { useLoading } from "@/components/voltedge/loading-provider"
 import { Product } from "@/types"
-
+import { useAuth } from "@/context/AuthContext"
 export interface SearchFilters {
   searchTerm?: string
   category?: string
@@ -21,9 +21,29 @@ export function useProductSearch(initialFilters: SearchFilters = {}) {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<Error | null>(null)
   const { startLoading, stopLoading } = useLoading()
+  const { token } = useAuth()
+  
+  // Track if a request is already in progress to prevent duplicates
+  const requestInProgress = useRef(false)
+  // Track last request time for debouncing
+  const lastRequestTime = useRef(0)
 
   // Fetch products with filters from API
   const fetchProducts = useCallback(async () => {
+    // Prevent multiple simultaneous requests
+    if (requestInProgress.current) {
+      return
+    }
+    
+    // Debounce requests - prevent too many requests in quick succession
+    const now = Date.now()
+    if (now - lastRequestTime.current < 500) {
+      return
+    }
+    
+    requestInProgress.current = true
+    lastRequestTime.current = now
+    
     setLoading(true)
     startLoading("Searching products...")
 
@@ -39,7 +59,13 @@ export function useProductSearch(initialFilters: SearchFilters = {}) {
       if (filters.brands && filters.brands.length > 0) searchParams.append('brands', filters.brands.join(','));
       
       // Make API request
-      const response = await fetch(`/api/products/search?${searchParams}`);
+      const response = await fetch(`/api/products/search?${searchParams}`, {
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        },
+        cache: 'no-store'
+      });
       
       if (!response.ok) {
         throw new Error(`Error searching products: ${response.statusText}`);
@@ -54,8 +80,9 @@ export function useProductSearch(initialFilters: SearchFilters = {}) {
     } finally {
       setLoading(false);
       stopLoading();
+      requestInProgress.current = false;
     }
-  }, [filters, startLoading, stopLoading]);
+  }, [filters, startLoading, stopLoading, token]);
 
   // Apply filters to products
   const applyFilters = useCallback(() => {
@@ -116,10 +143,35 @@ export function useProductSearch(initialFilters: SearchFilters = {}) {
     setFilteredProducts(results);
   }, [filters, products]);
 
+  // Use a ref to track if initial fetch has been done
+  const initialFetchDone = useRef(false);
+  
   // Initial fetch and fetch when filters change
   useEffect(() => {
+    // Only fetch if we have a token
+    if (!token) return;
+    
+    // Skip fetch if it's just the component mounting with empty filters
+    if (!initialFetchDone.current) {
+      const hasAnyFilter = 
+        filters.searchTerm || 
+        (filters.category && filters.category !== "All Categories") ||
+        (filters.brands && filters.brands.length > 0) ||
+        filters.minPrice || 
+        filters.maxPrice || 
+        filters.sortBy || 
+        filters.tag;
+      
+      if (!hasAnyFilter) {
+        setLoading(false);
+        initialFetchDone.current = true;
+        return;
+      }
+    }
+    
+    initialFetchDone.current = true;
     fetchProducts();
-  }, [fetchProducts, filters]);
+  }, [fetchProducts, filters, token]);
 
   // Apply filters when products or filters change
   useEffect(() => {

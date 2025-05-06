@@ -12,205 +12,8 @@ import { SlidersHorizontal, Search, X } from "lucide-react"
 import SectionLoading from "@/components/voltedge/section-loading"
 import { useProductSearch, SearchFilters as Filters } from "@/hooks/useProductSearch"
 
-// Mock products data
-const allProducts = [
-  {
-    id: "1",
-    name: "VoltEdge Pro Laptop",
-    category: "Laptops",
-    price: 1299.99,
-    originalPrice: 1499.99,
-    rating: 4.8,
-    image: "/placeholder.svg?height=300&width=300",
-    isNew: true,
-    isSale: true,
-    brand: "VoltEdge",
-    tags: ["laptop", "gaming", "professional", "deals"],
-  },
-  {
-    id: "2",
-    name: "VoltEdge Ultra Smartphone",
-    category: "Smartphones",
-    price: 899.99,
-    originalPrice: 999.99,
-    rating: 4.7,
-    image: "/placeholder.svg?height=300&width=300",
-    isSale: true,
-    brand: "VoltEdge",
-    tags: ["smartphone", "5G", "camera", "deals"],
-  },
-  {
-    id: "3",
-    name: "VoltEdge Noise-Cancelling Headphones",
-    category: "Audio",
-    price: 249.99,
-    rating: 4.9,
-    image: "/placeholder.svg?height=300&width=300",
-    isNew: true,
-    brand: "VoltEdge",
-    tags: ["audio", "wireless", "noise-cancelling"],
-  },
-  {
-    id: "4",
-    name: "VoltEdge Smart Watch Series 5",
-    category: "Wearables",
-    price: 349.99,
-    originalPrice: 399.99,
-    rating: 4.6,
-    image: "/placeholder.svg?height=300&width=300",
-    isSale: true,
-    brand: "VoltEdge",
-    tags: ["wearable", "fitness", "smartwatch", "deals"],
-  },
-  {
-    id: "5",
-    name: "VoltEdge 4K Ultra HD Smart TV",
-    category: "TVs",
-    price: 799.99,
-    originalPrice: 899.99,
-    rating: 4.5,
-    image: "/placeholder.svg?height=300&width=300",
-    brand: "VoltEdge",
-    tags: ["tv", "4k", "smart"],
-  },
-  {
-    id: "6",
-    name: "VoltEdge Wireless Gaming Controller",
-    category: "Gaming",
-    price: 69.99,
-    rating: 4.4,
-    image: "/placeholder.svg?height=300&width=300",
-    brand: "VoltEdge",
-    tags: ["gaming", "controller", "wireless"],
-  },
-  {
-    id: "7",
-    name: "VoltEdge Portable SSD 1TB",
-    category: "Storage",
-    price: 149.99,
-    originalPrice: 179.99,
-    rating: 4.7,
-    image: "/placeholder.svg?height=300&width=300",
-    isSale: true,
-    brand: "VoltEdge",
-    tags: ["storage", "ssd", "portable", "deals"],
-  },
-  {
-    id: "8",
-    name: "VoltEdge Wireless Earbuds",
-    category: "Audio",
-    price: 129.99,
-    rating: 4.3,
-    image: "/placeholder.svg?height=300&width=300",
-    isNew: true,
-    brand: "VoltEdge",
-    tags: ["audio", "wireless", "earbuds"],
-  },
-  {
-    id: "9",
-    name: "VoltEdge Gaming Mouse",
-    category: "Accessories",
-    price: 59.99,
-    originalPrice: 79.99,
-    rating: 4.8,
-    image: "/placeholder.svg?height=300&width=300",
-    isSale: true,
-    brand: "VoltEdge",
-    tags: ["gaming", "mouse", "rgb", "deals"],
-  },
-  {
-    id: "10",
-    name: "VoltEdge Mechanical Keyboard",
-    category: "Accessories",
-    price: 129.99,
-    rating: 4.6,
-    image: "/placeholder.svg?height=300&width=300",
-    brand: "VoltEdge",
-    tags: ["gaming", "keyboard", "mechanical"],
-  },
-  {
-    id: "11",
-    name: "VoltEdge Bluetooth Speaker",
-    category: "Audio",
-    price: 89.99,
-    originalPrice: 109.99,
-    rating: 4.5,
-    image: "/placeholder.svg?height=300&width=300",
-    isSale: true,
-    brand: "VoltEdge",
-    tags: ["audio", "speaker", "bluetooth", "deals"],
-  },
-  {
-    id: "12",
-    name: "VoltEdge Ultrawide Monitor",
-    category: "Monitors",
-    price: 499.99,
-    rating: 4.7,
-    image: "/placeholder.svg?height=300&width=300",
-    isNew: true,
-    brand: "VoltEdge",
-    tags: ["monitor", "ultrawide", "gaming"],
-  },
-  {
-    id: "13",
-    name: "TechPro Gaming Laptop",
-    category: "Laptops",
-    price: 1199.99,
-    rating: 4.5,
-    image: "/placeholder.svg?height=300&width=300",
-    brand: "TechPro",
-    tags: ["laptop", "gaming"],
-  },
-  {
-    id: "14",
-    name: "ElectraMax Smartphone Pro",
-    category: "Smartphones",
-    price: 849.99,
-    originalPrice: 949.99,
-    rating: 4.6,
-    image: "/placeholder.svg?height=300&width=300",
-    isSale: true,
-    brand: "ElectraMax",
-    tags: ["smartphone", "5G", "camera", "deals"],
-  },
-  {
-    id: "15",
-    name: "SonicWave Premium Headphones",
-    category: "Audio",
-    price: 199.99,
-    rating: 4.4,
-    image: "/placeholder.svg?height=300&width=300",
-    brand: "SonicWave",
-    tags: ["audio", "wireless", "noise-cancelling"],
-  },
-  {
-    id: "16",
-    name: "GigaByte Fitness Tracker",
-    category: "Wearables",
-    price: 129.99,
-    rating: 4.2,
-    image: "/placeholder.svg?height=300&width=300",
-    brand: "GigaByte",
-    tags: ["wearable", "fitness"],
-  },
-]
-
-// Define available categories and brands
-const categories = [
-  "All Categories",
-  "Laptops",
-  "Smartphones",
-  "Audio",
-  "Wearables",
-  "TVs",
-  "Gaming",
-  "Accessories",
-  "Storage",
-  "Monitors",
-]
-
-// Will be dynamic once we have real data
-const brands = ["VoltEdge", "TechPro", "ElectraMax", "GigaByte", "SonicWave"]
+// Default "All Categories" option
+const DEFAULT_CATEGORY = "All Categories"
 
 const sortOptions = [
   { label: "Relevance", value: "relevance" },
@@ -229,7 +32,7 @@ export default function SearchPage() {
   const router = useRouter()
 
   const query = searchParams.get("q") || ""
-  const categoryParam = searchParams.get("category") || "All Categories"
+  const categoryParam = searchParams.get("category") || DEFAULT_CATEGORY
   const tagParam = searchParams.get("tag") || ""
   const minPriceParam = searchParams.get("minPrice")
   const maxPriceParam = searchParams.get("maxPrice")
@@ -259,6 +62,39 @@ export default function SearchPage() {
 
   const [searchTerm, setSearchTerm] = useState(query)
   const [showFilters, setShowFilters] = useState(false)
+  const [categories, setCategories] = useState<string[]>([DEFAULT_CATEGORY])
+  const [brands, setBrands] = useState<string[]>([])
+  const [loadingData, setLoadingData] = useState(true)
+  
+  // Fetch categories and brands from backend
+  useEffect(() => {
+    const fetchCategoriesAndBrands = async () => {
+      try {
+        setLoadingData(true)
+        
+        // Fetch categories
+        const categoriesResponse = await fetch('/api/categories')
+        if (categoriesResponse.ok) {
+          const categoriesData = await categoriesResponse.json()
+          const categoryNames = [DEFAULT_CATEGORY, ...categoriesData.map((cat: any) => cat.name)]
+          setCategories(categoryNames)
+        }
+        
+        // Fetch brands
+        const brandsResponse = await fetch('/api/brands')
+        if (brandsResponse.ok) {
+          const brandsData = await brandsResponse.json()
+          setBrands(brandsData)
+        }
+      } catch (error) {
+        console.error('Error fetching categories and brands:', error)
+      } finally {
+        setLoadingData(false)
+      }
+    }
+    
+    fetchCategoriesAndBrands()
+  }, [])
   
   // Update URL when filters change
   const updateUrlWithFilters = (newFilters: Filters) => {
@@ -269,7 +105,7 @@ export default function SearchPage() {
       params.set("q", newFilters.searchTerm)
     }
 
-    if (newFilters.category && newFilters.category !== "All Categories") {
+    if (newFilters.category && newFilters.category !== DEFAULT_CATEGORY) {
       params.set("category", newFilters.category)
     }
 
@@ -348,9 +184,14 @@ export default function SearchPage() {
   // Page title based on search parameters
   const getPageTitle = () => {
     if (tagParam === "deals") return "Special Deals"
-    if (filters.category !== "All Categories") return filters.category
+    if (filters.category !== DEFAULT_CATEGORY) return filters.category
     if (filters.searchTerm) return `Search Results for "${filters.searchTerm}"`
     return "Search Results"
+  }
+
+  // Show loading if categories and brands are still loading
+  if (loadingData) {
+    return <SectionLoading message="Loading filters..." />
   }
 
   return (
@@ -377,7 +218,7 @@ export default function SearchPage() {
         <div className="hidden lg:block w-64">
           <SearchFilters
             searchTerm={filters.searchTerm || ""}
-            selectedCategory={filters.category || "All Categories"}
+            selectedCategory={filters.category || DEFAULT_CATEGORY}
             selectedBrands={filters.brands || []}
             priceRange={[filters.minPrice || 0, filters.maxPrice || 2000]}
             sortBy={filters.sortBy || "relevance"}
@@ -400,7 +241,7 @@ export default function SearchPage() {
             <div className="py-6 pr-6">
               <SearchFilters
                 searchTerm={filters.searchTerm || ""}
-                selectedCategory={filters.category || "All Categories"}
+                selectedCategory={filters.category || DEFAULT_CATEGORY}
                 selectedBrands={filters.brands || []}
                 priceRange={[filters.minPrice || 0, filters.maxPrice || 2000]}
                 sortBy={filters.sortBy || "relevance"}
@@ -432,11 +273,11 @@ export default function SearchPage() {
             <p className="text-muted-foreground">
               {loading ? "Searching..." : `${filteredProducts.length} ${filteredProducts.length === 1 ? "result" : "results"}`}
               {filters.searchTerm && <> for "{filters.searchTerm}"</>}
-              {filters.category !== "All Categories" && <> in {filters.category}</>}
+              {filters.category !== DEFAULT_CATEGORY && <> in {filters.category}</>}
               {tagParam === "deals" && <> on sale</>}
             </p>
             <div className="flex items-center gap-2">
-              {(filters.category !== "All Categories" ||
+              {(filters.category !== DEFAULT_CATEGORY ||
                 (filters.brands && filters.brands.length > 0) ||
                 (filters.minPrice && filters.minPrice > 0) ||
                 (filters.maxPrice && filters.maxPrice < 2000)) && (

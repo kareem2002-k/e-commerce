@@ -3,17 +3,27 @@
 import { motion } from "framer-motion"
 import Image from "next/image"
 import { useTheme } from "next-themes"
+import { useEffect, useState } from "react"
 
 interface LoadingScreenProps {
   message?: string
 }
 
 export default function LoadingScreen({ message = "Powering up..." }: LoadingScreenProps) {
-  const { theme } = useTheme()
-  const isDark = theme !== "light"
+  const { theme, resolvedTheme } = useTheme()
+  const [mounted, setMounted] = useState(false)
+  
+  // Only show theme-specific styles after hydration to prevent mismatch
+  useEffect(() => {
+    setMounted(true)
+  }, [])
+  
+  // Use a consistent theme for the initial render to avoid hydration mismatch
+  // After mounting, we'll use the correct theme
+  const isDark = mounted ? resolvedTheme === "dark" : false
 
   return (
-    <div className={`fixed inset-0 ${isDark ? "bg-[#030303]" : "bg-gray-50"} flex items-center justify-center z-50`}>
+    <div className="fixed inset-0 bg-gray-50 dark:bg-[#030303] flex items-center justify-center z-50">
       <div className="flex flex-col items-center">
         <motion.div
           initial={{ opacity: 0, scale: 0.8 }}
@@ -49,7 +59,7 @@ export default function LoadingScreen({ message = "Powering up..." }: LoadingScr
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.5, duration: 0.5 }}
-          className={`mt-4 ${isDark ? "text-white/60" : "text-gray-600"} text-sm`}
+          className="mt-4 text-gray-600 dark:text-white/60 text-sm"
         >
           {message}
         </motion.p>

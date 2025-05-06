@@ -7,7 +7,16 @@ export async function GET(request: NextRequest) {
     
     // Extract Bearer token from header
     const authHeader = request.headers.get("Authorization");
-    const token = authHeader ? authHeader.split(" ")[1] : null;
+    
+    // Ensure token is available
+    if (!authHeader || !authHeader.startsWith("Bearer ")) {
+      return NextResponse.json(
+        { error: "Unauthorized - Missing or invalid token" },
+        { status: 401 }
+      );
+    }
+    
+    const token = authHeader.split(" ")[1];
     
     // Forward the search parameters to the backend
     const backendUrl = new URL("http://localhost:3001/products/search");
@@ -22,9 +31,11 @@ export async function GET(request: NextRequest) {
       headers: {
         Authorization: `Bearer ${token}`,
       },
+      cache: "no-store" // Prevent caching issues
     });
     
     if (!response.ok) {
+      console.error(`Backend search error: ${response.status} ${response.statusText}`);
       return NextResponse.json(
         { error: "Failed to search products" },
         { status: response.status }
