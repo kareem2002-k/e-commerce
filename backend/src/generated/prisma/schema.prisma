@@ -203,3 +203,32 @@ model Coupon {
 
   @@index([validUntil])
 }
+
+model HomepageSettings {
+  id                   String @id @default("default")
+  heroTitle            String @default("Cutting-Edge")
+  heroSubtitle         String @default("Electronics")
+  heroDescription      String @default("Discover the latest in technology with premium devices designed for the modern lifestyle.")
+  heroPrimaryBtnText   String @default("Shop Now")
+  heroPrimaryBtnLink   String @default("/home/products")
+  heroSecondaryBtnText String @default("View Deals")
+  heroSecondaryBtnLink String @default("/home/deals")
+  heroBackgroundImage  String @default("/placeholder.svg?height=400&width=400")
+  heroGradientStart    String @default("#0f172a")
+  heroGradientEnd      String @default("#1e3a8a")
+
+  dealsBannerTitle   String  @default("Summer Savings Spectacular")
+  dealsBannerTagline String  @default("Flash Sale")
+  dealsBannerDesc    String  @default("Up to 40% off on selected electronics. Limited time offer!")
+  dealsBannerBtnText String  @default("Shop Now")
+  dealsBannerBtnLink String  @default("/home/deals")
+  dealsBannerBgColor String  @default("#3b82f6")
+  dealsBannerBgImage String  @default("/placeholder.svg?height=400&width=1200")
+  dealsBannerActive  Boolean @default(true)
+
+  showFeaturedCategories Boolean @default(true)
+  showFeaturedProducts   Boolean @default(true)
+  showNewArrivals        Boolean @default(true)
+
+  updatedAt DateTime @updatedAt
+}

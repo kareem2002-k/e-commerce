@@ -7,10 +7,13 @@ import { Button } from "@/components/ui/button"
 import { Zap } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { useProductsAndCategories } from "@/hooks/useProducts"
+import { useFeaturedProducts } from "@/hooks/useProducts"
 import { useState, useEffect } from "react"
 import { Product } from "@/types"
 import { useLoading } from "@/components/voltedge/loading-provider"
 import SectionLoading from "@/components/voltedge/section-loading"
+import { useAuth } from "@/context/AuthContext"
+import { useRouter } from "next/navigation"
 
 // Extending the Product type for local use to include createdAt
 interface ProductWithDate extends Product {
@@ -18,24 +21,28 @@ interface ProductWithDate extends Product {
 }
 
 export default function HomePage() {
-  const { products, categories, loading, error } = useProductsAndCategories()
+  const { categories, loading: categoriesLoading, error: categoriesError } = useProductsAndCategories()
+  const { products: featuredProducts, loading: featuredLoading, error: featuredError } = useFeaturedProducts()
   const [newArrivals, setNewArrivals] = useState<ProductWithDate[]>([])
   const { startLoading, stopLoading } = useLoading()
+  const { user } = useAuth()
+  const router = useRouter()
 
   // Handle initial page data loading
   useEffect(() => {
-    if (loading) {
+    if (categoriesLoading || featuredLoading) {
       startLoading("Loading products...")
     } else {
       stopLoading()
     }
-  }, [loading, startLoading, stopLoading])
+  }, [categoriesLoading, featuredLoading, startLoading, stopLoading])
 
+  // Get new arrivals from products
   useEffect(() => {
-    if (products && products.length > 0) {
+    if (featuredProducts && featuredProducts.length > 0) {
       // For demonstration, sort by ID as fallback if createdAt doesn't exist
       // In a real app, ensure your Product type includes createdAt from the API
-      const sortedProducts = [...products].sort((a, b) => {
+      const sortedProducts = [...featuredProducts].sort((a, b) => {
         // Type assertion to work with our extended interface
         const productA = a as ProductWithDate;
         const productB = b as ProductWithDate;
@@ -48,7 +55,7 @@ export default function HomePage() {
       })
       setNewArrivals(sortedProducts.slice(0, 4))
     }
-  }, [products])
+  }, [featuredProducts])
 
   return (
     <div className="space-y-10">
@@ -81,12 +88,23 @@ export default function HomePage() {
             </p>
 
             <div className="flex flex-wrap gap-4">
-              <Button size="lg" className="rounded-full  bg-voltBlue-500 hover:bg-voltBlue-600 text-white">
+              <Button size="lg" className="rounded-full bg-voltBlue-500 hover:bg-voltBlue-600 text-white">
                 Shop Now
               </Button>
               <Button size="lg" variant="outline" className="rounded-full border-voltBlue-400 text-voltBlue-100">
                 View Deals
               </Button>
+              
+              {user?.isAdmin && (
+                <Button 
+                  size="lg" 
+                  variant="outline" 
+                  className="rounded-full bg-amber-500 hover:bg-amber-600 text-white border-0"
+                  onClick={() => router.push('/home/admin/products')}
+                >
+                  Admin Panel
+                </Button>
+              )}
             </div>
           </div>
 
@@ -100,7 +118,7 @@ export default function HomePage() {
       {/* Categories */}
       <section>
         <h2 className="text-2xl font-bold mb-6">Shop by Category</h2>
-        {loading ? (
+        {categoriesLoading ? (
           <SectionLoading message="Loading categories..." />
         ) : (
           <CategoryGrid categories={categories} loading={false} />
@@ -109,11 +127,13 @@ export default function HomePage() {
 
       {/* Featured Products */}
       <section>
-        {loading ? (
+        {featuredLoading ? (
           <SectionLoading message="Loading featured products..." />
-        ) : (
-          <FeaturedProducts products={products} loading={false} />
-        )}
+        ) : featuredError ? (
+          <p className="text-red-500">Error loading featured products</p>
+        ) : featuredProducts && featuredProducts.length > 0 ? (
+          <FeaturedProducts products={featuredProducts} loading={false} />
+        ) : null}
       </section>
 
       {/* Deals Banner */}
@@ -124,41 +144,39 @@ export default function HomePage() {
       {/* New Arrivals */}
       <section>
         <h2 className="text-2xl font-bold mb-6">New Arrivals</h2>
-        {loading ? (
+        {featuredLoading ? (
           <SectionLoading message="Loading new arrivals..." />
-        ) : error ? (
+        ) : featuredError ? (
           <p className="text-red-500">Error loading products</p>
-        ) : (
+        ) : newArrivals.length > 0 ? (
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-            {newArrivals.length > 0 ? (
-              newArrivals.map((product) => (
-                <div 
-                  key={product.id} 
-                  className="group rounded-xl overflow-hidden border border-border hover:border-voltBlue-300 transition-all"
-                >
-                  <div className="aspect-square overflow-hidden bg-muted">
-                    {product.images && product.images.length > 0 ? (
-                      <img 
-                        src={product.images[0].url} 
-                        alt={product.images[0].altText} 
-                        className="w-full h-full object-cover transition-transform group-hover:scale-105"
-                      />
-                    ) : (
-                      <div className="w-full h-full flex items-center justify-center bg-muted">
-                        <span className="text-muted-foreground">No image</span>
-                      </div>
-                    )}
-                  </div>
-                  <div className="p-4">
-                    <h3 className="font-medium truncate">{product.name}</h3>
-                    <p className="text-voltBlue-600 mt-1">${product.price.toFixed(2)}</p>
-                  </div>
+            {newArrivals.map((product) => (
+              <div 
+                key={product.id} 
+                className="group rounded-xl overflow-hidden border border-border hover:border-voltBlue-300 transition-all"
+              >
+                <div className="aspect-square overflow-hidden bg-muted">
+                  {product.images && product.images.length > 0 ? (
+                    <img 
+                      src={product.images[0].url} 
+                      alt={product.images[0].altText} 
+                      className="w-full h-full object-cover transition-transform group-hover:scale-105"
+                    />
+                  ) : (
+                    <div className="w-full h-full flex items-center justify-center bg-muted">
+                      <span className="text-muted-foreground">No image</span>
+                    </div>
+                  )}
                 </div>
-              ))
-            ) : (
-              <p className="col-span-full text-center text-muted-foreground">No new arrivals found</p>
-            )}
+                <div className="p-4">
+                  <h3 className="font-medium truncate">{product.name}</h3>
+                  <p className="text-voltBlue-600 mt-1">${product.price.toFixed(2)}</p>
+                </div>
+              </div>
+            ))}
           </div>
+        ) : (
+          <p className="text-center text-muted-foreground">No new arrivals found</p>
         )}
       </section>
     </div>

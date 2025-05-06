@@ -124,10 +124,7 @@ export default function AdminProductsPage() {
       console.log('Fetching products with token:', token ? 'Token exists' : 'No token');
       setLoading(true);
       
-      // Get API URL with fallback
-      const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001';
-      
-      const response = await fetch(`${API_URL}/products`, {
+      const response = await fetch(`/api/products`, {
         headers: { 
           'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json'
@@ -183,10 +180,7 @@ export default function AdminProductsPage() {
         return;
       }
 
-      // Get API URL with fallback
-      const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001';
-      
-      const response = await fetch(`${API_URL}/categories`, {
+      const response = await fetch(`/api/categories`, {
         headers: { 
           'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json'

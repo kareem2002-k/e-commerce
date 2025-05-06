@@ -27,6 +27,7 @@ export function useProducts() {
           'Authorization': `Bearer ${token}`,
         },
       });
+      console.log(response)
       if (!response.ok) throw new Error('Failed to fetch products');
       const data = await response.json();
       setProducts(data);
@@ -182,4 +183,46 @@ export function useProductsAndCategories() {
     error: productsError || categoriesError,
     refetch: refetchProducts
   };
+}
+
+// Hook to fetch only featured products
+export function useFeaturedProducts() {
+  const [products, setProducts] = useState<Product[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<Error | null>(null);
+  const { token } = useAuth();
+
+  useEffect(() => {
+    fetchFeaturedProducts();
+  }, [token]);
+
+  const fetchFeaturedProducts = async () => {
+    try {
+      // Don't attempt to fetch if no token is available
+      if (!token) {
+        setLoading(false);
+        return;
+      }
+      
+      setLoading(true);
+      const response = await fetch('/api/products', {
+        headers: {
+          'Authorization': `Bearer ${token}`,
+        },
+      });
+      
+      if (!response.ok) throw new Error('Failed to fetch featured products');
+      const data = await response.json();
+      // Filter featured products only on the client-side
+      const featuredProducts = data.filter((product: Product) => product.featured);
+      setProducts(featuredProducts);
+      setLoading(false);
+    } catch (error) {
+      console.error('Error fetching featured products:', error);
+      setError(error instanceof Error ? error : new Error('Unknown error'));
+      setLoading(false);
+    }
+  };
+
+  return { products, loading, error, refetch: fetchFeaturedProducts };
 } 

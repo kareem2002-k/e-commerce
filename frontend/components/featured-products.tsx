@@ -8,66 +8,7 @@ import { ChevronLeft, ChevronRight } from "lucide-react"
 import { Product } from "@/types"
 import SectionLoading from "@/components/voltedge/section-loading"
 
-// Default products for fallback
-const defaultProducts = [
-  {
-    id: "1",
-    name: "VoltEdge Pro Laptop",
-    category: "Laptops",
-    price: 1299.99,
-    originalPrice: 1499.99,
-    rating: 4.8,
-    image: "/placeholder.svg?height=300&width=300",
-    isNew: true,
-    isSale: true,
-  },
-  {
-    id: "2",
-    name: "VoltEdge Ultra Smartphone",
-    category: "Smartphones",
-    price: 899.99,
-    originalPrice: 999.99,
-    rating: 4.7,
-    image: "/placeholder.svg?height=300&width=300",
-    isSale: true,
-  },
-  {
-    id: "3",
-    name: "VoltEdge Noise-Cancelling Headphones",
-    category: "Audio",
-    price: 249.99,
-    rating: 4.9,
-    image: "/placeholder.svg?height=300&width=300",
-    isNew: true,
-  },
-  {
-    id: "4",
-    name: "VoltEdge Smart Watch Series 5",
-    category: "Wearables",
-    price: 349.99,
-    originalPrice: 399.99,
-    rating: 4.6,
-    image: "/placeholder.svg?height=300&width=300",
-    isSale: true,
-  },
-  {
-    id: "5",
-    name: "VoltEdge 4K Ultra HD Smart TV",
-    category: "TVs",
-    price: 799.99,
-    originalPrice: 899.99,
-    rating: 4.5,
-    image: "/placeholder.svg?height=300&width=300",
-  },
-  {
-    id: "6",
-    name: "VoltEdge Wireless Gaming Controller",
-    category: "Gaming",
-    price: 69.99,
-    rating: 4.4,
-    image: "/placeholder.svg?height=300&width=300",
-  },
-]
+// No default products - we only want to show real data
 
 interface FeaturedProductsProps {
   products?: Product[];
@@ -78,7 +19,7 @@ export function FeaturedProducts({ products, loading }: FeaturedProductsProps = 
   const [currentIndex, setCurrentIndex] = useState(0)
   const productsPerPage = 4
   
-  // Format real products to match our UI or use default products
+  // Format real products to match our UI
   const displayProducts = !loading && products && products.length > 0
     ? products.map(product => ({
         id: product.id,
@@ -94,18 +35,8 @@ export function FeaturedProducts({ products, loading }: FeaturedProductsProps = 
         isNew: Math.random() > 0.7, // Randomly mark some products as new for demo
         isSale: Math.random() > 0.5, // Randomly mark some products as on sale for demo
       }))
-    : defaultProducts
+    : []
   
-  const totalPages = Math.ceil(displayProducts.length / productsPerPage)
-
-  const handlePrevious = () => {
-    setCurrentIndex((prev) => (prev === 0 ? totalPages - 1 : prev - 1))
-  }
-
-  const handleNext = () => {
-    setCurrentIndex((prev) => (prev === totalPages - 1 ? 0 : prev + 1))
-  }
-
   // Show loading state
   if (loading) {
     return (
@@ -126,23 +57,52 @@ export function FeaturedProducts({ products, loading }: FeaturedProductsProps = 
       </div>
     )
   }
+  
+  // If no products available, don't render the section
+  if (displayProducts.length === 0) {
+    return null;
+  }
+  
+  const totalPages = Math.ceil(displayProducts.length / productsPerPage)
 
-  // Duplicate products to create continuous carousel effect
-  const visibleProducts = [...displayProducts, ...displayProducts].slice(
-    currentIndex * productsPerPage,
-    currentIndex * productsPerPage + productsPerPage,
-  )
+  const handlePrevious = () => {
+    setCurrentIndex((prev) => (prev === 0 ? totalPages - 1 : prev - 1))
+  }
+
+  const handleNext = () => {
+    setCurrentIndex((prev) => (prev === totalPages - 1 ? 0 : prev + 1))
+  }
+
+  // Duplicate products to create continuous carousel effect if needed
+  const visibleProducts = displayProducts.length <= productsPerPage 
+    ? displayProducts
+    : [...displayProducts, ...displayProducts].slice(
+        currentIndex * productsPerPage,
+        currentIndex * productsPerPage + productsPerPage,
+      )
 
   return (
     <div className="relative">
       <div className="flex items-center justify-between mb-6">
         <h2 className="text-2xl font-bold">Featured Products</h2>
         <div className="flex gap-2">
-          <Button variant="outline" size="icon" onClick={handlePrevious} className="rounded-full">
+          <Button 
+            variant="outline" 
+            size="icon" 
+            onClick={handlePrevious} 
+            className="rounded-full"
+            disabled={displayProducts.length <= productsPerPage}
+          >
             <ChevronLeft className="h-4 w-4" />
             <span className="sr-only">Previous</span>
           </Button>
-          <Button variant="outline" size="icon" onClick={handleNext} className="rounded-full">
+          <Button 
+            variant="outline" 
+            size="icon" 
+            onClick={handleNext} 
+            className="rounded-full"
+            disabled={displayProducts.length <= productsPerPage}
+          >
             <ChevronRight className="h-4 w-4" />
             <span className="sr-only">Next</span>
           </Button>
