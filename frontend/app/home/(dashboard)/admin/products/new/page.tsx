@@ -66,20 +66,41 @@ export default function AddProductPage() {
   useEffect(() => {
     const fetchCategories = async () => {
       try {
-        const response = await fetch('/api/categories');
-        if (!response.ok) throw new Error('Failed to fetch categories');
+        if (!token) {
+          console.error('No authentication token available for categories');
+          return;
+        }
+
+        setLoading(true);
+        // Get API URL with fallback
+        const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001';
+
+        const response = await fetch(`${API_URL}/categories`, {
+          headers: { 
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json'
+          }
+        });
+        
+        if (!response.ok) {
+          throw new Error(`Failed to fetch categories: ${response.status}`);
+        }
+        
         const data = await response.json();
+        console.log('Categories fetched successfully:', data.length);
         setCategories(data);
-      } catch (error) {
-        console.error('Error fetching categories:', error);
-        toast.error("Failed to load categories");
+      } catch (error: any) {
+        console.error('Error fetching categories:', error.message);
+        toast.error("Failed to load categories: " + error.message);
+      } finally {
+        setLoading(false);
       }
     };
     
-    if (user?.isAdmin) {
+    if (user?.isAdmin && token) {
       fetchCategories();
     }
-  }, [user]);
+  }, [user, token]);
   
   // Handle input change
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -227,6 +248,12 @@ export default function AddProductPage() {
     setLoading(true);
     
     try {
+      // Check for user authentication
+      if (!user?.email || !token) {
+        toast.error("Authentication required");
+        return;
+      }
+
       // First, upload images if needed
       const uploadedImages = await Promise.all(
         images.map(async (image) => {
@@ -258,31 +285,32 @@ export default function AddProductPage() {
         images: uploadedImages
       };
       
-      // Check for user authentication
-      if (user?.email) {
-        console.log(user.email);
-        
-        const response = await fetch('/api/products', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${token}`
-          },
-          body: JSON.stringify(productData)
-        });
-        
-        if (!response.ok) {
-          throw new Error('Failed to create product');
+      // Get API URL with fallback
+      const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001';
+      
+      console.log('Creating product with token:', token ? 'Token exists' : 'No token');
+      
+      const response = await fetch(`${API_URL}/products`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify(productData)
+      });
+      
+      if (!response.ok) {
+        if (response.status === 401) {
+          throw new Error('Authentication failed. Please log in again.');
         }
-        
-        toast.success("Product created successfully");
-        router.push('/admin/products');
-      } else {
-        toast.error("Authentication required");
+        throw new Error(`Failed to create product: ${response.status}`);
       }
-    } catch (error) {
-      console.error('Error creating product:', error);
-      toast.error("Failed to create product");
+      
+      toast.success("Product created successfully");
+      router.push('/home/admin/products');
+    } catch (error: any) {
+      console.error('Error creating product:', error.message);
+      toast.error("Failed to create product: " + error.message);
     } finally {
       setLoading(false);
     }
@@ -303,7 +331,7 @@ export default function AddProductPage() {
               <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
                 <Button 
                   variant="ghost" 
-                  onClick={() => router.push('/admin/products')}
+                  onClick={() => router.push('/home/admin/products')}
                   className="mr-4"
                 >
                   <ChevronLeft className="h-4 w-4 mr-2" />
@@ -502,7 +530,7 @@ export default function AddProductPage() {
                                 type="button"
                                 variant="link"
                                 className="h-auto p-0 text-blue-500"
-                                onClick={() => router.push('/admin/categories/new')}
+                                onClick={() => router.push('/home/admin/categories/new')}
                               >
                                 Add a new category
                               </Button>

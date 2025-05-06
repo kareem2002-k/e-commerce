@@ -92,12 +92,12 @@ export function MainNav() {
           </NavigationMenuContent>
         </NavigationMenuItem>
         <NavigationMenuItem>
-          <Link href="/search?tag=deals" legacyBehavior passHref>
+          <Link href="/home/search?tag=deals" legacyBehavior passHref>
             <NavigationMenuLink className={navigationMenuTriggerStyle()}>Deals</NavigationMenuLink>
           </Link>
         </NavigationMenuItem>
         <NavigationMenuItem>
-          <Link href="/support" legacyBehavior passHref>
+          <Link href="/home/support" legacyBehavior passHref>
             <NavigationMenuLink className={navigationMenuTriggerStyle()}>Support</NavigationMenuLink>
           </Link>
         </NavigationMenuItem>

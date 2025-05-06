@@ -25,7 +25,7 @@ export const AuthRedirect: React.FC<AuthRedirectProps> = ({ children }) => {
       if (user && !redirected) {
         // User is already authenticated, redirect to home page
         setRedirected(true);
-        router.push('/home/products');
+        router.push('/home');
       } else if (!user) {
         // User is not authenticated, render the children
         setRenderChildren(true);

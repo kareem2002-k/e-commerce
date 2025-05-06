@@ -33,7 +33,7 @@ router.get('/', async (req, res) => {
         createdAt: 'desc'
       }
     });
-    
+    console.log(orders);
     res.json(orders);
   } catch (error) {
     res.status(500).json({ message: 'Error fetching orders' });

@@ -80,7 +80,7 @@ export default function AddCategoryPage() {
   // Handle navigation after successful category creation
   useEffect(() => {
     if (createState.isSuccess) {
-      router.push('/admin/products');
+      router.push('/home/admin/products');
     }
   }, [createState.isSuccess, router]);
   
@@ -186,7 +186,7 @@ export default function AddCategoryPage() {
               <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
                 <Button 
                   variant="ghost" 
-                  onClick={() => router.push('/admin/products')}
+                  onClick={() => router.push('/home/admin/products')}
                   className="mr-4"
                 >
                   <ChevronLeft className="h-4 w-4 mr-2" />
@@ -321,7 +321,7 @@ export default function AddCategoryPage() {
                       <Button
                         type="button"
                         variant="outline"
-                        onClick={() => router.push('/admin/products')}
+                        onClick={() => router.push('/home/admin/products')}
                         className="mr-2"
                       >
                         Cancel

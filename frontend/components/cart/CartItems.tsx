@@ -101,7 +101,7 @@ export default function CartItems({ onClose }: { onClose?: () => void }) {
               
               <div className="flex-grow">
                 <Link
-                  href={`/products/${item.product.id}`}
+                  href={`/home/products/${item.product.id}`} 
                   className="font-medium hover:text-purple-600 transition-colors"
                   onClick={onClose}
                 >
@@ -176,7 +176,7 @@ export default function CartItems({ onClose }: { onClose?: () => void }) {
           </Badge>
         </div>
         
-        <Link href="/checkout" onClick={onClose}>
+        <Link href="/home/checkout" onClick={onClose}>
           <Button className="w-full bg-gradient-to-r from-blue-600 to-fuchsia-600 hover:from-blue-700 hover:to-fuchsia-700">
             Proceed to Checkout
           </Button>

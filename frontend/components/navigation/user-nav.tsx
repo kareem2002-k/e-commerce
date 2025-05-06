@@ -45,7 +45,7 @@ export function UserNav() {
             </Link>
           </DropdownMenuItem>
           <DropdownMenuItem asChild>
-            <Link href="/orders">
+            <Link href="/home/orders">
               <ShoppingCart className="mr-2 h-4 w-4" />
               <span>Orders</span>
             </Link>

@@ -1,8 +1,12 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import Link from "next/link"
 import Image from "next/image"
+import { useRouter } from "next/navigation"
+import { useAuth } from "@/context/AuthContext"
+import axios from "axios"
+import { toast } from "sonner"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
@@ -12,146 +16,59 @@ import { Separator } from "@/components/ui/separator"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { ChevronRight, Download, ExternalLink, FileText, Package, Search, ShoppingBag, Truck } from "lucide-react"
-import { cn } from "@/lib/utils"
+import { cn, formatCurrency } from "@/lib/utils"
 
-// Mock orders data
-const orders = [
-  {
-    id: "ORD-12345",
-    date: "2023-04-15",
-    status: "delivered",
-    total: 1549.98,
-    items: [
-      {
-        id: "1",
-        name: "VoltEdge Pro Laptop",
-        price: 1299.99,
-        quantity: 1,
-        image: "/placeholder.svg?height=80&width=80",
-      },
-      {
-        id: "3",
-        name: "VoltEdge Noise-Cancelling Headphones",
-        price: 249.99,
-        quantity: 1,
-        image: "/placeholder.svg?height=80&width=80",
-      },
-    ],
-    shipping: {
-      method: "Express Shipping",
-      address: "123 Main St, Apt 4B, New York, NY 10001",
-      trackingNumber: "TRK-987654321",
-    },
-    payment: {
-      method: "Credit Card",
-      last4: "4242",
-    },
-  },
-  {
-    id: "ORD-12346",
-    date: "2023-03-28",
-    status: "shipped",
-    total: 899.99,
-    items: [
-      {
-        id: "2",
-        name: "VoltEdge Ultra Smartphone",
-        price: 899.99,
-        quantity: 1,
-        image: "/placeholder.svg?height=80&width=80",
-      },
-    ],
-    shipping: {
-      method: "Standard Shipping",
-      address: "123 Main St, Apt 4B, New York, NY 10001",
-      trackingNumber: "TRK-987654322",
-    },
-    payment: {
-      method: "PayPal",
-      email: "j***@example.com",
-    },
-  },
-  {
-    id: "ORD-12347",
-    date: "2023-03-10",
-    status: "processing",
-    total: 349.99,
-    items: [
-      {
-        id: "4",
-        name: "VoltEdge Smart Watch Series 5",
-        price: 349.99,
-        quantity: 1,
-        image: "/placeholder.svg?height=80&width=80",
-      },
-    ],
-    shipping: {
-      method: "Standard Shipping",
-      address: "123 Main St, Apt 4B, New York, NY 10001",
-    },
-    payment: {
-      method: "Credit Card",
-      last4: "4242",
-    },
-  },
-  {
-    id: "ORD-12348",
-    date: "2023-02-22",
-    status: "delivered",
-    total: 799.99,
-    items: [
-      {
-        id: "5",
-        name: "VoltEdge 4K Ultra HD Smart TV",
-        price: 799.99,
-        quantity: 1,
-        image: "/placeholder.svg?height=80&width=80",
-      },
-    ],
-    shipping: {
-      method: "Express Shipping",
-      address: "123 Main St, Apt 4B, New York, NY 10001",
-      trackingNumber: "TRK-987654323",
-    },
-    payment: {
-      method: "Credit Card",
-      last4: "4242",
-    },
-  },
-  {
-    id: "ORD-12349",
-    date: "2023-01-15",
-    status: "cancelled",
-    total: 69.99,
-    items: [
-      {
-        id: "6",
-        name: "VoltEdge Wireless Gaming Controller",
-        price: 69.99,
-        quantity: 1,
-        image: "/placeholder.svg?height=80&width=80",
-      },
-    ],
-    shipping: {
-      method: "Standard Shipping",
-      address: "123 Main St, Apt 4B, New York, NY 10001",
-    },
-    payment: {
-      method: "Credit Card",
-      last4: "4242",
-    },
-  },
-]
+// Order interfaces
+interface OrderItem {
+  id: string;
+  productId: string;
+  orderId: string;
+  quantity: number;
+  unitPrice: number;
+  totalPrice: number;
+  product: {
+    id: string;
+    name: string;
+    description: string;
+    images: { url: string }[];
+  };
+}
+
+interface Address {
+  id: string;
+  streetAddress: string;
+  city: string;
+  state: string;
+  zipCode: string;
+  country: string;
+}
+
+interface Order {
+  id: string;
+  userId: string;
+  orderStatus: string;
+  paymentStatus: string;
+  paymentMethod: string;
+  totalAmount: number;
+  shippingCost: number;
+  taxAmount: number;
+  createdAt: string;
+  updatedAt: string;
+  orderItems: OrderItem[];
+  shippingAddress: Address;
+  billingAddress: Address;
+}
 
 const getStatusColor = (status: string) => {
-  switch (status) {
-    case "delivered":
+  switch (status.toUpperCase()) {
+    case "DELIVERED":
       return "bg-green-500"
-    case "shipped":
+    case "SHIPPED":
       return "bg-blue-500"
-    case "processing":
+    case "PENDING":
+    case "CONFIRMED":
       return "bg-amber-500"
-    case "cancelled":
+    case "CANCELLED":
       return "bg-red-500"
     default:
       return "bg-gray-500"
@@ -159,25 +76,98 @@ const getStatusColor = (status: string) => {
 }
 
 const getStatusText = (status: string) => {
-  return status.charAt(0).toUpperCase() + status.slice(1)
+  return status.charAt(0).toUpperCase() + status.slice(1).toLowerCase()
 }
 
 export default function OrdersPage() {
+  const router = useRouter()
+  const { user, token } = useAuth()
+  const [orders, setOrders] = useState<Order[]>([])
+  const [loading, setLoading] = useState<boolean>(true)
+  const [loadingCancel, setLoadingCancel] = useState<Record<string, boolean>>({})
   const [selectedOrder, setSelectedOrder] = useState<string | null>(null)
   const [searchTerm, setSearchTerm] = useState("")
   const [statusFilter, setStatusFilter] = useState("all")
   const [dateFilter, setDateFilter] = useState("all")
+
+  // Get API URL with fallback
+  const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'
+
+  useEffect(() => {
+    if (token) {
+      fetchOrders()
+    }
+  }, [token])
+
+  const fetchOrders = async () => {
+    try {
+      if (!token) {
+        console.error('No authentication token available')
+        toast.error('Authentication error. Please log in again.')
+        return
+      }
+
+      setLoading(true)
+      console.log('Fetching orders with token:', token ? 'Token exists' : 'No token')
+      
+      const response = await axios.get(`${API_URL}/orders`, {
+        headers: { 
+          Authorization: `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        }
+      })
+      
+      setOrders(response.data)
+    } catch (error: any) {
+      console.error('Error fetching orders:', error.response?.data || error.message)
+      
+      if (error.response?.status === 401) {
+        toast.error('Session expired. Please log in again.')
+        // Redirect to login if needed
+        // router.push('/login')
+      } else {
+        toast.error('Failed to load orders')
+      }
+      
+      // Set empty orders array to avoid displaying old data
+      setOrders([])
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  const handleCancelOrder = async (orderId: string) => {
+    try {
+      setLoadingCancel(prev => ({ ...prev, [orderId]: true }))
+      
+      await axios.post(
+        `${API_URL}/orders/${orderId}/cancel`,
+        {},
+        { headers: { Authorization: `Bearer ${token}` } }
+      )
+      
+      // Refresh orders
+      await fetchOrders()
+      
+      toast.success('Order cancelled successfully')
+    } catch (error: any) {
+      console.error('Error cancelling order:', error)
+      toast.error(error.response?.data?.message || 'Failed to cancel order')
+    } finally {
+      setLoadingCancel(prev => ({ ...prev, [orderId]: false }))
+    }
+  }
 
   // Filter orders based on search and filters
   const filteredOrders = orders.filter((order) => {
     const matchesSearch =
       searchTerm === "" ||
       order.id.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      order.items.some((item) => item.name.toLowerCase().includes(searchTerm.toLowerCase()))
+      order.orderItems.some((item) => item.product.name.toLowerCase().includes(searchTerm.toLowerCase()))
 
-    const matchesStatus = statusFilter === "all" || order.status === statusFilter
+    const matchesStatus = statusFilter === "all" || order.orderStatus.toLowerCase() === statusFilter
 
-    const matchesDate = dateFilter === "all" || filterByDate(order.date, dateFilter)
+    const matchesDate = dateFilter === "all" || filterByDate(order.createdAt, dateFilter)
 
     return matchesSearch && matchesStatus && matchesDate
   })
@@ -200,6 +190,14 @@ export default function OrdersPage() {
 
   const currentOrder = selectedOrder ? orders.find((order) => order.id === selectedOrder) : null
 
+  if (loading) {
+    return (
+      <div className="flex justify-center py-16">
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-purple-600"></div>
+      </div>
+    )
+  }
+
   return (
     <div className="space-y-6">
       <div className="flex flex-col gap-2">
@@ -210,10 +208,10 @@ export default function OrdersPage() {
       <Tabs defaultValue="all" className="space-y-4">
         <div className="flex flex-col sm:flex-row justify-between gap-4">
           <TabsList>
-            <TabsTrigger value="all">All Orders</TabsTrigger>
-            <TabsTrigger value="processing">Processing</TabsTrigger>
-            <TabsTrigger value="shipped">Shipped</TabsTrigger>
-            <TabsTrigger value="delivered">Delivered</TabsTrigger>
+            <TabsTrigger value="all" onClick={() => setStatusFilter("all")}>All Orders</TabsTrigger>
+            <TabsTrigger value="pending" onClick={() => setStatusFilter("pending")}>Pending</TabsTrigger>
+            <TabsTrigger value="shipped" onClick={() => setStatusFilter("shipped")}>Shipped</TabsTrigger>
+            <TabsTrigger value="delivered" onClick={() => setStatusFilter("delivered")}>Delivered</TabsTrigger>
           </TabsList>
 
           <div className="flex gap-2">
@@ -257,16 +255,16 @@ export default function OrdersPage() {
                 <TableBody>
                   {filteredOrders.map((order) => (
                     <TableRow key={order.id} className="cursor-pointer" onClick={() => setSelectedOrder(order.id)}>
-                      <TableCell className="font-medium">{order.id}</TableCell>
-                      <TableCell>{new Date(order.date).toLocaleDateString()}</TableCell>
+                      <TableCell className="font-medium">#{order.id.slice(0, 8)}</TableCell>
+                      <TableCell>{new Date(order.createdAt).toLocaleDateString()}</TableCell>
                       <TableCell>
                         <div className="flex items-center gap-2">
-                          <div className={cn("h-2 w-2 rounded-full", getStatusColor(order.status))}></div>
-                          <span>{getStatusText(order.status)}</span>
+                          <div className={cn("h-2 w-2 rounded-full", getStatusColor(order.orderStatus))}></div>
+                          <span>{getStatusText(order.orderStatus)}</span>
                         </div>
                       </TableCell>
-                      <TableCell className="hidden md:table-cell">{order.items.length}</TableCell>
-                      <TableCell className="text-right">${order.total.toFixed(2)}</TableCell>
+                      <TableCell className="hidden md:table-cell">{order.orderItems.length}</TableCell>
+                      <TableCell className="text-right">{formatCurrency(order.totalAmount)}</TableCell>
                       <TableCell>
                         <Button variant="ghost" size="icon">
                           <ChevronRight className="h-4 w-4" />
@@ -289,14 +287,14 @@ export default function OrdersPage() {
                   : "You haven't placed any orders yet. Start shopping to see your orders here."}
               </p>
               <Button asChild>
-                <Link href="/">Continue Shopping</Link>
+                <Link href="/home/products">Continue Shopping</Link>
               </Button>
             </div>
           )}
         </TabsContent>
 
-        <TabsContent value="processing" className="space-y-4">
-          {filteredOrders.filter((order) => order.status === "processing").length > 0 ? (
+        <TabsContent value="pending" className="space-y-4">
+          {filteredOrders.filter((order) => order.orderStatus.toLowerCase() === "pending").length > 0 ? (
             <div className="rounded-md border">
               <Table>
                 <TableHeader>
@@ -310,13 +308,13 @@ export default function OrdersPage() {
                 </TableHeader>
                 <TableBody>
                   {filteredOrders
-                    .filter((order) => order.status === "processing")
+                    .filter((order) => order.orderStatus.toLowerCase() === "pending")
                     .map((order) => (
                       <TableRow key={order.id} className="cursor-pointer" onClick={() => setSelectedOrder(order.id)}>
-                        <TableCell className="font-medium">{order.id}</TableCell>
-                        <TableCell>{new Date(order.date).toLocaleDateString()}</TableCell>
-                        <TableCell className="hidden md:table-cell">{order.items.length}</TableCell>
-                        <TableCell className="text-right">${order.total.toFixed(2)}</TableCell>
+                        <TableCell className="font-medium">#{order.id.slice(0, 8)}</TableCell>
+                        <TableCell>{new Date(order.createdAt).toLocaleDateString()}</TableCell>
+                        <TableCell className="hidden md:table-cell">{order.orderItems.length}</TableCell>
+                        <TableCell className="text-right">{formatCurrency(order.totalAmount)}</TableCell>
                         <TableCell>
                           <Button variant="ghost" size="icon">
                             <ChevronRight className="h-4 w-4" />
@@ -332,39 +330,37 @@ export default function OrdersPage() {
               <div className="rounded-full bg-muted p-6 mb-4">
                 <Package className="h-10 w-10 text-muted-foreground" />
               </div>
-              <h3 className="text-xl font-semibold mb-2">No processing orders</h3>
+              <h3 className="text-xl font-semibold mb-2">No pending orders</h3>
               <p className="text-muted-foreground max-w-md mb-6">
                 You don't have any orders currently being processed.
               </p>
               <Button asChild>
-                <Link href="/">Continue Shopping</Link>
+                <Link href="/home/products">Continue Shopping</Link>
               </Button>
             </div>
           )}
         </TabsContent>
 
         <TabsContent value="shipped" className="space-y-4">
-          {filteredOrders.filter((order) => order.status === "shipped").length > 0 ? (
+          {filteredOrders.filter((order) => order.orderStatus.toLowerCase() === "shipped").length > 0 ? (
             <div className="rounded-md border">
               <Table>
                 <TableHeader>
                   <TableRow>
                     <TableHead>Order ID</TableHead>
                     <TableHead>Date</TableHead>
-                    <TableHead className="hidden md:table-cell">Tracking</TableHead>
                     <TableHead className="text-right">Total</TableHead>
                     <TableHead className="w-[100px]"></TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
                   {filteredOrders
-                    .filter((order) => order.status === "shipped")
+                    .filter((order) => order.orderStatus.toLowerCase() === "shipped")
                     .map((order) => (
                       <TableRow key={order.id} className="cursor-pointer" onClick={() => setSelectedOrder(order.id)}>
-                        <TableCell className="font-medium">{order.id}</TableCell>
-                        <TableCell>{new Date(order.date).toLocaleDateString()}</TableCell>
-                        <TableCell className="hidden md:table-cell">{order.shipping.trackingNumber || "N/A"}</TableCell>
-                        <TableCell className="text-right">${order.total.toFixed(2)}</TableCell>
+                        <TableCell className="font-medium">#{order.id.slice(0, 8)}</TableCell>
+                        <TableCell>{new Date(order.createdAt).toLocaleDateString()}</TableCell>
+                        <TableCell className="text-right">{formatCurrency(order.totalAmount)}</TableCell>
                         <TableCell>
                           <Button variant="ghost" size="icon">
                             <ChevronRight className="h-4 w-4" />
@@ -383,14 +379,14 @@ export default function OrdersPage() {
               <h3 className="text-xl font-semibold mb-2">No shipped orders</h3>
               <p className="text-muted-foreground max-w-md mb-6">You don't have any orders currently being shipped.</p>
               <Button asChild>
-                <Link href="/">Continue Shopping</Link>
+                <Link href="/home/products">Continue Shopping</Link>
               </Button>
             </div>
           )}
         </TabsContent>
 
         <TabsContent value="delivered" className="space-y-4">
-          {filteredOrders.filter((order) => order.status === "delivered").length > 0 ? (
+          {filteredOrders.filter((order) => order.orderStatus.toLowerCase() === "delivered").length > 0 ? (
             <div className="rounded-md border">
               <Table>
                 <TableHeader>
@@ -404,13 +400,13 @@ export default function OrdersPage() {
                 </TableHeader>
                 <TableBody>
                   {filteredOrders
-                    .filter((order) => order.status === "delivered")
+                    .filter((order) => order.orderStatus.toLowerCase() === "delivered")
                     .map((order) => (
                       <TableRow key={order.id} className="cursor-pointer" onClick={() => setSelectedOrder(order.id)}>
-                        <TableCell className="font-medium">{order.id}</TableCell>
-                        <TableCell>{new Date(order.date).toLocaleDateString()}</TableCell>
-                        <TableCell className="hidden md:table-cell">{order.items.length}</TableCell>
-                        <TableCell className="text-right">${order.total.toFixed(2)}</TableCell>
+                        <TableCell className="font-medium">#{order.id.slice(0, 8)}</TableCell>
+                        <TableCell>{new Date(order.createdAt).toLocaleDateString()}</TableCell>
+                        <TableCell className="hidden md:table-cell">{order.orderItems.length}</TableCell>
+                        <TableCell className="text-right">{formatCurrency(order.totalAmount)}</TableCell>
                         <TableCell>
                           <Button variant="ghost" size="icon">
                             <ChevronRight className="h-4 w-4" />
@@ -429,7 +425,7 @@ export default function OrdersPage() {
               <h3 className="text-xl font-semibold mb-2">No delivered orders</h3>
               <p className="text-muted-foreground max-w-md mb-6">You don't have any delivered orders yet.</p>
               <Button asChild>
-                <Link href="/">Continue Shopping</Link>
+                <Link href="/home/products">Continue Shopping</Link>
               </Button>
             </div>
           )}
@@ -441,12 +437,12 @@ export default function OrdersPage() {
         <Card className="mt-6">
           <CardHeader className="flex flex-row items-center justify-between">
             <div>
-              <CardTitle className="text-2xl">Order {currentOrder.id}</CardTitle>
-              <CardDescription>Placed on {new Date(currentOrder.date).toLocaleDateString()}</CardDescription>
+              <CardTitle className="text-2xl">Order #{currentOrder.id.slice(0, 8)}</CardTitle>
+              <CardDescription>Placed on {new Date(currentOrder.createdAt).toLocaleDateString()}</CardDescription>
             </div>
             <div className="flex items-center gap-2">
-              <Badge className={cn(getStatusColor(currentOrder.status), "text-white")}>
-                {getStatusText(currentOrder.status)}
+              <Badge className={cn(getStatusColor(currentOrder.orderStatus), "text-white")}>
+                {getStatusText(currentOrder.orderStatus)}
               </Badge>
               <Button variant="outline" size="sm" onClick={() => setSelectedOrder(null)}>
                 Close
@@ -458,17 +454,28 @@ export default function OrdersPage() {
             <div>
               <h3 className="font-semibold text-lg mb-3">Items</h3>
               <div className="space-y-4">
-                {currentOrder.items.map((item) => (
+                {currentOrder.orderItems.map((item) => (
                   <div key={item.id} className="flex items-center gap-4">
                     <div className="h-20 w-20 relative rounded-md overflow-hidden border">
-                      <Image src={item.image || "/placeholder.svg"} alt={item.name} fill className="object-cover" />
+                      {item.product.images && item.product.images.length > 0 ? (
+                        <Image 
+                          src={item.product.images[0].url || "/placeholder.svg"} 
+                          alt={item.product.name} 
+                          fill 
+                          className="object-cover" 
+                        />
+                      ) : (
+                        <div className="flex items-center justify-center h-full w-full bg-muted">
+                          <Package className="h-8 w-8 text-muted-foreground" />
+                        </div>
+                      )}
                     </div>
                     <div className="flex-1">
-                      <h4 className="font-medium">{item.name}</h4>
+                      <h4 className="font-medium">{item.product.name}</h4>
                       <p className="text-sm text-muted-foreground">Quantity: {item.quantity}</p>
                     </div>
                     <div className="text-right">
-                      <p className="font-medium">${item.price.toFixed(2)}</p>
+                      <p className="font-medium">{formatCurrency(item.unitPrice)}</p>
                     </div>
                   </div>
                 ))}
@@ -476,7 +483,7 @@ export default function OrdersPage() {
               <Separator className="my-4" />
               <div className="flex justify-between">
                 <span className="font-medium">Total</span>
-                <span className="font-bold">${currentOrder.total.toFixed(2)}</span>
+                <span className="font-bold">{formatCurrency(currentOrder.totalAmount)}</span>
               </div>
             </div>
 
@@ -486,22 +493,11 @@ export default function OrdersPage() {
                 <h3 className="font-semibold text-lg mb-3">Shipping Information</h3>
                 <div className="space-y-2">
                   <p>
-                    <span className="font-medium">Method:</span> {currentOrder.shipping.method}
+                    <span className="font-medium">Method:</span> {currentOrder.paymentMethod === 'CREDIT_CARD' ? 'Standard Shipping' : 'Cash on Delivery'}
                   </p>
                   <p>
-                    <span className="font-medium">Address:</span> {currentOrder.shipping.address}
+                    <span className="font-medium">Address:</span> {currentOrder.shippingAddress.streetAddress}, {currentOrder.shippingAddress.city}, {currentOrder.shippingAddress.state} {currentOrder.shippingAddress.zipCode}, {currentOrder.shippingAddress.country}
                   </p>
-                  {currentOrder.shipping.trackingNumber && (
-                    <p>
-                      <span className="font-medium">Tracking:</span> {currentOrder.shipping.trackingNumber}
-                    </p>
-                  )}
-                  {currentOrder.status === "shipped" && currentOrder.shipping.trackingNumber && (
-                    <Button variant="outline" size="sm" className="mt-2">
-                      <ExternalLink className="mr-2 h-4 w-4" />
-                      Track Package
-                    </Button>
-                  )}
                 </div>
               </div>
 
@@ -510,34 +506,40 @@ export default function OrdersPage() {
                 <h3 className="font-semibold text-lg mb-3">Payment Information</h3>
                 <div className="space-y-2">
                   <p>
-                    <span className="font-medium">Method:</span> {currentOrder.payment.method}
+                    <span className="font-medium">Method:</span> {currentOrder.paymentMethod === 'CREDIT_CARD' ? 'Credit Card' : 'Cash on Delivery'}
                   </p>
-                  {currentOrder.payment.last4 && (
-                    <p>
-                      <span className="font-medium">Card:</span> •••• {currentOrder.payment.last4}
-                    </p>
-                  )}
-                  {currentOrder.payment.email && (
-                    <p>
-                      <span className="font-medium">Email:</span> {currentOrder.payment.email}
-                    </p>
-                  )}
+                  <p>
+                    <span className="font-medium">Status:</span> {getStatusText(currentOrder.paymentStatus)}
+                  </p>
                 </div>
               </div>
             </div>
           </CardContent>
           <CardFooter className="flex justify-between">
-            <Button variant="outline">
+            <Button variant="outline" onClick={() => router.push('/home/products')}>
               <FileText className="mr-2 h-4 w-4" />
-              View Invoice
+              Buy Again
             </Button>
-            <Button>
-              <Download className="mr-2 h-4 w-4" />
-              Download Receipt
-            </Button>
+            {(currentOrder.orderStatus.toUpperCase() === 'PENDING' || currentOrder.orderStatus.toUpperCase() === 'CONFIRMED') && (
+              <Button 
+                variant="destructive"
+                onClick={() => handleCancelOrder(currentOrder.id)}
+                disabled={loadingCancel[currentOrder.id]}
+              >
+                {loadingCancel[currentOrder.id] ? (
+                  <>
+                    <div className="h-4 w-4 animate-spin rounded-full border-2 border-current border-t-transparent mr-2" />
+                    Cancelling...
+                  </>
+                ) : (
+                  'Cancel Order'
+                )}
+              </Button>
+            )}
           </CardFooter>
         </Card>
       )}
     </div>
   )
 }
+

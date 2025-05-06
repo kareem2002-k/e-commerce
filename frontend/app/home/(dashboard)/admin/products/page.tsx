@@ -103,6 +103,109 @@ export default function AdminProductsPage() {
       router.push('/home/products');
     }
   }, [user, router]);
+
+  // Direct API call without custom hook for debugging
+  useEffect(() => {
+    if (token) {
+      fetchProductsDirectly();
+      fetchCategoriesDirectly();
+    }
+  }, [token]);
+
+  const fetchProductsDirectly = async () => {
+    try {
+      if (!token) {
+        console.error('No authentication token available');
+        toast.error('Authentication error. Please log in again.');
+        return;
+      }
+
+      console.log('Fetching products with token:', token ? 'Token exists' : 'No token');
+      setLoading(true);
+      
+      // Get API URL with fallback
+      const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001';
+      
+      const response = await fetch(`${API_URL}/products`, {
+        headers: { 
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        }
+      });
+      
+      if (!response.ok) {
+        if (response.status === 401) {
+          throw new Error('Authentication failed. Please log in again.');
+        } else {
+          throw new Error(`Error fetching products: ${response.status}`);
+        }
+      }
+      
+      const data = await response.json() as Product[];
+      console.log('Products fetched successfully:', data.length);
+      setProducts(data);
+      
+      // Calculate stats
+      const totalValue = data.reduce((sum: number, product: Product) => 
+        sum + (product.price * product.stock), 0);
+      const lowStockCount = data.filter((product: Product) => 
+        product.stock <= product.lowStockThreshold).length;
+      
+      setStats(prev => ({
+        ...prev,
+        totalProducts: data?.length ?? 0,
+        lowStockProducts: lowStockCount,
+        totalValue
+      }));
+      
+    } catch (error: any) {
+      console.error('Error fetching products:', error.message);
+      
+      if (error.message.includes('401')) {
+        toast.error('Session expired. Please log in again.');
+      } else {
+        toast.error('Failed to load products: ' + error.message);
+      }
+      
+    } finally {
+      setLoading(false);
+    }
+  };
+  
+  const fetchCategoriesDirectly = async () => {
+    try {
+      if (!token) {
+        console.error('No authentication token available for categories');
+        return;
+      }
+
+      // Get API URL with fallback
+      const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001';
+      
+      const response = await fetch(`${API_URL}/categories`, {
+        headers: { 
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        }
+      });
+      
+      if (!response.ok) {
+        throw new Error(`Error fetching categories: ${response.status}`);
+      }
+      
+      const data = await response.json() as Category[];
+      console.log('Categories fetched successfully:', data.length);
+      setCategories(data);
+      
+      setStats(prev => ({
+        ...prev,
+        totalCategories: data?.length ?? 0
+      }));
+      
+    } catch (error: any) {
+      console.error('Error fetching categories:', error.message);
+    }
+  };
   
   // Set data when it's loaded
   useEffect(() => {
@@ -174,7 +277,7 @@ export default function AdminProductsPage() {
   
   // Edit product
   const handleEditProduct = (productId: string) => {
-    router.push(`/admin/products/edit/${productId}`);
+    router.push(`/home/admin/products/edit/${productId}`);
   };
   
   // Delete product
@@ -280,12 +383,12 @@ export default function AdminProductsPage() {
 
   return (
     <ProtectedRoute>
-      <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
+      <div className="min-h-screen ">
         <TopBar />
         
         {/* Lightning effect background */}
-        <div className="absolute top-0 left-0 right-0 h-[300px] bg-gradient-to-b from-blue-500/10 via-blue-400/5 to-transparent -z-10 pointer-events-none" />
-        <div className="absolute top-0 left-0 right-0 h-[300px] bg-[radial-gradient(ellipse_80%_80%_at_50%_-20%,rgba(0,123,255,0.2),rgba(255,255,255,0))] -z-10 pointer-events-none" />
+        <div className="absolute top-0 left-0 right-0 h-[300px]z-10 pointer-events-none" />
+        <div className="absolute top-0 left-0 right-0 h-[300px] -z-10 pointer-events-none" />
         
         <main className="container mx-auto px-4 py-8">
           <motion.div
@@ -331,7 +434,7 @@ export default function AdminProductsPage() {
               
               <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
                 <Button 
-                  onClick={() => router.push('/admin/products/new')}
+                  onClick={() => router.push('/home/admin/products/new')}
                   className="bg-blue-600 hover:bg-blue-700 text-white"
                 >
                   <Plus className="mr-2 h-4 w-4" />

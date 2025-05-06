@@ -76,7 +76,7 @@ export function CartDrawer({ open, onOpenChange }: CartDrawerProps) {
                       <Image src={item.image || "/placeholder.svg"} alt={item.name} fill className="object-cover" />
                     </div>
                     <div className="flex-1 flex flex-col">
-                      <Link href={`/products/${item.id}`} className="font-medium hover:underline">
+                      <Link href={`/home/products/${item.id}`} className="font-medium hover:underline">
                         {item.name}
                       </Link>
                       <div className="text-sm text-muted-foreground mt-1">Qty: {item.quantity}</div>

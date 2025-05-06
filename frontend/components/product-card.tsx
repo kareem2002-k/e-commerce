@@ -29,7 +29,7 @@ export function ProductCard({ product, className }: ProductCardProps) {
   return (
     <Card className={cn("overflow-hidden transition-all hover:shadow-md", className)}>
       <div className="relative">
-        <Link href={`/products/${product.id}`}>
+        <Link href={`/home/products/${product.id}`}>
           <div className="aspect-square overflow-hidden">
             <Image
               src={product.image || "/placeholder.svg"}
@@ -53,7 +53,7 @@ export function ProductCard({ product, className }: ProductCardProps) {
       </div>
       <CardContent className="p-4">
         <div className="mb-1 text-sm text-muted-foreground">{product.category}</div>
-        <Link href={`/products/${product.id}`} className="hover:underline">
+        <Link href={`/home/products/${product.id}`} className="hover:underline">
           <h3 className="font-medium line-clamp-2">{product.name}</h3>
         </Link>
         <div className="mt-2 flex items-center gap-2">

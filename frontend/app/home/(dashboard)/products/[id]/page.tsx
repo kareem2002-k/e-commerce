@@ -73,7 +73,7 @@ export default function ProductPage() {
         <h2 className="text-xl font-semibold">Error loading product</h2>
         <p className="text-muted-foreground">{error.message}</p>
         <Button asChild>
-          <Link href="/products">Return to Products</Link>
+          <Link href="/home/products">Return to Products</Link>
         </Button>
       </div>
     )
@@ -84,7 +84,7 @@ export default function ProductPage() {
       <div className="flex flex-col items-center justify-center min-h-[400px] space-y-4">
         <h2 className="text-xl font-semibold">Product not found</h2>
         <Button asChild>
-          <Link href="/products">Return to Products</Link>
+          <Link href="/home/products">Return to Products</Link>
         </Button>
       </div>
     )
@@ -98,17 +98,17 @@ export default function ProductPage() {
     <div className="space-y-8">
       {/* Breadcrumb */}
       <nav className="flex items-center text-sm text-muted-foreground">
-        <Link href="/" className="hover:text-foreground">
+        <Link href="/home" className="hover:text-foreground">
           Home
         </Link>
         <ChevronRight className="h-4 w-4 mx-2" />
-        <Link href="/products" className="hover:text-foreground">
+        <Link href="/home/products" className="hover:text-foreground">
           Products
         </Link>
         {product.category && (
           <>
             <ChevronRight className="h-4 w-4 mx-2" />
-            <Link href={`/products/${product.category.name.toLowerCase()}`} className="hover:text-foreground">
+            <Link href={`/home/products/${product.category.name.toLowerCase()}`} className="hover:text-foreground">
               {product.category.name}
             </Link>
           </>

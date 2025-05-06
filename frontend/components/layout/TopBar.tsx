@@ -64,14 +64,14 @@ export default function TopBar() {
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
     if (searchTerm.trim()) {
-      router.push(`/products?search=${encodeURIComponent(searchTerm)}`);
+      router.push(`/home/products?search=${encodeURIComponent(searchTerm)}`);
       setSearchTerm("");
     }
   };
   
   const navItems = [
     { name: "Home", href: "/" },
-    { name: "Products", href: "/products" },
+    { name: "Products", href: "/home/products" },
   ];
 
   const pageTransition = {
@@ -186,7 +186,7 @@ export default function TopBar() {
                 </DropdownMenuItem>
                 <DropdownMenuItem 
                   className="cursor-pointer flex items-center focus:bg-purple-50 dark:focus:bg-purple-900/20"
-                  onClick={() => router.push('/orders')}
+                  onClick={() => router.push('/home/orders')}
                 >
                   <ShoppingCart className="mr-2 h-4 w-4 text-purple-600" />
                   My Orders
@@ -398,7 +398,7 @@ export default function TopBar() {
                       variant="outline"
                       className="justify-start w-full border-purple-100 dark:border-purple-900/20"
                       onClick={() => {
-                        router.push('/orders');
+                        router.push('/home/orders');
                         setMobileMenuOpen(false);
                       }}
                     >
