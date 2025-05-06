@@ -128,7 +128,7 @@ router.get('/:id', authenticate, async (req, res) => {
 // Create new product
 router.post('/', authenticate, requireAdmin, async (req, res) => {
   try {
-    const { name, description, sku, price, stock, lowStockThreshold, categoryId, images, brand } = req.body;
+    const { name, description, sku, price, stock, lowStockThreshold, categoryId, images, brand, featured, discount } = req.body;
     
     const product = await prisma.product.create({
       data: {
@@ -139,6 +139,8 @@ router.post('/', authenticate, requireAdmin, async (req, res) => {
         stock: parseInt(stock),
         lowStockThreshold: parseInt(lowStockThreshold),
         categoryId,
+        featured: featured || false,
+        discount: discount ? parseFloat(discount) : null,
         images: {
           create: images.map((image: { url: string; altText: string }) => ({
             url: image.url,
@@ -154,6 +156,7 @@ router.post('/', authenticate, requireAdmin, async (req, res) => {
     
     res.status(201).json(product);
   } catch (error) {
+    console.error('Error creating product:', error);
     res.status(500).json({ message: 'Error creating product' });
   }
 });

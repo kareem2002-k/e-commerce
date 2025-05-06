@@ -27,6 +27,8 @@ export type Product = {
   stock: number;
   sku: string;
   lowStockThreshold: number;
+  featured: boolean;
+  discount: number | null;
   categoryId: string;
   category: {
     id: string;

@@ -79,6 +79,8 @@ model Product {
   price             Float
   stock             Int         @default(0)
   lowStockThreshold Int         @default(5)
+  featured          Boolean     @default(false)
+  discount          Float?
   category          Category?   @relation(fields: [categoryId], references: [id])
   categoryId        String?
   images            Image[]
@@ -92,6 +94,7 @@ model Product {
   @@index([name])
   @@index([price])
   @@index([categoryId])
+  @@index([featured])
 }
 
 model Image {

@@ -7,7 +7,7 @@ import {
   Plus, Edit, Trash2, Search, 
   Zap, ArrowUpDown, XCircle, Filter,
   BarChart3, Package, Tag, DollarSign,
-  ChevronDown, Upload, Download, RefreshCw, Eye
+  ChevronDown, Upload, Download, RefreshCw, Eye, Star
 } from "lucide-react";
 import { useAuth } from "@/context/AuthContext";
 import { ProtectedRoute } from "@/components/auth/ProtectedRoute";
@@ -81,6 +81,7 @@ export default function AdminProductsPage() {
   const [stats, setStats] = useState({
     totalProducts: 0,
     lowStockProducts: 0,
+    featuredProducts: 0,
     totalValue: 0,
     totalCategories: 0
   });
@@ -150,11 +151,14 @@ export default function AdminProductsPage() {
         sum + (product.price * product.stock), 0);
       const lowStockCount = data.filter((product: Product) => 
         product.stock <= product.lowStockThreshold).length;
+      const featuredCount = data.filter((product: Product) => 
+        product.featured).length;
       
       setStats(prev => ({
         ...prev,
         totalProducts: data?.length ?? 0,
         lowStockProducts: lowStockCount,
+        featuredProducts: featuredCount,
         totalValue
       }));
       
@@ -217,11 +221,14 @@ export default function AdminProductsPage() {
         sum + (product.price * product.stock), 0);
       const lowStockCount = productsState.data.filter((product: Product) => 
         product.stock <= product.lowStockThreshold).length;
+      const featuredCount = productsState.data.filter((product: Product) => 
+        product.featured).length;
       
       setStats(prev => ({
         ...prev,
         totalProducts: productsState.data?.length ?? 0,
         lowStockProducts: lowStockCount,
+        featuredProducts: featuredCount,
         totalValue
       }));
     }
@@ -253,7 +260,8 @@ export default function AdminProductsPage() {
     const matchesTab = 
       (activeTab === "all") || 
       (activeTab === "low-stock" && product.stock <= product.lowStockThreshold) ||
-      (activeTab === "in-stock" && product.stock > product.lowStockThreshold);
+      (activeTab === "in-stock" && product.stock > product.lowStockThreshold) ||
+      (activeTab === "featured" && product.featured);
     
     return matchesSearch && matchesCategory && matchesTab;
   });
@@ -495,6 +503,23 @@ export default function AdminProductsPage() {
               </motion.div>
               
               <motion.div variants={itemVariants} whileHover="hover">
+                <Card className="border-amber-100 dark:border-amber-900/30 hover:border-amber-300 transition-colors">
+                  <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                    <CardTitle className="text-sm font-medium">Featured Products</CardTitle>
+                    <Star className="h-4 w-4 text-amber-500" />
+                  </CardHeader>
+                  <CardContent>
+                    <div className="text-2xl font-bold text-amber-500">
+                      {stats.featuredProducts}
+                    </div>
+                    <p className="text-xs text-muted-foreground">
+                      showcased on homepage
+                    </p>
+                  </CardContent>
+                </Card>
+              </motion.div>
+              
+              <motion.div variants={itemVariants} whileHover="hover">
                 <Card className="border-green-100 dark:border-green-900/30 hover:border-green-300 transition-colors">
                   <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                     <CardTitle className="text-sm font-medium">Inventory Value</CardTitle>
@@ -513,29 +538,6 @@ export default function AdminProductsPage() {
                   </CardContent>
                 </Card>
               </motion.div>
-              
-              <motion.div variants={itemVariants} whileHover="hover">
-                <Card className="border-purple-100 dark:border-purple-900/30 hover:border-purple-300 transition-colors">
-                  <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                    <CardTitle className="text-sm font-medium">Categories</CardTitle>
-                    <Tag className="h-4 w-4 text-purple-600" />
-                  </CardHeader>
-                  <CardContent>
-                    <div className="text-2xl font-bold text-purple-600">
-                      {stats.totalCategories}
-                    </div>
-                    <p className="text-xs text-muted-foreground">
-                      <Button 
-                        variant="link" 
-                        className="h-auto p-0 text-xs"
-                        onClick={() => router.push('/admin/categories')}
-                      >
-                        Manage categories
-                      </Button>
-                    </p>
-                  </CardContent>
-                </Card>
-              </motion.div>
             </motion.div>
           )}
           
@@ -547,7 +549,7 @@ export default function AdminProductsPage() {
               onValueChange={setActiveTab}
               className="w-full"
             >
-              <TabsList className="grid w-full grid-cols-3 mb-4">
+              <TabsList className="grid w-full grid-cols-4 mb-4">
                 <TabsTrigger value="all">All Products</TabsTrigger>
                 <TabsTrigger 
                   value="in-stock" 
@@ -568,6 +570,17 @@ export default function AdminProductsPage() {
                   {stats.lowStockProducts > 0 && (
                     <Badge className="ml-2 bg-red-500 hover:bg-red-600">
                       {stats.lowStockProducts}
+                    </Badge>
+                  )}
+                </TabsTrigger>
+                <TabsTrigger 
+                  value="featured"
+                  className="relative"
+                >
+                  Featured
+                  {products.filter(p => p.featured).length > 0 && (
+                    <Badge className="ml-2 bg-amber-500 hover:bg-amber-600">
+                      {products.filter(p => p.featured).length}
                     </Badge>
                   )}
                 </TabsTrigger>
@@ -793,6 +806,53 @@ export default function AdminProductsPage() {
                   {(data) => renderProductTable(data)}
                 </DataLoader>
               </TabsContent>
+              
+              <TabsContent value="featured" className="pt-2">
+                <DataLoader
+                  isLoading={loading}
+                  error={null} // We're not showing the error, just handling the loading state
+                  data={sortedProducts}
+                  onRetry={() => {
+                    fetchProducts();
+                    fetchCategories();
+                  }}
+                  isEmpty={(data) => data.length === 0}
+                  emptyComponent={
+                    <motion.div
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      className="text-center py-12 border rounded-md bg-white dark:bg-gray-800"
+                    >
+                      <svg className="mx-auto h-12 w-12 text-gray-400" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M13 10V3L4 14H11V21L20 10H13Z" fill="currentColor" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                      </svg>
+                      <h3 className="text-xl font-medium mt-4">No products found</h3>
+                      <p className="text-muted-foreground mt-2">
+                        {searchTerm || selectedCategory !== "all" 
+                          ? "Try adjusting your filters" 
+                          : "Add your first product to get started"}
+                      </p>
+                      {!searchTerm && selectedCategory === "all" && (
+                        <motion.div
+                          whileHover={{ scale: 1.05 }}
+                          whileTap={{ scale: 0.95 }}
+                          className="mt-6"
+                        >
+                          <Button 
+                            onClick={() => router.push('/admin/products/new')}
+                            className="bg-blue-600 hover:bg-blue-700"
+                          >
+                            <Plus className="mr-2 h-4 w-4" />
+                            Add New Product
+                          </Button>
+                        </motion.div>
+                      )}
+                    </motion.div>
+                  }
+                >
+                  {(data) => renderProductTable(data)}
+                </DataLoader>
+              </TabsContent>
             </Tabs>
           </div>
         </main>
@@ -864,12 +924,33 @@ export default function AdminProductsPage() {
                     </div>
                   </TableCell>
                   <TableCell className="font-medium">
-                    <div className="flex items-center">
+                    <div className="flex items-center gap-2">
                       {product.name}
+                      <div className="flex gap-1">
+                        {product.featured && (
+                          <Badge variant="outline" className="text-amber-500 border-amber-200 bg-amber-50 dark:border-amber-800 dark:bg-amber-900/20">
+                            Featured
+                          </Badge>
+                        )}
+                        {product.discount && (
+                          <Badge variant="outline" className="text-green-500 border-green-200 bg-green-50 dark:border-green-800 dark:bg-green-900/20">
+                            {product.discount}% Off
+                          </Badge>
+                        )}
+                      </div>
                     </div>
                   </TableCell>
                   <TableCell>{product.sku}</TableCell>
-                  <TableCell className="font-mono">${product.price}</TableCell>
+                  <TableCell className="font-mono">
+                    {product.discount ? (
+                      <div className="flex flex-col">
+                        <span className="text-green-600">${(product.price * (1 - product.discount / 100)).toFixed(2)}</span>
+                        <span className="text-xs line-through text-gray-500">${product.price}</span>
+                      </div>
+                    ) : (
+                      `$${product.price}`
+                    )}
+                  </TableCell>
                   <TableCell>
                     <div className="flex items-center">
                       {product.stock}

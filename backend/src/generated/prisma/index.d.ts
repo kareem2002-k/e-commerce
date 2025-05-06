@@ -4454,12 +4454,14 @@ export namespace Prisma {
     price: number | null
     stock: number | null
     lowStockThreshold: number | null
+    discount: number | null
   }
 
   export type ProductSumAggregateOutputType = {
     price: number | null
     stock: number | null
     lowStockThreshold: number | null
+    discount: number | null
   }
 
   export type ProductMinAggregateOutputType = {
@@ -4470,6 +4472,8 @@ export namespace Prisma {
     price: number | null
     stock: number | null
     lowStockThreshold: number | null
+    featured: boolean | null
+    discount: number | null
     categoryId: string | null
     createdAt: Date | null
     updatedAt: Date | null
@@ -4483,6 +4487,8 @@ export namespace Prisma {
     price: number | null
     stock: number | null
     lowStockThreshold: number | null
+    featured: boolean | null
+    discount: number | null
     categoryId: string | null
     createdAt: Date | null
     updatedAt: Date | null
@@ -4496,6 +4502,8 @@ export namespace Prisma {
     price: number
     stock: number
     lowStockThreshold: number
+    featured: number
+    discount: number
     categoryId: number
     createdAt: number
     updatedAt: number
@@ -4507,12 +4515,14 @@ export namespace Prisma {
     price?: true
     stock?: true
     lowStockThreshold?: true
+    discount?: true
   }
 
   export type ProductSumAggregateInputType = {
     price?: true
     stock?: true
     lowStockThreshold?: true
+    discount?: true
   }
 
   export type ProductMinAggregateInputType = {
@@ -4523,6 +4533,8 @@ export namespace Prisma {
     price?: true
     stock?: true
     lowStockThreshold?: true
+    featured?: true
+    discount?: true
     categoryId?: true
     createdAt?: true
     updatedAt?: true
@@ -4536,6 +4548,8 @@ export namespace Prisma {
     price?: true
     stock?: true
     lowStockThreshold?: true
+    featured?: true
+    discount?: true
     categoryId?: true
     createdAt?: true
     updatedAt?: true
@@ -4549,6 +4563,8 @@ export namespace Prisma {
     price?: true
     stock?: true
     lowStockThreshold?: true
+    featured?: true
+    discount?: true
     categoryId?: true
     createdAt?: true
     updatedAt?: true
@@ -4649,6 +4665,8 @@ export namespace Prisma {
     price: number
     stock: number
     lowStockThreshold: number
+    featured: boolean
+    discount: number | null
     categoryId: string | null
     createdAt: Date
     updatedAt: Date
@@ -4681,6 +4699,8 @@ export namespace Prisma {
     price?: boolean
     stock?: boolean
     lowStockThreshold?: boolean
+    featured?: boolean
+    discount?: boolean
     categoryId?: boolean
     createdAt?: boolean
     updatedAt?: boolean
@@ -4700,6 +4720,8 @@ export namespace Prisma {
     price?: boolean
     stock?: boolean
     lowStockThreshold?: boolean
+    featured?: boolean
+    discount?: boolean
     categoryId?: boolean
     createdAt?: boolean
     updatedAt?: boolean
@@ -4714,6 +4736,8 @@ export namespace Prisma {
     price?: boolean
     stock?: boolean
     lowStockThreshold?: boolean
+    featured?: boolean
+    discount?: boolean
     categoryId?: boolean
     createdAt?: boolean
     updatedAt?: boolean
@@ -4728,12 +4752,14 @@ export namespace Prisma {
     price?: boolean
     stock?: boolean
     lowStockThreshold?: boolean
+    featured?: boolean
+    discount?: boolean
     categoryId?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }
 
-  export type ProductOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "description" | "sku" | "price" | "stock" | "lowStockThreshold" | "categoryId" | "createdAt" | "updatedAt", ExtArgs["result"]["product"]>
+  export type ProductOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "description" | "sku" | "price" | "stock" | "lowStockThreshold" | "featured" | "discount" | "categoryId" | "createdAt" | "updatedAt", ExtArgs["result"]["product"]>
   export type ProductInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     category?: boolean | Product$categoryArgs<ExtArgs>
     images?: boolean | Product$imagesArgs<ExtArgs>
@@ -4766,6 +4792,8 @@ export namespace Prisma {
       price: number
       stock: number
       lowStockThreshold: number
+      featured: boolean
+      discount: number | null
       categoryId: string | null
       createdAt: Date
       updatedAt: Date
@@ -5204,6 +5232,8 @@ export namespace Prisma {
     readonly price: FieldRef<"Product", 'Float'>
     readonly stock: FieldRef<"Product", 'Int'>
     readonly lowStockThreshold: FieldRef<"Product", 'Int'>
+    readonly featured: FieldRef<"Product", 'Boolean'>
+    readonly discount: FieldRef<"Product", 'Float'>
     readonly categoryId: FieldRef<"Product", 'String'>
     readonly createdAt: FieldRef<"Product", 'DateTime'>
     readonly updatedAt: FieldRef<"Product", 'DateTime'>
@@ -14877,6 +14907,8 @@ export namespace Prisma {
     price: 'price',
     stock: 'stock',
     lowStockThreshold: 'lowStockThreshold',
+    featured: 'featured',
+    discount: 'discount',
     categoryId: 'categoryId',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt'
@@ -15090,6 +15122,13 @@ export namespace Prisma {
 
 
   /**
+   * Reference to a field of type 'Boolean'
+   */
+  export type BooleanFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Boolean'>
+    
+
+
+  /**
    * Reference to a field of type 'PaymentStatus'
    */
   export type EnumPaymentStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'PaymentStatus'>
@@ -15275,6 +15314,8 @@ export namespace Prisma {
     price?: FloatFilter<"Product"> | number
     stock?: IntFilter<"Product"> | number
     lowStockThreshold?: IntFilter<"Product"> | number
+    featured?: BoolFilter<"Product"> | boolean
+    discount?: FloatNullableFilter<"Product"> | number | null
     categoryId?: StringNullableFilter<"Product"> | string | null
     createdAt?: DateTimeFilter<"Product"> | Date | string
     updatedAt?: DateTimeFilter<"Product"> | Date | string
@@ -15293,6 +15334,8 @@ export namespace Prisma {
     price?: SortOrder
     stock?: SortOrder
     lowStockThreshold?: SortOrder
+    featured?: SortOrder
+    discount?: SortOrderInput | SortOrder
     categoryId?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -15314,6 +15357,8 @@ export namespace Prisma {
     price?: FloatFilter<"Product"> | number
     stock?: IntFilter<"Product"> | number
     lowStockThreshold?: IntFilter<"Product"> | number
+    featured?: BoolFilter<"Product"> | boolean
+    discount?: FloatNullableFilter<"Product"> | number | null
     categoryId?: StringNullableFilter<"Product"> | string | null
     createdAt?: DateTimeFilter<"Product"> | Date | string
     updatedAt?: DateTimeFilter<"Product"> | Date | string
@@ -15332,6 +15377,8 @@ export namespace Prisma {
     price?: SortOrder
     stock?: SortOrder
     lowStockThreshold?: SortOrder
+    featured?: SortOrder
+    discount?: SortOrderInput | SortOrder
     categoryId?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -15353,6 +15400,8 @@ export namespace Prisma {
     price?: FloatWithAggregatesFilter<"Product"> | number
     stock?: IntWithAggregatesFilter<"Product"> | number
     lowStockThreshold?: IntWithAggregatesFilter<"Product"> | number
+    featured?: BoolWithAggregatesFilter<"Product"> | boolean
+    discount?: FloatNullableWithAggregatesFilter<"Product"> | number | null
     categoryId?: StringNullableWithAggregatesFilter<"Product"> | string | null
     createdAt?: DateTimeWithAggregatesFilter<"Product"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"Product"> | Date | string
@@ -16074,6 +16123,8 @@ export namespace Prisma {
     price: number
     stock?: number
     lowStockThreshold?: number
+    featured?: boolean
+    discount?: number | null
     createdAt?: Date | string
     updatedAt?: Date | string
     category?: CategoryCreateNestedOneWithoutProductsInput
@@ -16091,6 +16142,8 @@ export namespace Prisma {
     price: number
     stock?: number
     lowStockThreshold?: number
+    featured?: boolean
+    discount?: number | null
     categoryId?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -16108,6 +16161,8 @@ export namespace Prisma {
     price?: FloatFieldUpdateOperationsInput | number
     stock?: IntFieldUpdateOperationsInput | number
     lowStockThreshold?: IntFieldUpdateOperationsInput | number
+    featured?: BoolFieldUpdateOperationsInput | boolean
+    discount?: NullableFloatFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     category?: CategoryUpdateOneWithoutProductsNestedInput
@@ -16125,6 +16180,8 @@ export namespace Prisma {
     price?: FloatFieldUpdateOperationsInput | number
     stock?: IntFieldUpdateOperationsInput | number
     lowStockThreshold?: IntFieldUpdateOperationsInput | number
+    featured?: BoolFieldUpdateOperationsInput | boolean
+    discount?: NullableFloatFieldUpdateOperationsInput | number | null
     categoryId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -16142,6 +16199,8 @@ export namespace Prisma {
     price: number
     stock?: number
     lowStockThreshold?: number
+    featured?: boolean
+    discount?: number | null
     categoryId?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -16155,6 +16214,8 @@ export namespace Prisma {
     price?: FloatFieldUpdateOperationsInput | number
     stock?: IntFieldUpdateOperationsInput | number
     lowStockThreshold?: IntFieldUpdateOperationsInput | number
+    featured?: BoolFieldUpdateOperationsInput | boolean
+    discount?: NullableFloatFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -16167,6 +16228,8 @@ export namespace Prisma {
     price?: FloatFieldUpdateOperationsInput | number
     stock?: IntFieldUpdateOperationsInput | number
     lowStockThreshold?: IntFieldUpdateOperationsInput | number
+    featured?: BoolFieldUpdateOperationsInput | boolean
+    discount?: NullableFloatFieldUpdateOperationsInput | number | null
     categoryId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -17002,6 +17065,22 @@ export namespace Prisma {
     not?: NestedIntFilter<$PrismaModel> | number
   }
 
+  export type BoolFilter<$PrismaModel = never> = {
+    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
+    not?: NestedBoolFilter<$PrismaModel> | boolean
+  }
+
+  export type FloatNullableFilter<$PrismaModel = never> = {
+    equals?: number | FloatFieldRefInput<$PrismaModel> | null
+    in?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
+    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
+    lt?: number | FloatFieldRefInput<$PrismaModel>
+    lte?: number | FloatFieldRefInput<$PrismaModel>
+    gt?: number | FloatFieldRefInput<$PrismaModel>
+    gte?: number | FloatFieldRefInput<$PrismaModel>
+    not?: NestedFloatNullableFilter<$PrismaModel> | number | null
+  }
+
   export type ImageListRelationFilter = {
     every?: ImageWhereInput
     some?: ImageWhereInput
@@ -17040,6 +17119,8 @@ export namespace Prisma {
     price?: SortOrder
     stock?: SortOrder
     lowStockThreshold?: SortOrder
+    featured?: SortOrder
+    discount?: SortOrder
     categoryId?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -17049,6 +17130,7 @@ export namespace Prisma {
     price?: SortOrder
     stock?: SortOrder
     lowStockThreshold?: SortOrder
+    discount?: SortOrder
   }
 
   export type ProductMaxOrderByAggregateInput = {
@@ -17059,6 +17141,8 @@ export namespace Prisma {
     price?: SortOrder
     stock?: SortOrder
     lowStockThreshold?: SortOrder
+    featured?: SortOrder
+    discount?: SortOrder
     categoryId?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -17072,6 +17156,8 @@ export namespace Prisma {
     price?: SortOrder
     stock?: SortOrder
     lowStockThreshold?: SortOrder
+    featured?: SortOrder
+    discount?: SortOrder
     categoryId?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -17081,6 +17167,7 @@ export namespace Prisma {
     price?: SortOrder
     stock?: SortOrder
     lowStockThreshold?: SortOrder
+    discount?: SortOrder
   }
 
   export type FloatWithAggregatesFilter<$PrismaModel = never> = {
@@ -17113,6 +17200,30 @@ export namespace Prisma {
     _sum?: NestedIntFilter<$PrismaModel>
     _min?: NestedIntFilter<$PrismaModel>
     _max?: NestedIntFilter<$PrismaModel>
+  }
+
+  export type BoolWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
+    not?: NestedBoolWithAggregatesFilter<$PrismaModel> | boolean
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedBoolFilter<$PrismaModel>
+    _max?: NestedBoolFilter<$PrismaModel>
+  }
+
+  export type FloatNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: number | FloatFieldRefInput<$PrismaModel> | null
+    in?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
+    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
+    lt?: number | FloatFieldRefInput<$PrismaModel>
+    lte?: number | FloatFieldRefInput<$PrismaModel>
+    gt?: number | FloatFieldRefInput<$PrismaModel>
+    gte?: number | FloatFieldRefInput<$PrismaModel>
+    not?: NestedFloatNullableWithAggregatesFilter<$PrismaModel> | number | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _avg?: NestedFloatNullableFilter<$PrismaModel>
+    _sum?: NestedFloatNullableFilter<$PrismaModel>
+    _min?: NestedFloatNullableFilter<$PrismaModel>
+    _max?: NestedFloatNullableFilter<$PrismaModel>
   }
 
   export type ProductScalarRelationFilter = {
@@ -17895,6 +18006,18 @@ export namespace Prisma {
     divide?: number
   }
 
+  export type BoolFieldUpdateOperationsInput = {
+    set?: boolean
+  }
+
+  export type NullableFloatFieldUpdateOperationsInput = {
+    set?: number | null
+    increment?: number
+    decrement?: number
+    multiply?: number
+    divide?: number
+  }
+
   export type CategoryUpdateOneWithoutProductsNestedInput = {
     create?: XOR<CategoryCreateWithoutProductsInput, CategoryUncheckedCreateWithoutProductsInput>
     connectOrCreate?: CategoryCreateOrConnectWithoutProductsInput
@@ -18588,6 +18711,22 @@ export namespace Prisma {
     not?: NestedFloatFilter<$PrismaModel> | number
   }
 
+  export type NestedBoolFilter<$PrismaModel = never> = {
+    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
+    not?: NestedBoolFilter<$PrismaModel> | boolean
+  }
+
+  export type NestedFloatNullableFilter<$PrismaModel = never> = {
+    equals?: number | FloatFieldRefInput<$PrismaModel> | null
+    in?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
+    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
+    lt?: number | FloatFieldRefInput<$PrismaModel>
+    lte?: number | FloatFieldRefInput<$PrismaModel>
+    gt?: number | FloatFieldRefInput<$PrismaModel>
+    gte?: number | FloatFieldRefInput<$PrismaModel>
+    not?: NestedFloatNullableFilter<$PrismaModel> | number | null
+  }
+
   export type NestedFloatWithAggregatesFilter<$PrismaModel = never> = {
     equals?: number | FloatFieldRefInput<$PrismaModel>
     in?: number[] | ListFloatFieldRefInput<$PrismaModel>
@@ -18618,6 +18757,30 @@ export namespace Prisma {
     _sum?: NestedIntFilter<$PrismaModel>
     _min?: NestedIntFilter<$PrismaModel>
     _max?: NestedIntFilter<$PrismaModel>
+  }
+
+  export type NestedBoolWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
+    not?: NestedBoolWithAggregatesFilter<$PrismaModel> | boolean
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedBoolFilter<$PrismaModel>
+    _max?: NestedBoolFilter<$PrismaModel>
+  }
+
+  export type NestedFloatNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: number | FloatFieldRefInput<$PrismaModel> | null
+    in?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
+    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
+    lt?: number | FloatFieldRefInput<$PrismaModel>
+    lte?: number | FloatFieldRefInput<$PrismaModel>
+    gt?: number | FloatFieldRefInput<$PrismaModel>
+    gte?: number | FloatFieldRefInput<$PrismaModel>
+    not?: NestedFloatNullableWithAggregatesFilter<$PrismaModel> | number | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _avg?: NestedFloatNullableFilter<$PrismaModel>
+    _sum?: NestedFloatNullableFilter<$PrismaModel>
+    _min?: NestedFloatNullableFilter<$PrismaModel>
+    _max?: NestedFloatNullableFilter<$PrismaModel>
   }
 
   export type NestedEnumPaymentStatusFilter<$PrismaModel = never> = {
@@ -18685,17 +18848,6 @@ export namespace Prisma {
     _sum?: NestedIntNullableFilter<$PrismaModel>
     _min?: NestedIntNullableFilter<$PrismaModel>
     _max?: NestedIntNullableFilter<$PrismaModel>
-  }
-
-  export type NestedFloatNullableFilter<$PrismaModel = never> = {
-    equals?: number | FloatFieldRefInput<$PrismaModel> | null
-    in?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
-    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
-    lt?: number | FloatFieldRefInput<$PrismaModel>
-    lte?: number | FloatFieldRefInput<$PrismaModel>
-    gt?: number | FloatFieldRefInput<$PrismaModel>
-    gte?: number | FloatFieldRefInput<$PrismaModel>
-    not?: NestedFloatNullableFilter<$PrismaModel> | number | null
   }
 
   export type CartCreateWithoutUserInput = {
@@ -19000,6 +19152,8 @@ export namespace Prisma {
     price: number
     stock?: number
     lowStockThreshold?: number
+    featured?: boolean
+    discount?: number | null
     createdAt?: Date | string
     updatedAt?: Date | string
     images?: ImageCreateNestedManyWithoutProductInput
@@ -19016,6 +19170,8 @@ export namespace Prisma {
     price: number
     stock?: number
     lowStockThreshold?: number
+    featured?: boolean
+    discount?: number | null
     createdAt?: Date | string
     updatedAt?: Date | string
     images?: ImageUncheckedCreateNestedManyWithoutProductInput
@@ -19114,6 +19270,8 @@ export namespace Prisma {
     price?: FloatFilter<"Product"> | number
     stock?: IntFilter<"Product"> | number
     lowStockThreshold?: IntFilter<"Product"> | number
+    featured?: BoolFilter<"Product"> | boolean
+    discount?: FloatNullableFilter<"Product"> | number | null
     categoryId?: StringNullableFilter<"Product"> | string | null
     createdAt?: DateTimeFilter<"Product"> | Date | string
     updatedAt?: DateTimeFilter<"Product"> | Date | string
@@ -19370,6 +19528,8 @@ export namespace Prisma {
     price: number
     stock?: number
     lowStockThreshold?: number
+    featured?: boolean
+    discount?: number | null
     createdAt?: Date | string
     updatedAt?: Date | string
     category?: CategoryCreateNestedOneWithoutProductsInput
@@ -19386,6 +19546,8 @@ export namespace Prisma {
     price: number
     stock?: number
     lowStockThreshold?: number
+    featured?: boolean
+    discount?: number | null
     categoryId?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -19418,6 +19580,8 @@ export namespace Prisma {
     price?: FloatFieldUpdateOperationsInput | number
     stock?: IntFieldUpdateOperationsInput | number
     lowStockThreshold?: IntFieldUpdateOperationsInput | number
+    featured?: BoolFieldUpdateOperationsInput | boolean
+    discount?: NullableFloatFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     category?: CategoryUpdateOneWithoutProductsNestedInput
@@ -19434,6 +19598,8 @@ export namespace Prisma {
     price?: FloatFieldUpdateOperationsInput | number
     stock?: IntFieldUpdateOperationsInput | number
     lowStockThreshold?: IntFieldUpdateOperationsInput | number
+    featured?: BoolFieldUpdateOperationsInput | boolean
+    discount?: NullableFloatFieldUpdateOperationsInput | number | null
     categoryId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -19575,6 +19741,8 @@ export namespace Prisma {
     price: number
     stock?: number
     lowStockThreshold?: number
+    featured?: boolean
+    discount?: number | null
     createdAt?: Date | string
     updatedAt?: Date | string
     category?: CategoryCreateNestedOneWithoutProductsInput
@@ -19591,6 +19759,8 @@ export namespace Prisma {
     price: number
     stock?: number
     lowStockThreshold?: number
+    featured?: boolean
+    discount?: number | null
     categoryId?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -19646,6 +19816,8 @@ export namespace Prisma {
     price?: FloatFieldUpdateOperationsInput | number
     stock?: IntFieldUpdateOperationsInput | number
     lowStockThreshold?: IntFieldUpdateOperationsInput | number
+    featured?: BoolFieldUpdateOperationsInput | boolean
+    discount?: NullableFloatFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     category?: CategoryUpdateOneWithoutProductsNestedInput
@@ -19662,6 +19834,8 @@ export namespace Prisma {
     price?: FloatFieldUpdateOperationsInput | number
     stock?: IntFieldUpdateOperationsInput | number
     lowStockThreshold?: IntFieldUpdateOperationsInput | number
+    featured?: BoolFieldUpdateOperationsInput | boolean
+    discount?: NullableFloatFieldUpdateOperationsInput | number | null
     categoryId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -20219,6 +20393,8 @@ export namespace Prisma {
     price: number
     stock?: number
     lowStockThreshold?: number
+    featured?: boolean
+    discount?: number | null
     createdAt?: Date | string
     updatedAt?: Date | string
     category?: CategoryCreateNestedOneWithoutProductsInput
@@ -20235,6 +20411,8 @@ export namespace Prisma {
     price: number
     stock?: number
     lowStockThreshold?: number
+    featured?: boolean
+    discount?: number | null
     categoryId?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -20310,6 +20488,8 @@ export namespace Prisma {
     price?: FloatFieldUpdateOperationsInput | number
     stock?: IntFieldUpdateOperationsInput | number
     lowStockThreshold?: IntFieldUpdateOperationsInput | number
+    featured?: BoolFieldUpdateOperationsInput | boolean
+    discount?: NullableFloatFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     category?: CategoryUpdateOneWithoutProductsNestedInput
@@ -20326,6 +20506,8 @@ export namespace Prisma {
     price?: FloatFieldUpdateOperationsInput | number
     stock?: IntFieldUpdateOperationsInput | number
     lowStockThreshold?: IntFieldUpdateOperationsInput | number
+    featured?: BoolFieldUpdateOperationsInput | boolean
+    discount?: NullableFloatFieldUpdateOperationsInput | number | null
     categoryId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -20342,6 +20524,8 @@ export namespace Prisma {
     price: number
     stock?: number
     lowStockThreshold?: number
+    featured?: boolean
+    discount?: number | null
     createdAt?: Date | string
     updatedAt?: Date | string
     category?: CategoryCreateNestedOneWithoutProductsInput
@@ -20358,6 +20542,8 @@ export namespace Prisma {
     price: number
     stock?: number
     lowStockThreshold?: number
+    featured?: boolean
+    discount?: number | null
     categoryId?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -20421,6 +20607,8 @@ export namespace Prisma {
     price?: FloatFieldUpdateOperationsInput | number
     stock?: IntFieldUpdateOperationsInput | number
     lowStockThreshold?: IntFieldUpdateOperationsInput | number
+    featured?: BoolFieldUpdateOperationsInput | boolean
+    discount?: NullableFloatFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     category?: CategoryUpdateOneWithoutProductsNestedInput
@@ -20437,6 +20625,8 @@ export namespace Prisma {
     price?: FloatFieldUpdateOperationsInput | number
     stock?: IntFieldUpdateOperationsInput | number
     lowStockThreshold?: IntFieldUpdateOperationsInput | number
+    featured?: BoolFieldUpdateOperationsInput | boolean
+    discount?: NullableFloatFieldUpdateOperationsInput | number | null
     categoryId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -20715,6 +20905,8 @@ export namespace Prisma {
     price: number
     stock?: number
     lowStockThreshold?: number
+    featured?: boolean
+    discount?: number | null
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -20749,6 +20941,8 @@ export namespace Prisma {
     price?: FloatFieldUpdateOperationsInput | number
     stock?: IntFieldUpdateOperationsInput | number
     lowStockThreshold?: IntFieldUpdateOperationsInput | number
+    featured?: BoolFieldUpdateOperationsInput | boolean
+    discount?: NullableFloatFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     images?: ImageUpdateManyWithoutProductNestedInput
@@ -20765,6 +20959,8 @@ export namespace Prisma {
     price?: FloatFieldUpdateOperationsInput | number
     stock?: IntFieldUpdateOperationsInput | number
     lowStockThreshold?: IntFieldUpdateOperationsInput | number
+    featured?: BoolFieldUpdateOperationsInput | boolean
+    discount?: NullableFloatFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     images?: ImageUncheckedUpdateManyWithoutProductNestedInput
@@ -20781,6 +20977,8 @@ export namespace Prisma {
     price?: FloatFieldUpdateOperationsInput | number
     stock?: IntFieldUpdateOperationsInput | number
     lowStockThreshold?: IntFieldUpdateOperationsInput | number
+    featured?: BoolFieldUpdateOperationsInput | boolean
+    discount?: NullableFloatFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }

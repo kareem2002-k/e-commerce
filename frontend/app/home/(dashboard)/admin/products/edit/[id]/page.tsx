@@ -5,7 +5,8 @@ import { useRouter, useParams } from "next/navigation";
 import { motion } from "framer-motion";
 import { 
   ChevronLeft, Save, Trash2, Upload, X, 
-  Plus, Image as ImageIcon, AlertCircle, Zap
+  Plus, Image as ImageIcon, AlertCircle, Zap,
+  Star, Percent, DollarSign, Tag
 } from "lucide-react";
 import { useAuth } from "@/context/AuthContext";
 import { ProtectedRoute } from "@/components/auth/ProtectedRoute";
@@ -27,6 +28,7 @@ import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Category, ProductImage, Product } from "@/types";
+import { Switch } from "@/components/ui/switch";
 
 export default function EditProductPage() {
   const router = useRouter();
@@ -46,7 +48,9 @@ export default function EditProductPage() {
     price: "",
     stock: "",
     lowStockThreshold: "5",
-    categoryId: ""
+    categoryId: "",
+    featured: false,
+    discount: ""
   });
   
   const [images, setImages] = useState<ProductImage[]>([]);
@@ -97,7 +101,9 @@ export default function EditProductPage() {
         price: data.price.toString(),
         stock: data.stock.toString(),
         lowStockThreshold: data.lowStockThreshold.toString(),
-        categoryId: data.categoryId
+        categoryId: data.categoryId,
+        featured: data.featured || false,
+        discount: data.discount ? data.discount.toString() : ""
       });
       
       // Set images
@@ -216,6 +222,11 @@ export default function EditProductPage() {
     });
   };
   
+  // Handle switch change
+  const handleSwitchChange = (name: string, checked: boolean) => {
+    setProduct(prev => ({ ...prev, [name]: checked }));
+  };
+  
   // Validate form
   const validateForm = () => {
     const newErrors: Record<string, string> = {};
@@ -246,6 +257,10 @@ export default function EditProductPage() {
     
     if (images.length === 0) {
       newErrors.images = "At least one image is required";
+    }
+    
+    if (product.discount && (isNaN(Number(product.discount)) || Number(product.discount) < 0 || Number(product.discount) > 100)) {
+      newErrors.discount = "Discount must be a percentage between 0 and 100";
     }
     
     setErrors(newErrors);
@@ -282,6 +297,12 @@ export default function EditProductPage() {
         return;
       }
       
+      if (errors.discount && activeTab !== "marketing") {
+        setActiveTab("marketing");
+        toast.error("Please check the Marketing tab for errors");
+        return;
+      }
+      
       return;
     }
     
@@ -300,6 +321,8 @@ export default function EditProductPage() {
         stock: parseInt(product.stock),
         lowStockThreshold: parseInt(product.lowStockThreshold),
         categoryId: product.categoryId,
+        featured: product.featured,
+        discount: product.discount ? parseFloat(product.discount) : null,
         images: images.map(img => ({
           url: img.url,
           altText: img.altText
@@ -336,6 +359,7 @@ export default function EditProductPage() {
   return (
     <ProtectedRoute>
       <div className="min-h-screen">
+        <TopBar />
         
         <main className="container mx-auto px-4 py-8">
           <div className="mb-8">
@@ -404,6 +428,17 @@ export default function EditProductPage() {
                       >
                         Images
                         {errors.images && (
+                          <span className="ml-auto">
+                            <AlertCircle className="h-4 w-4" />
+                          </span>
+                        )}
+                      </TabsTrigger>
+                      <TabsTrigger 
+                        value="marketing" 
+                        className={`justify-start ${errors.discount ? 'text-red-500' : ''}`}
+                      >
+                        Marketing
+                        {errors.discount && (
                           <span className="ml-auto">
                             <AlertCircle className="h-4 w-4" />
                           </span>
@@ -674,6 +709,85 @@ export default function EditProductPage() {
                                 </Alert>
                               )}
                             </div>
+                          </div>
+                        </TabsContent>
+                        
+                        <TabsContent value="marketing" className="space-y-6 mt-0">
+                          <div className="space-y-4">
+                            <div className="border p-4 rounded-lg">
+                              <div className="flex items-center justify-between">
+                                <div className="space-y-0.5">
+                                  <Label className="text-base">Featured Product</Label>
+                                  <p className="text-sm text-muted-foreground">
+                                    Featured products are displayed prominently on the homepage
+                                  </p>
+                                </div>
+                                <Switch
+                                  checked={product.featured}
+                                  onCheckedChange={(checked) => handleSwitchChange("featured", checked)}
+                                />
+                              </div>
+                            </div>
+                            
+                            <div className="border p-4 rounded-lg">
+                              <div className="space-y-4">
+                                <div>
+                                  <Label htmlFor="discount" className={errors.discount ? "text-red-500" : ""}>
+                                    <div className="flex items-center gap-1">
+                                      <Percent className="h-4 w-4" />
+                                      <span>Discount Percentage</span>
+                                    </div>
+                                  </Label>
+                                  <div className="flex items-center gap-2 mt-1">
+                                    <Input
+                                      id="discount"
+                                      name="discount"
+                                      type="number"
+                                      min="0"
+                                      max="100"
+                                      value={product.discount}
+                                      onChange={handleChange}
+                                      className={`${errors.discount ? "border-red-500" : ""}`}
+                                      placeholder="e.g. 15"
+                                    />
+                                    <span className="text-sm font-medium">%</span>
+                                  </div>
+                                  {errors.discount && (
+                                    <p className="mt-1 text-sm text-red-500">{errors.discount}</p>
+                                  )}
+                                  <p className="mt-1 text-sm text-muted-foreground">
+                                    Leave empty for no discount
+                                  </p>
+                                </div>
+                                
+                                {product.discount && !isNaN(Number(product.discount)) && (
+                                  <div className="bg-gray-50 dark:bg-gray-800 p-3 rounded-md">
+                                    <p className="text-sm font-medium">Price after discount:</p>
+                                    <div className="flex items-center mt-1">
+                                      <DollarSign className="h-4 w-4 text-green-600" />
+                                      <span className="text-lg font-bold text-green-600">
+                                        {(parseFloat(product.price) * (1 - (parseFloat(product.discount) / 100))).toFixed(2)}
+                                      </span>
+                                      <span className="ml-2 text-sm line-through text-gray-500">
+                                        ${product.price}
+                                      </span>
+                                    </div>
+                                  </div>
+                                )}
+                              </div>
+                            </div>
+                            
+                            <Alert className="bg-blue-50 dark:bg-blue-900/20 border-blue-200 dark:border-blue-800">
+                              <Tag className="h-4 w-4 text-blue-600" />
+                              <AlertTitle>Marketing Tips</AlertTitle>
+                              <AlertDescription className="text-sm">
+                                <ul className="list-disc pl-5 space-y-1 mt-2">
+                                  <li>Featured products get 3.5x more visibility</li>
+                                  <li>Products with 10-20% discounts typically see the best conversion rates</li>
+                                  <li>Update featured products regularly to keep your storefront fresh</li>
+                                </ul>
+                              </AlertDescription>
+                            </Alert>
                           </div>
                         </TabsContent>
                       </Tabs>
