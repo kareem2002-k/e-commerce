@@ -4,10 +4,10 @@ import { useState, useEffect, useCallback, useRef } from "react"
 import { useLoading } from "@/components/voltedge/loading-provider"
 import { Product } from "@/types"
 import { useAuth } from "@/context/AuthContext"
+
 export interface SearchFilters {
   searchTerm?: string
   category?: string
-  brands?: string[]
   minPrice?: number
   maxPrice?: number
   sortBy?: string
@@ -16,132 +16,98 @@ export interface SearchFilters {
 
 export function useProductSearch(initialFilters: SearchFilters = {}) {
   const [products, setProducts] = useState<Product[]>([])
-  const [filteredProducts, setFilteredProducts] = useState<Product[]>([])
   const [filters, setFilters] = useState<SearchFilters>(initialFilters)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<Error | null>(null)
   const { startLoading, stopLoading } = useLoading()
   const { token } = useAuth()
   
-  // Track if a request is already in progress to prevent duplicates
-  const requestInProgress = useRef(false)
-  // Track last request time for debouncing
-  const lastRequestTime = useRef(0)
+  // Track if a request is already in progress
+  const requestInProgress = useRef<boolean>(false)
+  // Track debounce timeout
+  const debounceTimeout = useRef<NodeJS.Timeout | undefined>(undefined)
+  // Track current request for cancellation
+  const currentRequest = useRef<AbortController | null>(null)
+  // Track last search params to prevent duplicate requests
+  const lastSearchParams = useRef<string>("")
 
   // Fetch products with filters from API
   const fetchProducts = useCallback(async () => {
+    // Cancel any existing request
+    if (currentRequest.current) {
+      currentRequest.current.abort()
+    }
+
+    // Create new AbortController for this request
+    currentRequest.current = new AbortController()
+
     // Prevent multiple simultaneous requests
     if (requestInProgress.current) {
       return
     }
     
-    // Debounce requests - prevent too many requests in quick succession
-    const now = Date.now()
-    if (now - lastRequestTime.current < 500) {
+    // Build search params
+    const searchParams = new URLSearchParams();
+    
+    if (filters.searchTerm) searchParams.append('searchTerm', filters.searchTerm);
+    if (filters.category && filters.category !== "All Categories") searchParams.append('category', filters.category);
+    if (filters.minPrice !== undefined) searchParams.append('minPrice', filters.minPrice.toString());
+    if (filters.maxPrice !== undefined) searchParams.append('maxPrice', filters.maxPrice.toString());
+    if (filters.sortBy) searchParams.append('sortBy', filters.sortBy);
+    
+    const searchParamsString = searchParams.toString()
+    
+    // Skip if this is the same search as last time
+    if (searchParamsString === lastSearchParams.current) {
       return
     }
     
-    requestInProgress.current = true
-    lastRequestTime.current = now
+    lastSearchParams.current = searchParamsString
     
+    requestInProgress.current = true
     setLoading(true)
     startLoading("Searching products...")
 
     try {
-      // Build search params
-      const searchParams = new URLSearchParams();
-      
-      if (filters.searchTerm) searchParams.append('q', filters.searchTerm);
-      if (filters.category && filters.category !== "All Categories") searchParams.append('category', filters.category);
-      if (filters.minPrice !== undefined) searchParams.append('minPrice', filters.minPrice.toString());
-      if (filters.maxPrice !== undefined) searchParams.append('maxPrice', filters.maxPrice.toString());
-      if (filters.sortBy) searchParams.append('sortBy', filters.sortBy);
-      if (filters.brands && filters.brands.length > 0) searchParams.append('brands', filters.brands.join(','));
-      
-      // Make API request
-      const response = await fetch(`/api/products/search?${searchParams}`, {
+      console.log('Making search request with params:', searchParamsString)
+      // Make API request with abort signal
+      const response = await fetch(`/api/products/search?${searchParamsString}`, {
         headers: {
           'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json'
         },
-        cache: 'no-store'
       });
       
+      console.log('Search response:', response)
       if (!response.ok) {
         throw new Error(`Error searching products: ${response.statusText}`);
       }
       
       const data = await response.json();
-      setProducts(data);
+      console.log('Search response:', data)
+      
+      // Ensure data is an array before setting it
+      if (Array.isArray(data)) {
+        setProducts(data);
+      } else {
+        console.error('Search response is not an array:', data);
+        setProducts([]);
+      }
       setError(null);
     } catch (err) {
+      // Don't set error if request was aborted
+      if (err instanceof Error && err.name === 'AbortError') {
+        return;
+      }
       console.error("Error searching products:", err);
       setError(err instanceof Error ? err : new Error(String(err)));
     } finally {
       setLoading(false);
       stopLoading();
       requestInProgress.current = false;
+      currentRequest.current = null;
     }
   }, [filters, startLoading, stopLoading, token]);
-
-  // Apply filters to products
-  const applyFilters = useCallback(() => {
-    if (!products.length) return;
-
-    let results = [...products];
-
-    // Filter by search term
-    if (filters.searchTerm) {
-      const searchLower = filters.searchTerm.toLowerCase();
-      results = results.filter(product => 
-        product.name.toLowerCase().includes(searchLower) || 
-        product.description?.toLowerCase().includes(searchLower) ||
-        product.category.name.toLowerCase().includes(searchLower)
-      );
-    }
-
-    // Filter by category
-    if (filters.category && filters.category !== "All Categories") {
-      results = results.filter(product => product.category.name === filters.category);
-    }
-
-    // Filter by brands
-    if (filters.brands && filters.brands.length > 0) {
-      results = results.filter(product => filters.brands?.includes(product.brand || ""));
-    }
-
-    // Filter by price range
-    if (filters.minPrice !== undefined || filters.maxPrice !== undefined) {
-      results = results.filter(product => {
-        const price = product.price;
-        const minMatch = filters.minPrice === undefined || price >= filters.minPrice;
-        const maxMatch = filters.maxPrice === undefined || price <= filters.maxPrice;
-        return minMatch && maxMatch;
-      });
-    }
-
-    // Sort products
-    if (filters.sortBy) {
-      results.sort((a, b) => {
-        switch (filters.sortBy) {
-          case "price_asc":
-            return a.price - b.price;
-          case "price_desc":
-            return b.price - a.price;
-          case "newest":
-            // Assuming newer products have higher IDs or comparing by date if available
-            return b.id.localeCompare(a.id);
-          case "rating_desc":
-            // If rating is available
-            return (b.rating || 0) - (a.rating || 0);
-          default:
-            return 0;
-        }
-      });
-    }
-
-    setFilteredProducts(results);
-  }, [filters, products]);
 
   // Use a ref to track if initial fetch has been done
   const initialFetchDone = useRef(false);
@@ -156,7 +122,6 @@ export function useProductSearch(initialFilters: SearchFilters = {}) {
       const hasAnyFilter = 
         filters.searchTerm || 
         (filters.category && filters.category !== "All Categories") ||
-        (filters.brands && filters.brands.length > 0) ||
         filters.minPrice || 
         filters.maxPrice || 
         filters.sortBy || 
@@ -170,16 +135,32 @@ export function useProductSearch(initialFilters: SearchFilters = {}) {
     }
     
     initialFetchDone.current = true;
-    fetchProducts();
-  }, [fetchProducts, filters, token]);
 
-  // Apply filters when products or filters change
-  useEffect(() => {
-    applyFilters();
-  }, [applyFilters, filters, products]);
+    // Clear any existing timeout
+    if (debounceTimeout.current) {
+      clearTimeout(debounceTimeout.current);
+    }
+
+    // Set new timeout for debouncing
+    debounceTimeout.current = setTimeout(() => {
+      console.log('Triggering search with filters:', filters)
+      fetchProducts();
+    }, 500); // 500ms debounce delay
+
+    // Cleanup timeout and abort any pending request on unmount or filter change
+    return () => {
+      if (debounceTimeout.current) {
+        clearTimeout(debounceTimeout.current);
+      }
+      if (currentRequest.current) {
+        currentRequest.current.abort();
+      }
+    };
+  }, [fetchProducts, filters, token]);
 
   // Update filters
   const updateFilters = useCallback((newFilters: SearchFilters) => {
+    console.log('Updating filters:', newFilters)
     setFilters(prevFilters => ({
       ...prevFilters,
       ...newFilters
@@ -194,8 +175,7 @@ export function useProductSearch(initialFilters: SearchFilters = {}) {
   }, [filters.searchTerm]);
 
   return {
-    products: filteredProducts,
-    allProducts: products,
+    products,
     loading,
     error,
     filters,

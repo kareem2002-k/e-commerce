@@ -4,22 +4,18 @@ import { useState, useEffect } from "react"
 import { Button } from "@/components/ui/button"
 import { Label } from "@/components/ui/label"
 import { Slider } from "@/components/ui/slider"
-import { Checkbox } from "@/components/ui/checkbox"
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import { Separator } from "@/components/ui/separator"
 
 interface SearchFiltersProps {
   searchTerm: string
   selectedCategory: string
-  selectedBrands: string[]
   priceRange: [number, number]
   sortBy: string
   categories: string[]
-  brands: string[]
   onUpdateFilters: (filters: {
     searchTerm?: string
     selectedCategory?: string
-    selectedBrands?: string[]
     priceRange?: [number, number]
     sortBy?: string
   }) => void
@@ -28,18 +24,16 @@ interface SearchFiltersProps {
 
 /**
  * Reusable search filters component.
- * Provides UI for filtering products by category, brand, price, and sort order.
+ * Provides UI for filtering products by category, price, and sort order.
  *
  * @param props - Component properties including current filter values and update handlers
  */
 export function SearchFilters({
   searchTerm,
   selectedCategory,
-  selectedBrands,
   priceRange,
   sortBy,
   categories,
-  brands,
   onUpdateFilters,
   clearFilters,
 }: SearchFiltersProps) {
@@ -49,12 +43,6 @@ export function SearchFilters({
   useEffect(() => {
     setLocalPriceRange(priceRange)
   }, [priceRange])
-
-  const handleBrandChange = (brand: string, checked: boolean) => {
-    const newBrands = checked ? [...selectedBrands, brand] : selectedBrands.filter((b) => b !== brand)
-
-    onUpdateFilters({ selectedBrands: newBrands })
-  }
 
   const handlePriceChange = (value: [number, number]) => {
     setLocalPriceRange(value)
@@ -87,25 +75,6 @@ export function SearchFilters({
                   <Label htmlFor={`category-${category}`}>{category}</Label>
                 </div>
               </RadioGroup>
-            </div>
-          ))}
-        </div>
-      </div>
-
-      <Separator />
-
-      {/* Brands */}
-      <div>
-        <h3 className="font-medium mb-3">Brands</h3>
-        <div className="space-y-2">
-          {brands.map((brand) => (
-            <div key={brand} className="flex items-center space-x-2">
-              <Checkbox
-                id={`brand-${brand}`}
-                checked={selectedBrands.includes(brand)}
-                onCheckedChange={(checked) => handleBrandChange(brand, checked === true)}
-              />
-              <Label htmlFor={`brand-${brand}`}>{brand}</Label>
             </div>
           ))}
         </div>

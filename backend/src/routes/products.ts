@@ -94,6 +94,7 @@ router.get('/search', authenticate, async (req, res) => {
       }
     });
     
+    console.log('Search results:', products);
     res.json(products);
   } catch (error) {
     console.error('Search error:', error);

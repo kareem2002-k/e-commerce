@@ -11,6 +11,7 @@ import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
 import { SlidersHorizontal, Search, X } from "lucide-react"
 import SectionLoading from "@/components/voltedge/section-loading"
 import { useProductSearch, SearchFilters as Filters } from "@/hooks/useProductSearch"
+import { useAuth } from "@/context/AuthContext"
 
 // Default "All Categories" option
 const DEFAULT_CATEGORY = "All Categories"
@@ -30,6 +31,7 @@ const sortOptions = [
 export default function SearchPage() {
   const searchParams = useSearchParams()
   const router = useRouter()
+  const { token } = useAuth()
 
   const query = searchParams.get("q") || ""
   const categoryParam = searchParams.get("category") || DEFAULT_CATEGORY
@@ -37,13 +39,11 @@ export default function SearchPage() {
   const minPriceParam = searchParams.get("minPrice")
   const maxPriceParam = searchParams.get("maxPrice")
   const sortByParam = searchParams.get("sort") || "relevance"
-  const brandsParam = searchParams.get("brands")
 
   // Set up initial filters from URL params
   const initialFilters: Filters = {
     searchTerm: query,
     category: categoryParam,
-    brands: brandsParam ? brandsParam.split(",") : [],
     minPrice: minPriceParam ? Number(minPriceParam) : 0,
     maxPrice: maxPriceParam ? Number(maxPriceParam) : 2000,
     sortBy: sortByParam,
@@ -52,7 +52,7 @@ export default function SearchPage() {
 
   // Use our product search hook
   const { 
-    products: filteredProducts, 
+    products, 
     loading, 
     error, 
     filters, 
@@ -63,38 +63,53 @@ export default function SearchPage() {
   const [searchTerm, setSearchTerm] = useState(query)
   const [showFilters, setShowFilters] = useState(false)
   const [categories, setCategories] = useState<string[]>([DEFAULT_CATEGORY])
-  const [brands, setBrands] = useState<string[]>([])
   const [loadingData, setLoadingData] = useState(true)
+  const [filterError, setFilterError] = useState<string | null>(null)
   
-  // Fetch categories and brands from backend
+  // Fetch categories from backend
   useEffect(() => {
-    const fetchCategoriesAndBrands = async () => {
+    const fetchCategories = async () => {
       try {
         setLoadingData(true)
+        setFilterError(null)
         
         // Fetch categories
-        const categoriesResponse = await fetch('/api/categories')
-        if (categoriesResponse.ok) {
-          const categoriesData = await categoriesResponse.json()
+        const categoriesResponse = await fetch('/api/categories', {
+          headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json'
+          }
+        });
+        
+        if (!categoriesResponse.ok) {
+          throw new Error('Failed to fetch categories')
+        }
+        
+        const categoriesData = await categoriesResponse.json()
+        
+        if (!Array.isArray(categoriesData) || categoriesData.length === 0) {
+          console.warn('No categories returned from API')
+          setCategories([DEFAULT_CATEGORY])
+        } else {
           const categoryNames = [DEFAULT_CATEGORY, ...categoriesData.map((cat: any) => cat.name)]
           setCategories(categoryNames)
         }
-        
-        // Fetch brands
-        const brandsResponse = await fetch('/api/brands')
-        if (brandsResponse.ok) {
-          const brandsData = await brandsResponse.json()
-          setBrands(brandsData)
-        }
       } catch (error) {
-        console.error('Error fetching categories and brands:', error)
+        console.error('Error fetching categories:', error)
+        setFilterError('Failed to load categories')
+        setCategories([DEFAULT_CATEGORY])
       } finally {
         setLoadingData(false)
       }
     }
     
-    fetchCategoriesAndBrands()
-  }, [])
+    // Only fetch if we have a token
+    if (token) {
+      fetchCategories()
+    } else {
+      setLoadingData(false)
+    }
+  }, [token])
   
   // Update URL when filters change
   const updateUrlWithFilters = (newFilters: Filters) => {
@@ -121,10 +136,6 @@ export default function SearchPage() {
       params.set("maxPrice", newFilters.maxPrice.toString())
     }
 
-    if (newFilters.brands && newFilters.brands.length > 0) {
-      params.set("brands", newFilters.brands.join(","))
-    }
-
     if (tagParam) {
       params.set("tag", tagParam)
     }
@@ -136,7 +147,6 @@ export default function SearchPage() {
   const handleUpdateFilters = (newFilters: {
     searchTerm?: string
     selectedCategory?: string
-    selectedBrands?: string[]
     priceRange?: [number, number]
     sortBy?: string
   }) => {
@@ -144,14 +154,11 @@ export default function SearchPage() {
 
     if (newFilters.searchTerm !== undefined) {
       updatedFilters.searchTerm = newFilters.searchTerm
+      setSearchTerm(newFilters.searchTerm) // Update local search term state
     }
 
     if (newFilters.selectedCategory !== undefined) {
       updatedFilters.category = newFilters.selectedCategory
-    }
-
-    if (newFilters.selectedBrands !== undefined) {
-      updatedFilters.brands = newFilters.selectedBrands
     }
 
     if (newFilters.priceRange !== undefined) {
@@ -189,9 +196,24 @@ export default function SearchPage() {
     return "Search Results"
   }
 
-  // Show loading if categories and brands are still loading
+  // Show loading if categories are still loading
   if (loadingData) {
     return <SectionLoading message="Loading filters..." />
+  }
+
+  if (filterError) {
+    return (
+      <div className="flex flex-col items-center justify-center py-12 text-center">
+        <div className="rounded-full bg-red-100 dark:bg-red-900/20 p-6 mb-4">
+          <X className="h-10 w-10 text-red-500" />
+        </div>
+        <h3 className="text-xl font-semibold mb-2">Error loading filters</h3>
+        <p className="text-muted-foreground max-w-md mb-6">
+          {filterError}
+        </p>
+        <Button onClick={() => window.location.reload()}>Retry</Button>
+      </div>
+    )
   }
 
   return (
@@ -219,11 +241,9 @@ export default function SearchPage() {
           <SearchFilters
             searchTerm={filters.searchTerm || ""}
             selectedCategory={filters.category || DEFAULT_CATEGORY}
-            selectedBrands={filters.brands || []}
             priceRange={[filters.minPrice || 0, filters.maxPrice || 2000]}
             sortBy={filters.sortBy || "relevance"}
             categories={categories}
-            brands={brands}
             onUpdateFilters={handleUpdateFilters}
             clearFilters={handleClearFilters}
           />
@@ -242,11 +262,9 @@ export default function SearchPage() {
               <SearchFilters
                 searchTerm={filters.searchTerm || ""}
                 selectedCategory={filters.category || DEFAULT_CATEGORY}
-                selectedBrands={filters.brands || []}
                 priceRange={[filters.minPrice || 0, filters.maxPrice || 2000]}
                 sortBy={filters.sortBy || "relevance"}
                 categories={categories}
-                brands={brands}
                 onUpdateFilters={handleUpdateFilters}
                 clearFilters={() => {
                   handleClearFilters()
@@ -271,14 +289,13 @@ export default function SearchPage() {
         <div className="flex-1">
           <div className="flex items-center justify-between mb-4">
             <p className="text-muted-foreground">
-              {loading ? "Searching..." : `${filteredProducts.length} ${filteredProducts.length === 1 ? "result" : "results"}`}
+              {loading ? "Searching..." : `${products.length} ${products.length === 1 ? "result" : "results"}`}
               {filters.searchTerm && <> for "{filters.searchTerm}"</>}
               {filters.category !== DEFAULT_CATEGORY && <> in {filters.category}</>}
               {tagParam === "deals" && <> on sale</>}
             </p>
             <div className="flex items-center gap-2">
               {(filters.category !== DEFAULT_CATEGORY ||
-                (filters.brands && filters.brands.length > 0) ||
                 (filters.minPrice && filters.minPrice > 0) ||
                 (filters.maxPrice && filters.maxPrice < 2000)) && (
                 <Button variant="outline" size="sm" onClick={handleClearFilters} className="hidden lg:flex">
@@ -316,9 +333,9 @@ export default function SearchPage() {
               </p>
               <Button onClick={() => window.location.reload()}>Retry</Button>
             </div>
-          ) : filteredProducts.length > 0 ? (
+          ) : products.length > 0 ? (
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
-              {filteredProducts.map((product) => (
+              {products.map((product) => (
                 <ProductCard key={product.id} product={product} />
               ))}
             </div>

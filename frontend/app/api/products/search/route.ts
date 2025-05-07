@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 
-export async function GET(request: Request) {
+export async function GET(request: NextRequest) {
   try {
     // Extract authentication token
     const authHeader = request.headers.get("Authorization");
@@ -12,18 +12,25 @@ export async function GET(request: Request) {
     
     // Forward these parameters to the backend
     const backendUrl = new URL("http://localhost:3001/products/search");
+    
+    // Forward all parameters directly to backend
     searchParams.forEach((value, key) => {
       backendUrl.searchParams.append(key, value);
     });
+    
+    console.log('Searching with params:', backendUrl.toString());
     
     // Make the request to backend
     const response = await fetch(backendUrl.toString(), {
       headers: {
         Authorization: `Bearer ${token}`,
+        'Content-Type': 'application/json'
       },
+      cache: 'no-store'
     });
     
     if (!response.ok) {
+      console.error('Search API error:', response.status, response.statusText);
       return NextResponse.json(
         { error: "Failed to search products" },
         { status: response.status }
@@ -31,6 +38,9 @@ export async function GET(request: Request) {
     }
     
     const data = await response.json();
+    console.log('Search response data:', data);
+    
+    // Return the data directly without wrapping it
     return NextResponse.json(data);
   } catch (error) {
     console.error("Error searching products:", error);
