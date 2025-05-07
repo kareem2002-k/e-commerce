@@ -50,7 +50,7 @@ export function MobileNav() {
                 {categories.map((category) => (
                   <SheetClose asChild key={category.id}>
                     <Link
-                      href={`/search?category=${category.id}`}
+                      href={`/home/search?category=${category.id}`}
                       className="flex items-center gap-2 py-2 text-muted-foreground hover:text-foreground"
                     >
                       <Laptop className="h-5 w-5 text-voltBlue-500" />

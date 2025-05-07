@@ -129,7 +129,7 @@ export default function SearchPage() {
       params.set("tag", tagParam)
     }
 
-    router.push(`/search?${params.toString()}`)
+    router.push(`/home/search?${params.toString()}`)
   }
 
   // Handle filter updates
@@ -178,7 +178,7 @@ export default function SearchPage() {
     const params = new URLSearchParams()
     if (searchTerm) params.set("q", searchTerm)
     if (tagParam) params.set("tag", tagParam)
-    router.push(`/search?${params.toString()}`)
+    router.push(`/home/search?${params.toString()}`)
   }
 
   // Page title based on search parameters

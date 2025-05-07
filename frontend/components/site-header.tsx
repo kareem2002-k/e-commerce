@@ -36,7 +36,7 @@ export function SiteHeader() {
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault()
     if (searchTerm.trim()) {
-      router.push(`/search?q=${encodeURIComponent(searchTerm.trim())}`)
+      router.push(`/home/search?q=${encodeURIComponent(searchTerm.trim())}`)
       setSearchTerm("")
       if (searchOpen) setSearchOpen(false)
     }

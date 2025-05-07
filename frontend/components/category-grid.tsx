@@ -42,7 +42,7 @@ export function CategoryGrid({ categories, loading }: CategoryGridProps = {}) {
       id: cat.id,
       name: cat.name,
       icon: icon,
-      href: `/search?category=${cat.name}`,
+      href: `/home/search?category=${cat.name}`,
       color: isEven ? "bg-voltBlue-100 dark:bg-voltBlue-900/40" : "bg-voltBlue-50 dark:bg-voltBlue-900/30",
       iconColor: isEven ? "text-voltBlue-600" : "text-voltBlue-500",
     }
