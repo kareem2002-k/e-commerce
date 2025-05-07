@@ -116,14 +116,16 @@ export default function HomePage() {
       </section>
 
       {/* Categories */}
-      <section>
-        <h2 className="text-2xl font-bold mb-6">Shop by Category</h2>
-        {categoriesLoading ? (
-          <SectionLoading message="Loading categories..." />
-        ) : (
-          <CategoryGrid categories={categories} loading={false} />
-        )}
-      </section>
+      {categories && categories.length > 0 && (
+        <section>
+          <h2 className="text-2xl font-bold mb-6">Shop by Category</h2>
+          {categoriesLoading ? (
+            <SectionLoading message="Loading categories..." />
+          ) : (
+            <CategoryGrid categories={categories} loading={false} />
+          )}
+        </section>
+      )}
 
       {/* Featured Products */}
       <section>

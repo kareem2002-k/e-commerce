@@ -7,53 +7,7 @@ import { ChevronLeft, ChevronRight } from "lucide-react"
 
 // Mock related products
 const relatedProducts = [
-  {
-    id: "2",
-    name: "VoltEdge Ultra Laptop",
-    category: "Laptops",
-    price: 1499.99,
-    originalPrice: 1699.99,
-    rating: 4.7,
-    image: "/placeholder.svg?height=300&width=300",
-    isSale: true,
-  },
-  {
-    id: "3",
-    name: "VoltEdge Lite Laptop",
-    category: "Laptops",
-    price: 899.99,
-    rating: 4.5,
-    image: "/placeholder.svg?height=300&width=300",
-  },
-  {
-    id: "4",
-    name: "VoltEdge Gaming Laptop",
-    category: "Laptops",
-    price: 1799.99,
-    originalPrice: 1999.99,
-    rating: 4.9,
-    image: "/placeholder.svg?height=300&width=300",
-    isNew: true,
-    isSale: true,
-  },
-  {
-    id: "5",
-    name: "VoltEdge Business Laptop",
-    category: "Laptops",
-    price: 1199.99,
-    rating: 4.6,
-    image: "/placeholder.svg?height=300&width=300",
-  },
-  {
-    id: "6",
-    name: "VoltEdge Student Laptop",
-    category: "Laptops",
-    price: 799.99,
-    originalPrice: 899.99,
-    rating: 4.4,
-    image: "/placeholder.svg?height=300&width=300",
-    isSale: true,
-  },
+ 
 ]
 
 interface RelatedProductsProps {

@@ -17,73 +17,6 @@ const iconMap: Record<string, any> = {
   "default": Laptop,
 };
 
-// Default categories for fallback
-const defaultCategories = [
-  {
-    id: "1",
-    name: "Laptops",
-    icon: Laptop,
-    href: "/search?category=Laptops",
-    color: "bg-voltBlue-50 dark:bg-voltBlue-900/30",
-    iconColor: "text-voltBlue-500",
-  },
-  {
-    id: "2",
-    name: "Smartphones",
-    icon: Smartphone,
-    href: "/search?category=Smartphones",
-    color: "bg-voltBlue-100 dark:bg-voltBlue-900/40",
-    iconColor: "text-voltBlue-600",
-  },
-  {
-    id: "3",
-    name: "Audio",
-    icon: Headphones,
-    href: "/search?category=Audio",
-    color: "bg-voltBlue-50 dark:bg-voltBlue-900/30",
-    iconColor: "text-voltBlue-500",
-  },
-  {
-    id: "4",
-    name: "Wearables",
-    icon: Watch,
-    href: "/search?category=Wearables",
-    color: "bg-voltBlue-100 dark:bg-voltBlue-900/40",
-    iconColor: "text-voltBlue-600",
-  },
-  {
-    id: "5",
-    name: "Cameras",
-    icon: Camera,
-    href: "/search?category=Cameras",
-    color: "bg-voltBlue-50 dark:bg-voltBlue-900/30",
-    iconColor: "text-voltBlue-500",
-  },
-  {
-    id: "6",
-    name: "TVs",
-    icon: Tv,
-    href: "/search?category=TVs",
-    color: "bg-voltBlue-100 dark:bg-voltBlue-900/40",
-    iconColor: "text-voltBlue-600",
-  },
-  {
-    id: "7",
-    name: "Speakers",
-    icon: Speaker,
-    href: "/search?category=Speakers",
-    color: "bg-voltBlue-50 dark:bg-voltBlue-900/30",
-    iconColor: "text-voltBlue-500",
-  },
-  {
-    id: "8",
-    name: "Gaming",
-    icon: Gamepad2,
-    href: "/search?category=Gaming",
-    color: "bg-voltBlue-100 dark:bg-voltBlue-900/40",
-    iconColor: "text-voltBlue-600",
-  },
-]
 
 interface CategoryGridProps {
   categories?: { id: string; name: string }[];
@@ -91,26 +24,29 @@ interface CategoryGridProps {
 }
 
 export function CategoryGrid({ categories, loading }: CategoryGridProps = {}) {
-  // If loading or no categories provided, render skeleton or fallback
+  // If loading or no categories provided, return null
   if (loading) {
     return <SectionLoading message="Loading categories..." size="small" />
   }
 
-  // Use provided categories or fall back to default ones
-  const displayCategories = categories && categories.length > 0 
-    ? categories.map(cat => {
-        const icon = iconMap[cat.name] || iconMap.default;
-        const isEven = Number(cat.id) % 2 === 0;
-        return {
-          id: cat.id,
-          name: cat.name,
-          icon: icon,
-          href: `/search?category=${cat.name}`,
-          color: isEven ? "bg-voltBlue-100 dark:bg-voltBlue-900/40" : "bg-voltBlue-50 dark:bg-voltBlue-900/30",
-          iconColor: isEven ? "text-voltBlue-600" : "text-voltBlue-500",
-        }
-      })
-    : defaultCategories;
+  // If no categories provided, return null
+  if (!categories || categories.length === 0) {
+    return null;
+  }
+
+  // Map provided categories
+  const displayCategories = categories.map(cat => {
+    const icon = iconMap[cat.name] || iconMap.default;
+    const isEven = Number(cat.id) % 2 === 0;
+    return {
+      id: cat.id,
+      name: cat.name,
+      icon: icon,
+      href: `/search?category=${cat.name}`,
+      color: isEven ? "bg-voltBlue-100 dark:bg-voltBlue-900/40" : "bg-voltBlue-50 dark:bg-voltBlue-900/30",
+      iconColor: isEven ? "text-voltBlue-600" : "text-voltBlue-500",
+    }
+  });
 
   return (
     <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
