@@ -21,7 +21,7 @@ interface ProductWithDate extends Product {
 }
 
 export default function HomePage() {
-  const { categories, loading: categoriesLoading, error: categoriesError } = useProductsAndCategories()
+  const { categories, loading: categoriesLoading, error: categoriesError , products } = useProductsAndCategories()
   const { products: featuredProducts, loading: featuredLoading, error: featuredError } = useFeaturedProducts()
   const [newArrivals, setNewArrivals] = useState<ProductWithDate[]>([])
   const { startLoading, stopLoading } = useLoading()
@@ -39,10 +39,10 @@ export default function HomePage() {
 
   // Get new arrivals from products
   useEffect(() => {
-    if (featuredProducts && featuredProducts.length > 0) {
+    if (products && products.length > 0) { 
       // For demonstration, sort by ID as fallback if createdAt doesn't exist
       // In a real app, ensure your Product type includes createdAt from the API
-      const sortedProducts = [...featuredProducts].sort((a, b) => {
+      const sortedProducts = [...products].sort((a, b) => {
         // Type assertion to work with our extended interface
         const productA = a as ProductWithDate;
         const productB = b as ProductWithDate;
@@ -55,7 +55,7 @@ export default function HomePage() {
       })
       setNewArrivals(sortedProducts.slice(0, 4))
     }
-  }, [featuredProducts])
+  }, [products])
 
   return (
     <div className="space-y-10">
