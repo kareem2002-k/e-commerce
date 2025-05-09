@@ -23,7 +23,7 @@ WORKDIR /app/backend
 RUN pnpm install
 
 # Expose the port your backend runs on
-EXPOSE 3001
+EXPOSE 3002
 
 # Start the app using ts-node
 CMD ["pnpm", "run", "start-ts"]
