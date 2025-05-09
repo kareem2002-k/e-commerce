@@ -76,7 +76,7 @@ model Product {
   id                String        @id @default(uuid())
   name              String
   description       String?
-  sku               String        @unique
+  sku               String        @unique 
   price             Float
   stock             Int           @default(0)
   lowStockThreshold Int           @default(5)

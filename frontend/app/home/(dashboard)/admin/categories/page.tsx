@@ -56,8 +56,7 @@ export default function CategoriesPage() {
       });
       router.push('/home/products');
     }
-  }, [user, router]);
-  
+  }, [user, router]); 
   // Fetch categories
   useEffect(() => {
     const fetchCategories = async () => {

@@ -11,6 +11,8 @@ router.use(authenticate);
 router.get('/', async (req, res) => {
   try {
     const userId = req.userId;
+
+
     
     const addresses = await prisma.address.findMany({
       where: { userId }
@@ -162,7 +164,6 @@ router.delete('/:id', async (req, res) => {
     await prisma.address.delete({
       where: { id }
     });
-    
     res.json({ message: 'Address deleted successfully' });
   } catch (error) {
     res.status(500).json({ message: 'Error deleting address' });
