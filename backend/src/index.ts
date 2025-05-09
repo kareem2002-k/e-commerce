@@ -30,13 +30,13 @@ app.get('/', (_req, res) => {
 
 // Routes
 app.use('/api/auth', authRoutes);
-app.use('/products', productRoutes);
-app.use('/categories', categoryRoutes);
-app.use('/cart', cartRoutes);
-app.use('/orders', orderRoutes);
-app.use('/addresses', addressRoutes);
-app.use('/coupons', couponRoutes);
-app.use('/reviews', reviewRoutes);
+app.use('/api/products', productRoutes);
+app.use('/api/categories', categoryRoutes);
+app.use('/api/cart', cartRoutes);
+app.use('/api/orders', orderRoutes);
+app.use('/api/addresses', addressRoutes);
+app.use('/api/coupons', couponRoutes);
+app.use('/api/reviews', reviewRoutes);
 
 
 
