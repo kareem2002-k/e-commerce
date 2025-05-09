@@ -1,23 +1,29 @@
-# Build stage
-FROM node:20-alpine AS builder
+# Use Node.js 22 base image
+FROM node:22
 
+# Set working directory to /app
 WORKDIR /app
 
-COPY package*.json tsconfig.json ./
-RUN npm install
+# Copy all project files to container
+COPY . .
 
-COPY src ./src
-RUN npm run build
+# Set production environment variable
+ENV NODE_ENV=production
 
-# Production stage
-FROM node:20-alpine
+# Install global dev tools
+RUN npm install -g pnpm ts-node typescript
 
-WORKDIR /app
+# Install root-level dependencies (if any)
+RUN pnpm install
 
-COPY package*.json ./
-RUN npm install --only=production
+# Move into backend directory
+WORKDIR /app/backend
 
-COPY --from=builder /app/dist ./dist
+# Install backend-specific dependencies
+RUN pnpm install
 
-EXPOSE 3000
-CMD ["node", "dist/index.js"]
+# Expose the port your backend runs on
+EXPOSE 3001
+
+# Start the app using ts-node
+CMD ["pnpm", "run", "start-ts"]
