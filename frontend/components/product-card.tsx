@@ -40,12 +40,12 @@ export function ProductCard({ product, className }: ProductCardProps) {
             />
           </div>
         </Link>
-        <div className="absolute right-2 top-2">
+        {/* <div className="absolute right-2 top-2">
           <Button variant="ghost" size="icon" className="rounded-full bg-background/80 backdrop-blur-sm">
             <Heart className="h-5 w-5" />
             <span className="sr-only">Add to wishlist</span>
           </Button>
-        </div>
+        </div> */}
         <div className="absolute left-2 top-2 flex flex-col gap-1">
           {product.isNew && <Badge className="bg-voltBlue-500 hover:bg-voltBlue-600">New</Badge>}
           {product.isSale && <Badge variant="destructive">-{discount}%</Badge>}

@@ -252,10 +252,10 @@ export default function ProductPage() {
                 className="flex-1 sm:flex-none"
               />
               
-              <Button size="lg" variant="outline" className="flex-1 sm:flex-none">
+              {/* <Button size="lg" variant="outline" className="flex-1 sm:flex-none">
                 <Heart className="mr-2 h-5 w-5" />
                 Add to Wishlist
-              </Button>
+              </Button> */}
               <Button size="icon" variant="outline">
                 <Share2 className="h-5 w-5" />
                 <span className="sr-only">Share</span>

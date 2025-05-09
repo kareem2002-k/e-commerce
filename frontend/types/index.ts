@@ -86,3 +86,53 @@ export const registerSchema = z
   })
 
 export type RegisterFormValues = z.infer<typeof registerSchema>
+
+interface OrderUser {
+  id: string;
+  name: string;
+  email: string;
+}
+
+interface OrderItem {
+  id: string;
+  productId: string;
+  quantity: number;
+  unitPrice: number;
+  totalPrice: number;
+  product: {
+    id: string;
+    name: string;
+    price: number;
+    images: Array<{
+      id: string;
+      url: string;
+      altText: string;
+    }>;
+  };
+}
+
+interface Address {
+  id: string;
+  streetAddress: string;
+  city: string;
+  state: string;
+  postalCode: string;
+  country: string;
+}
+
+export interface Order {
+  id: string;
+  userId: string;
+  user: OrderUser;
+  totalAmount: number;
+  orderStatus: string;
+  paymentStatus: string;
+  createdAt: string;
+  updatedAt: string;
+  orderItems: OrderItem[];
+  shippingCost: number;
+  taxAmount: number;
+  shippingAddress: Address;
+  billingAddress: Address;
+  paymentMethod: string;
+}

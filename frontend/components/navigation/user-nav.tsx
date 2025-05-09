@@ -67,12 +67,12 @@ export function UserNav() {
               <span>Orders</span>
             </Link>
           </DropdownMenuItem>
-          <DropdownMenuItem asChild>
+          {/* <DropdownMenuItem asChild>
             <Link href="/wishlist">
               <Heart className="mr-2 h-4 w-4" />
               <span>Wishlist</span>
             </Link>
-          </DropdownMenuItem>
+          </DropdownMenuItem> */}
           <DropdownMenuItem asChild>
             <Link href="/settings">
               <Settings className="mr-2 h-4 w-4" />

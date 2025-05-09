@@ -350,12 +350,12 @@ export default function CategoriesPage() {
 
   return (
     <ProtectedRoute>
-      <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
-        <TopBar />
+      <div className="min-h-screen ">
+      
         
         {/* Lightning effect background */}
-        <div className="absolute top-0 left-0 right-0 h-[300px] bg-gradient-to-b from-blue-500/10 via-blue-400/5 to-transparent -z-10 pointer-events-none" />
-        <div className="absolute top-0 left-0 right-0 h-[300px] bg-[radial-gradient(ellipse_80%_80%_at_50%_-20%,rgba(0,123,255,0.2),rgba(255,255,255,0))] -z-10 pointer-events-none" />
+        <div className="absolute top-0 left-0 right-0 h-[300px]  pointer-events-none" />
+        <div className="absolute top-0 left-0 right-0 h-[300px] pointer-events-none" />
         
         <main className="container mx-auto px-4 py-8">
           <motion.div

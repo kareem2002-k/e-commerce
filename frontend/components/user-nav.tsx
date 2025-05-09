@@ -41,10 +41,10 @@ export function UserNav() {
             <ShoppingCart className="mr-2 h-4 w-4" />
             <span>Orders</span>
           </DropdownMenuItem>
-          <DropdownMenuItem>
+          {/* <DropdownMenuItem>
             <Heart className="mr-2 h-4 w-4" />
             <span>Wishlist</span>
-          </DropdownMenuItem>
+          </DropdownMenuItem> */}
           <DropdownMenuItem>
             <Settings className="mr-2 h-4 w-4" />
             <span>Settings</span>

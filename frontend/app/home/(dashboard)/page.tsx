@@ -100,7 +100,7 @@ export default function HomePage() {
                   size="lg" 
                   variant="outline" 
                   className="rounded-full bg-amber-500 hover:bg-amber-600 text-white border-0"
-                  onClick={() => router.push('/home/admin/products')}
+                  onClick={() => router.push('/home/admin')}
                 >
                   Admin Panel
                 </Button>
