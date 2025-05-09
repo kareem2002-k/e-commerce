@@ -1,26 +1,27 @@
-FROM node:22-alpine
+FROM node:22
 
-# Add native build tools for bcrypt
-RUN apk add --no-cache python3 make g++ 
+# Install build tools required for bcrypt
+RUN apt-get update && apt-get install -y python3 make g++ && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /app
 
+# Copy entire project
 COPY . .
 
-ENV NODE_ENV=production
-
+# Install global dev tools
 RUN npm install -g pnpm ts-node typescript
 
-# Install root dependencies
+# Install all dependencies (including bcrypt)
 RUN pnpm install
 
-RUN pnpm install bcrypt
-
+# Move into backend folder (assuming package.json is there)
 WORKDIR /app/backend
 
-# Rebuild bcrypt from source inside container
-RUN pnpm rebuild bcrypt && pnpm install
+# Ensure bcrypt is rebuilt for this environment
+RUN pnpm rebuild bcrypt
 
+# Expose backend port
 EXPOSE 3002
 
+# Start the app using ts-node
 CMD ["pnpm", "run", "start-ts"]
