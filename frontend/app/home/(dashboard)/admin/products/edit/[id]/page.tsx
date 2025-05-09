@@ -30,6 +30,8 @@ import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Category, ProductImage, Product } from "@/types";
 import { Switch } from "@/components/ui/switch";
 import { getUrl } from "@/utils";
+import { ImageUploader } from "@/components/ImageUploader";
+
 export default function EditProductPage() {
   const router = useRouter();
   const params = useParams();
@@ -309,10 +311,19 @@ export default function EditProductPage() {
     setLoading(true);
     
     try {
-      // Get API URL with fallback
-      const API_URL = getUrl();
+      if (!user?.isAdmin || !token) {
+        toast.error("Authentication required. Please log in again.");
+        return;
+      }
 
-      // Format product data
+      // No need to upload images here - they're already uploaded to Supabase using the ImageUploader
+      // Just use the image URLs and alt text directly
+      const productImages = images.map(image => ({
+        url: image.url,
+        altText: image.altText || ""
+      }));
+      
+      // Prepare the product data
       const productData = {
         name: product.name,
         description: product.description,
@@ -323,11 +334,11 @@ export default function EditProductPage() {
         categoryId: product.categoryId,
         featured: product.featured,
         discount: product.discount ? parseFloat(product.discount) : null,
-        images: images.map(img => ({
-          url: img.url,
-          altText: img.altText
-        }))
+        images: productImages
       };
+      
+      // Get API URL with fallback
+      const API_URL = getUrl();
       
       // Update the product
       const response = await fetch(`${API_URL}/products/${productId}`, {
@@ -638,66 +649,21 @@ export default function EditProductPage() {
                                 Add high-quality images of your product. The first image will be used as the cover image.
                               </p>
                               
-                              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-4">
-                                {images.map((image, index) => (
-                                  <Card key={index} className="overflow-hidden relative group">
-                                    <div className="aspect-square relative bg-gray-100 dark:bg-gray-800">
-                                      {/* eslint-disable-next-line @next/next/no-img-element */}
-                                      <img 
-                                        src={image.url} 
-                                        alt={image.altText || "Product image"} 
-                                        className="object-cover w-full h-full"
-                                      />
-                                      <Button
-                                        type="button"
-                                        variant="destructive"
-                                        size="icon"
-                                        className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity"
-                                        onClick={() => removeImage(index)}
-                                      >
-                                        <Trash2 className="h-4 w-4" />
-                                      </Button>
-                                      
-                                      {index === 0 && (
-                                        <Badge className="absolute top-2 left-2 bg-blue-500">
-                                          Cover Image
-                                        </Badge>
-                                      )}
-                                    </div>
-                                    <CardContent className="p-2">
-                                      <Input
-                                        type="text"
-                                        placeholder="Alt text (for accessibility)"
-                                        value={image.altText || ""}
-                                        onChange={(e) => updateImageAltText(index, e.target.value)}
-                                        className="text-xs"
-                                      />
-                                    </CardContent>
-                                  </Card>
-                                ))}
-                                
-                                <Card className="border-dashed border-2 aspect-square flex flex-col items-center justify-center p-4 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
-                                  <div className="text-center">
-                                    <ImageIcon className="h-8 w-8 mx-auto mb-2 text-muted-foreground" />
-                                    <p className="text-sm font-medium">Add Image</p>
-                                    <p className="text-xs text-muted-foreground mb-4">
-                                      Drag & drop or click to upload
-                                    </p>
-                                    <label className="cursor-pointer">
-                                      <Input
-                                        type="file"
-                                        accept="image/*"
-                                        className="hidden"
-                                        onChange={handleImageUpload}
-                                      />
-                                      <Button type="button" variant="outline" size="sm">
-                                        <Upload className="h-4 w-4 mr-2" />
-                                        Browse
-                                      </Button>
-                                    </label>
-                                  </div>
-                                </Card>
-                              </div>
+                              <ImageUploader
+                                onImagesUploaded={(uploadedImages) => {
+                                  setImages(uploadedImages.map(img => ({
+                                    url: img.url,
+                                    altText: img.altText,
+                                    isNew: false
+                                  })));
+                                }}
+                                maxImages={5}
+                                existingImages={images.map(img => ({
+                                  url: img.url,
+                                  altText: img.altText || ""
+                                }))}
+                                label=""
+                              />
                               
                               {errors.images && (
                                 <Alert variant="destructive" className="mt-4">

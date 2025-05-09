@@ -3,7 +3,13 @@ import { getUrl } from '@/utils';
 
 export async function GET() {
   try {
-    const response = await fetch(`${getUrl()}/categories`);
+    const response = await fetch(`${getUrl()}/categories`,{
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+  
     if (!response.ok) {
       return NextResponse.json({ error: 'Failed to fetch categories' }, { status: response.status });
     }

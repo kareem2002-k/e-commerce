@@ -30,6 +30,7 @@ import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Category, ProductImage } from "@/types";
 import { Switch } from "@/components/ui/switch";
 import { getUrl } from "@/utils"; 
+import { ImageUploader } from "@/components/ImageUploader";
 
 
 
@@ -136,50 +137,6 @@ export default function AddProductPage() {
     setProduct(prev => ({ ...prev, [name]: value }));
   };
   
-  // Handle image upload
-  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (!e.target.files || e.target.files.length === 0) return;
-    
-    const file = e.target.files[0];
-    const imageUrl = URL.createObjectURL(file);
-    
-    setImages(prev => [
-      ...prev, 
-      { 
-        url: imageUrl, 
-        altText: file.name.split('.')[0] || 'Product image', 
-        file,
-        isNew: true 
-      }
-    ]);
-    
-    e.target.value = '';
-  };
-  
-  // Remove image
-  const removeImage = (index: number) => {
-    setImages(prev => {
-      const updatedImages = [...prev];
-      
-      // If URL is an object URL created by us, revoke it to prevent memory leaks
-      if (updatedImages[index].isNew) {
-        URL.revokeObjectURL(updatedImages[index].url);
-      }
-      
-      updatedImages.splice(index, 1);
-      return updatedImages;
-    });
-  };
-  
-  // Update image alt text
-  const updateImageAltText = (index: number, altText: string) => {
-    setImages(prev => {
-      const updatedImages = [...prev];
-      updatedImages[index] = { ...updatedImages[index], altText };
-      return updatedImages;
-    });
-  };
-  
   // Handle switch change
   const handleSwitchChange = (name: string, checked: boolean) => {
     setProduct(prev => ({ ...prev, [name]: checked }));
@@ -273,41 +230,12 @@ export default function AddProductPage() {
         return;
       }
 
-      // First, upload images if needed
-      const uploadedImages = await Promise.all(
-        images.map(async (image) => {
-          if (image.isNew && image.file) {
-            // In a real application, you would upload the file to your server or cloud storage
-            // For demo purposes, we'll simulate an upload
-            // const uploadedUrl = await uploadImage(image.file);
-            const uploadedUrl = image.url; // Simulate successful upload
-            
-            return {
-              url: uploadedUrl,
-              altText: image.altText
-            };
-          }
-          
-          return {
-            url: image.url,
-            altText: image.altText
-          };
-        })
-      );
-      
-      // Prepare form data for upload
-      const formData = new FormData();
-      formData.append('name', product.name);
-      formData.append('description', product.description);
-      formData.append('sku', product.sku);
-      formData.append('price', product.price);
-      formData.append('stock', product.stock);
-      formData.append('lowStockThreshold', product.lowStockThreshold);
-      formData.append('categoryId', product.categoryId);
-      formData.append('featured', product.featured.toString());
-      if (product.discount) {
-        formData.append('discount', product.discount);
-      }
+      // No need to upload images here - they're already uploaded to Supabase using the ImageUploader
+      // Just use the image URLs and alt text directly
+      const productImages = images.map(image => ({
+        url: image.url,
+        altText: image.altText
+      }));
       
       // Format product data
       const productData = {
@@ -320,7 +248,7 @@ export default function AddProductPage() {
         categoryId: product.categoryId,
         featured: product.featured,
         discount: product.discount ? parseFloat(product.discount) : null,
-        images: uploadedImages
+        images: productImages
       };
       
       // Get API URL with fallback
@@ -667,69 +595,21 @@ export default function AddProductPage() {
                               Product Images *
                             </Label>
                             
-                            <div className="mt-2 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                              {/* Image list */}
-                              {images.map((image, index) => (
-                                <div 
-                                  key={index} 
-                                  className="relative border rounded-md overflow-hidden group h-[150px]"
-                                >
-                                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                                  <img 
-                                    src={image.url} 
-                                    alt={image.altText}
-                                    className="w-full h-full object-cover"
-                                  />
-                                  
-                                  <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-                                    <div className="p-2">
-                                      <Input
-                                        value={image.altText}
-                                        onChange={(e) => updateImageAltText(index, e.target.value)}
-                                        placeholder="Alt text (for accessibility)"
-                                        className="mb-2 bg-black/50 text-white border-gray-600"
-                                      />
-                                      <Button
-                                        type="button"
-                                        variant="destructive"
-                                        size="sm"
-                                        className="w-full"
-                                        onClick={() => removeImage(index)}
-                                      >
-                                        <Trash2 className="h-4 w-4 mr-2" />
-                                        Remove
-                                      </Button>
-                                    </div>
-                                  </div>
-                                  
-                                  {index === 0 && (
-                                    <Badge className="absolute top-2 left-2 bg-blue-500">
-                                      Main Image
-                                    </Badge>
-                                  )}
-                                </div>
-                              ))}
-                              
-                              {/* Upload button */}
-                              <div 
-                                className="border-2 border-dashed border-gray-300 dark:border-gray-700 rounded-md h-[150px] flex items-center justify-center cursor-pointer hover:border-blue-500 transition-colors"
-                                onClick={() => document.getElementById('image-upload')?.click()}
-                              >
-                                <div className="text-center p-4">
-                                  <ImageIcon className="h-8 w-8 mx-auto text-gray-400 mb-2" />
-                                  <p className="text-sm text-muted-foreground">
-                                    Click to upload
-                                  </p>
-                                  <input
-                                    id="image-upload"
-                                    type="file"
-                                    accept="image/*"
-                                    onChange={handleImageUpload}
-                                    className="hidden"
-                                  />
-                                </div>
-                              </div>
-                            </div>
+                            <ImageUploader
+                              onImagesUploaded={(uploadedImages) => {
+                                setImages(uploadedImages.map(img => ({
+                                  url: img.url,
+                                  altText: img.altText,
+                                  isNew: false
+                                })));
+                              }}
+                              maxImages={5}
+                              existingImages={images.map(img => ({
+                                url: img.url,
+                                altText: img.altText
+                              }))}
+                              label=""
+                            />
                             
                             {errors.images && (
                               <p className="mt-2 text-sm text-red-500">{errors.images}</p>

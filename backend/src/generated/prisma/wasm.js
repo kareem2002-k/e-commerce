@@ -233,32 +233,6 @@ exports.Prisma.CouponScalarFieldEnum = {
   updatedAt: 'updatedAt'
 };
 
-exports.Prisma.HomepageSettingsScalarFieldEnum = {
-  id: 'id',
-  heroTitle: 'heroTitle',
-  heroSubtitle: 'heroSubtitle',
-  heroDescription: 'heroDescription',
-  heroPrimaryBtnText: 'heroPrimaryBtnText',
-  heroPrimaryBtnLink: 'heroPrimaryBtnLink',
-  heroSecondaryBtnText: 'heroSecondaryBtnText',
-  heroSecondaryBtnLink: 'heroSecondaryBtnLink',
-  heroBackgroundImage: 'heroBackgroundImage',
-  heroGradientStart: 'heroGradientStart',
-  heroGradientEnd: 'heroGradientEnd',
-  dealsBannerTitle: 'dealsBannerTitle',
-  dealsBannerTagline: 'dealsBannerTagline',
-  dealsBannerDesc: 'dealsBannerDesc',
-  dealsBannerBtnText: 'dealsBannerBtnText',
-  dealsBannerBtnLink: 'dealsBannerBtnLink',
-  dealsBannerBgColor: 'dealsBannerBgColor',
-  dealsBannerBgImage: 'dealsBannerBgImage',
-  dealsBannerActive: 'dealsBannerActive',
-  showFeaturedCategories: 'showFeaturedCategories',
-  showFeaturedProducts: 'showFeaturedProducts',
-  showNewArrivals: 'showNewArrivals',
-  updatedAt: 'updatedAt'
-};
-
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -311,8 +285,7 @@ exports.Prisma.ModelName = {
   Order: 'Order',
   OrderItem: 'OrderItem',
   Review: 'Review',
-  Coupon: 'Coupon',
-  HomepageSettings: 'HomepageSettings'
+  Coupon: 'Coupon'
 };
 
 /**

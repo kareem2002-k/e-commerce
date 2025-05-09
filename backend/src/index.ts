@@ -8,6 +8,7 @@ import orderRoutes from './routes/orders';
 import addressRoutes from './routes/addresses';
 import couponRoutes from './routes/coupons';
 import reviewRoutes from './routes/reviews';
+import uploadRoutes from './routes/uploads';
 import cors from 'cors';
 
 // Load environment variables
@@ -19,8 +20,8 @@ const app = express();
 const PORT = process.env.PORT || 3002;
 
 // Middleware
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+app.use(express.json({ limit: '10mb' })); // Increased limit for image uploads
+app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 app.use(cors());
 
 // Welcome route
@@ -37,7 +38,7 @@ app.use('/api/orders', orderRoutes);
 app.use('/api/addresses', addressRoutes);
 app.use('/api/coupons', couponRoutes);
 app.use('/api/reviews', reviewRoutes);
-
+app.use('/api/uploads', uploadRoutes);
 
 
 // Start server
