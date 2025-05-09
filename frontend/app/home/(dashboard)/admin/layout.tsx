@@ -3,6 +3,7 @@
 import { useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { useAuth } from '@/context/AuthContext'
+import { AdminBreadcrumbs } from '@/components/admin/AdminBreadcrumbs'
 
 export default function AdminLayout({
   children,
@@ -35,5 +36,10 @@ export default function AdminLayout({
   }
 
   // Render admin content if user is admin
-  return <>{children}</>
+  return (
+    <div className="container px-4 py-4">
+      <AdminBreadcrumbs />
+      {children}
+    </div>
+  )
 } 
