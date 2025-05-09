@@ -17,6 +17,8 @@ app.use(cors());
 app.use(express.json());
 app.use(morgan('dev'));
 
+
+
 // Routes
 app.use('/api/auth', authRoutes);
 app.use('/api/products', productRoutes);
@@ -33,4 +35,7 @@ app.use((err: any, req: express.Request, res: express.Response, next: express.Ne
   res.status(500).json({ message: 'Something went wrong!' });
 });
 
+app.get('/', (req, res) => {
+  res.send('<h1>Server is running</h1><p>API endpoints are available at /api/*</p>');
+});
 export default app; 
