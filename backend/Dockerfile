@@ -1,29 +1,33 @@
-# Use Debian-based Node.js image (NOT Alpine)
+# Use Debian-based Node.js image
 FROM node:22
 
-# Install required build tools for bcrypt native bindings
+# Install build tools needed for bcrypt and Prisma
 RUN apt-get update && apt-get install -y python3 make g++ && rm -rf /var/lib/apt/lists/*
 
-# Set working directory
 WORKDIR /app
 
-# Copy full project into container
+# Copy project files
 COPY . .
 
-# Install global tools
-RUN npm install -g pnpm ts-node typescript
+# Install global dev tools
+RUN npm install -g pnpm ts-node typescript prisma
 
-# Change into backend directory where the actual code lives
 WORKDIR /app/backend
 
 # Install backend dependencies
 RUN pnpm install
 
-# Rebuild bcrypt native bindings
+# Rebuild native bcrypt binding
 RUN pnpm rebuild bcrypt
 
-# Expose the backend port
+# Generate Prisma Client for the correct platform
+RUN pnpm exec prisma generate
+
+# Optional: Deploy DB migrations in production
+# RUN pnpm exec prisma migrate deploy
+
+# Expose backend port
 EXPOSE 3002
 
-# Start the app using ts-node
+# Start the app
 CMD ["pnpm", "run", "start-ts"]
