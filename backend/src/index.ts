@@ -10,6 +10,7 @@ import couponRoutes from './routes/coupons';
 import reviewRoutes from './routes/reviews';
 import uploadRoutes from './routes/uploads';
 import contentRoutes from './routes/content';
+import usersRouter from './routes/users';
 import cors from 'cors';
 import { setupDefaultContent } from './setupContent';
 
@@ -42,6 +43,7 @@ app.use('/api/coupons', couponRoutes);
 app.use('/api/reviews', reviewRoutes);
 app.use('/api/uploads', uploadRoutes);
 app.use('/api/content', contentRoutes);
+app.use('/api/users', usersRouter);   
 
 
 // Start server

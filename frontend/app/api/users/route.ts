@@ -8,7 +8,7 @@ export async function GET(request: Request) {
     const token = authHeader ? authHeader.split(" ")[1] : null;
     
     // Forward request to backend with auth token
-    const response = await fetch(`${getUrl()}/api/users`, {
+    const response = await fetch(`${getUrl()}/users`, {
       headers: {
         Authorization: `Bearer ${token}`,
       },

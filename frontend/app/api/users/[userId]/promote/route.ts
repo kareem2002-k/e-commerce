@@ -13,7 +13,7 @@ export async function PUT(
     const token = authHeader ? authHeader.split(" ")[1] : null;
     
     // Forward request to backend with auth token
-    const response = await fetch(`${getUrl()}/api/users/${userId}/promote`, {
+    const response = await fetch(`${getUrl()}/users/${userId}/promote`, {
       method: 'PUT',
       headers: {
         Authorization: `Bearer ${token}`,

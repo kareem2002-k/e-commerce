@@ -13,7 +13,7 @@ export async function DELETE(
     const token = authHeader ? authHeader.split(" ")[1] : null;
     
     // Forward request to backend with auth token
-    const response = await fetch(`${getUrl()}/api/users/${userId}`, {
+    const response = await fetch(`${getUrl()}/users/${userId}`, {
       method: 'DELETE',
       headers: {
         Authorization: `Bearer ${token}`,
