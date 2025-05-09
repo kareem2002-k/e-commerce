@@ -34,11 +34,16 @@ interface ExtendedProduct extends Product {
   originalPrice?: number;
   isNew?: boolean;
   isSale?: boolean;
-  rating?: number;
-  reviewCount?: number;
-  features?: string[];
+  rating: number;
+  reviewCount: number;
+  features: string[];
   specifications?: Record<string, string>;
   tags?: string[];
+  freeShippingThreshold?: number;
+  warrantyPeriod?: string;
+  warrantyDescription?: string;
+  returnPeriod?: string;
+  returnDescription?: string;
 }
 
 export default function ProductPage() {
@@ -264,27 +269,42 @@ export default function ProductPage() {
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-4">
-            <div className="flex items-center gap-2 rounded-lg border p-3">
-              <Truck className="h-5 w-5 text-voltBlue-500" />
-              <div>
-                <p className="text-sm font-medium">Free Shipping</p>
-                <p className="text-xs text-muted-foreground">On orders over $50</p>
+            {/* Only show shipping info if it exists */}
+            {(product.freeShippingThreshold !== undefined && product.freeShippingThreshold !== null) && (
+              <div className="flex items-center gap-2 rounded-lg border p-3">
+                <Truck className="h-5 w-5 text-voltBlue-500" />
+                <div>
+                  <p className="text-sm font-medium">Free Shipping</p>
+                  <p className="text-xs text-muted-foreground">
+                    {product.freeShippingThreshold > 0 
+                      ? `On orders over $${product.freeShippingThreshold.toFixed(0)}`
+                      : 'For all orders'}
+                  </p>
+                </div>
               </div>
-            </div>
-            <div className="flex items-center gap-2 rounded-lg border p-3">
-              <ShieldCheck className="h-5 w-5 text-voltBlue-500" />
-              <div>
-                <p className="text-sm font-medium">2-Year Warranty</p>
-                <p className="text-xs text-muted-foreground">Extended coverage</p>
+            )}
+            
+            {/* Only show warranty info if it exists */}
+            {(product.warrantyPeriod || product.warrantyDescription) && (
+              <div className="flex items-center gap-2 rounded-lg border p-3">
+                <ShieldCheck className="h-5 w-5 text-voltBlue-500" />
+                <div>
+                  <p className="text-sm font-medium">{product.warrantyPeriod || '2-Year Warranty'}</p>
+                  <p className="text-xs text-muted-foreground">{product.warrantyDescription || 'Extended coverage'}</p>
+                </div>
               </div>
-            </div>
-            <div className="flex items-center gap-2 rounded-lg border p-3">
-              <RotateCcw className="h-5 w-5 text-voltBlue-500" />
-              <div>
-                <p className="text-sm font-medium">30-Day Returns</p>
-                <p className="text-xs text-muted-foreground">Hassle-free returns</p>
+            )}
+            
+            {/* Only show return info if it exists */}
+            {(product.returnPeriod || product.returnDescription) && (
+              <div className="flex items-center gap-2 rounded-lg border p-3">
+                <RotateCcw className="h-5 w-5 text-voltBlue-500" />
+                <div>
+                  <p className="text-sm font-medium">{product.returnPeriod || '30-Day Returns'}</p>
+                  <p className="text-xs text-muted-foreground">{product.returnDescription || 'Hassle-free returns'}</p>
+                </div>
               </div>
-            </div>
+            )}
           </div>
         </div>
       </div>
@@ -293,13 +313,12 @@ export default function ProductPage() {
       <Tabs defaultValue="features" className="mt-8">
         <TabsList className="grid w-full grid-cols-3 lg:w-auto lg:grid-cols-none lg:flex">
           <TabsTrigger value="features">Features</TabsTrigger>
-          <TabsTrigger value="specifications">Specifications</TabsTrigger>
           <TabsTrigger value="reviews">Reviews ({product.reviewCount || 0})</TabsTrigger>
         </TabsList>
         <TabsContent value="features" className="mt-4 space-y-4">
           <div className="rounded-lg border bg-card p-6">
             <h3 className="text-xl font-semibold mb-4">Key Features</h3>
-            {product.features && product.features.length > 0 ? (
+            {product.features && Array.isArray(product.features) && product.features.length > 0 ? (
               <ul className="space-y-3">
                 {product.features.map((feature, index) => (
                   <li key={index} className="flex items-start gap-2">

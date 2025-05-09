@@ -17,6 +17,7 @@ export interface ProductCardData {
   price: number
   originalPrice?: number
   rating: number
+  reviewCount: number
   image: string
   isNew?: boolean
   isSale?: boolean
@@ -90,7 +91,9 @@ export function ProductCard({ product, className }: ProductCardProps) {
                 />
               ))}
           </div>
-          <span className="text-xs text-muted-foreground">({formattedProduct.rating.toFixed(1)})</span>
+          <span className="text-xs text-muted-foreground">
+            ({formattedProduct.rating.toFixed(1)}) {formattedProduct.reviewCount > 0 && `${formattedProduct.reviewCount} reviews`}
+          </span>
         </div>
       </CardContent>
       <CardFooter className="flex items-center justify-between p-4 pt-0">
@@ -126,7 +129,6 @@ function formatProduct(product: ProductCardData | ApiProduct): ProductCardData {
   const isNew = Math.random() > 0.7;
   const isSale = Math.random() > 0.5;
   const originalPrice = isSale ? product.price * 1.2 : undefined;
-  const rating = 4 + Math.random();
   
   return {
     id: apiProduct.id,
@@ -134,7 +136,9 @@ function formatProduct(product: ProductCardData | ApiProduct): ProductCardData {
     category: apiProduct.category?.name || 'Unknown',
     price: apiProduct.price,
     originalPrice,
-    rating,
+    // Use actual rating and review count from API
+    rating: apiProduct.rating || 0,
+    reviewCount: apiProduct.reviewCount || 0,
     image: apiProduct.images && apiProduct.images.length > 0 
       ? apiProduct.images[0].url 
       : "/placeholder.svg?height=300&width=300",

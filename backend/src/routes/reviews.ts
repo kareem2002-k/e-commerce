@@ -5,6 +5,31 @@ import prisma from '../lib/prisma';
 
 const router = express.Router();
 
+// Utility function to update product review metrics
+const updateProductReviewMetrics = async (productId: string) => {
+  try {
+    // Get all reviews for the product
+    const reviews = await prisma.review.findMany({
+      where: { productId }
+    });
+    
+    const reviewCount = reviews.length;
+    let rating = 0;
+    
+    if (reviewCount > 0) {
+      const ratingSum = reviews.reduce((sum, review) => sum + review.rating, 0);
+      rating = ratingSum / reviewCount;
+    }
+    
+    console.log(`Updated metrics for product ${productId}: ${reviewCount} reviews, ${rating.toFixed(2)} rating`);
+    
+    return { reviewCount, rating };
+  } catch (error) {
+    console.error('Error updating product review metrics:', error);
+    throw error;
+  }
+};
+
 // Public route - Get reviews for a product
 router.get('/product/:productId', async (req, res) => {
   try {
@@ -70,8 +95,7 @@ router.post('/', authenticate, async (req, res) => {
     
     if (!product) {
       res.status(404).json({ message: 'Product not found' });
-
-      return 
+      return;
     }
     
     // Check if user has purchased the product
@@ -89,8 +113,7 @@ router.post('/', authenticate, async (req, res) => {
     
     if (!hasPurchased) {
       res.status(403).json({ message: 'You can only review products you have purchased' });
-
-      return 
+      return;
     }
     
     // Check if user has already reviewed this product
@@ -105,8 +128,7 @@ router.post('/', authenticate, async (req, res) => {
     
     if (existingReview) {
       res.status(400).json({ message: 'You have already reviewed this product' });
-
-      return 
+      return;
     }
     
     // Create review
@@ -132,6 +154,9 @@ router.post('/', authenticate, async (req, res) => {
       }
     });
     
+    // Update product review metrics
+    await updateProductReviewMetrics(productId);
+    
     res.status(201).json(review);
   } catch (error) {
     res.status(500).json({ message: 'Error creating review' });
@@ -152,8 +177,7 @@ router.put('/:id', authenticate, async (req, res) => {
     
     if (!review || review.userId !== userId) {
       res.status(404).json({ message: 'Review not found' });
-
-      return 
+      return;
     }
     
     // Update review
@@ -177,6 +201,9 @@ router.put('/:id', authenticate, async (req, res) => {
         }
       }
     });
+    
+    // Update product review metrics
+    await updateProductReviewMetrics(updatedReview.productId);
     
     res.json(updatedReview);
   } catch (error) {
@@ -202,14 +229,19 @@ router.delete('/:id', authenticate, async (req, res) => {
     
     if (!review || (review.userId !== userId && user?.role !== 'ADMIN')) {
       res.status(404).json({ message: 'Review not found' });
-
-      return 
+      return;
     }
+    
+    // Store product ID before deleting
+    const productId = review.productId;
     
     // Delete review
     await prisma.review.delete({
       where: { id }
     });
+    
+    // Update product review metrics
+    await updateProductReviewMetrics(productId);
     
     res.json({ message: 'Review deleted successfully' });
   } catch (error) {

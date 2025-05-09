@@ -82,6 +82,7 @@ const products = [
     name: "Ultra HD Smart TV",
     price: 899.99,
     rating: 4.8,
+    reviewCount: 38,
     image: "/placeholder.svg?height=300&width=400",
     category: "TVs & Displays",
   },
@@ -90,6 +91,7 @@ const products = [
     name: "Pro Wireless Headphones",
     price: 249.99,
     rating: 4.9,
+    reviewCount: 64,
     image: "/placeholder.svg?height=300&width=400",
     category: "Audio",
   },
@@ -98,6 +100,7 @@ const products = [
     name: "Gaming Laptop Elite",
     price: 1299.99,
     rating: 4.7,
+    reviewCount: 29,
     image: "/placeholder.svg?height=300&width=400",
     category: "Computers",
   },
@@ -106,6 +109,7 @@ const products = [
     name: "Smart Home Hub",
     price: 129.99,
     rating: 4.6,
+    reviewCount: 45,
     image: "/placeholder.svg?height=300&width=400",
     category: "Smart Home",
   },
@@ -212,7 +216,7 @@ export default function FeaturedProducts() {
                         />
                       ))}
                     <span className={`${isDark ? "text-white/60" : "text-gray-500"} text-xs ml-2`}>
-                      {product.rating}
+                      {product.rating} ({product.reviewCount} reviews)
                     </span>
                   </div>
                   <div className={`text-xl font-bold ${isDark ? "text-white" : "text-gray-800"}`}>${product.price}</div>

@@ -88,9 +88,14 @@ model Product {
   orderItems        OrderItem[]
   cartItems         CartItem[]
   reviews           Review[]
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  features          String[]
+  freeShippingThreshold Float?    @default(50)
+  warrantyPeriod    String?       @default("2-Year Warranty")
+  warrantyDescription String?     @default("Extended coverage")
+  returnPeriod      String?       @default("30-Day Returns")
+  returnDescription String?       @default("Hassle-free returns")
+  createdAt         DateTime      @default(now())
+  updatedAt         DateTime      @updatedAt
 
   @@index([name])
   @@index([price])

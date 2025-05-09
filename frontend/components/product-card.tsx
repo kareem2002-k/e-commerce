@@ -14,6 +14,7 @@ interface ProductCardProps {
     price: number
     originalPrice?: number
     rating: number
+    reviewCount?: number
     image: string
     isNew?: boolean
     isSale?: boolean
@@ -70,7 +71,9 @@ export function ProductCard({ product, className }: ProductCardProps) {
                 />
               ))}
           </div>
-          <span className="text-xs text-muted-foreground">({product.rating.toFixed(1)})</span>
+          <span className="text-xs text-muted-foreground">
+            ({product.rating.toFixed(1)}) {product.reviewCount ? `${product.reviewCount} reviews` : ''}
+          </span>
         </div>
       </CardContent>
       <CardFooter className="flex items-center justify-between p-4 pt-0">

@@ -55,6 +55,12 @@ export type Product = {
   isNew?: boolean; // Whether this is a new product
   isSale?: boolean; // Whether this product is on sale
   tags?: string[]; // Product tags
+  features?: string[]; // Product features
+  freeShippingThreshold?: number; // Free shipping threshold
+  warrantyPeriod?: string; // Warranty period (e.g. "2-Year Warranty")
+  warrantyDescription?: string; // Warranty description
+  returnPeriod?: string; // Return period (e.g. "30-Day Returns")
+  returnDescription?: string; // Return description
 };
 
 // Define form schema

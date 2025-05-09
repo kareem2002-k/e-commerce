@@ -43,10 +43,11 @@ export async function POST(request: Request) {
       headers["Authorization"] = authHeader;
     }
 
+    // Make sure all the new fields are passed to the API
+    // The backend will handle these fields appropriately
     const response = await fetch(`${getUrl()}/products`, {
       method: "POST",
       headers: headers,
-
       body: JSON.stringify(body),
     });
 

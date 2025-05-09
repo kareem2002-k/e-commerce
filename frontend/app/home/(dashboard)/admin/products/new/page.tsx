@@ -56,6 +56,23 @@ export default function AddProductPage() {
   
   const [images, setImages] = useState<ProductImage[]>([]);
   const [errors, setErrors] = useState<Record<string, string>>({});
+  const [features, setFeatures] = useState<string[]>([]);
+  const [newFeature, setNewFeature] = useState("");
+  
+  // Shipping, warranty and return info
+  const [shippingInfo, setShippingInfo] = useState({
+    freeShippingThreshold: "50",
+  });
+  
+  const [warrantyInfo, setWarrantyInfo] = useState({
+    warrantyPeriod: "2-Year Warranty",
+    warrantyDescription: "Extended coverage"
+  });
+  
+  const [returnInfo, setReturnInfo] = useState({
+    returnPeriod: "30-Day Returns",
+    returnDescription: "Hassle-free returns"
+  });
   
   // Admin protection
   useEffect(() => {
@@ -142,6 +159,34 @@ export default function AddProductPage() {
     setProduct(prev => ({ ...prev, [name]: checked }));
   };
   
+  // Add features handling
+  const handleAddFeature = () => {
+    if (newFeature.trim()) {
+      setFeatures([...features, newFeature.trim()]);
+      setNewFeature("");
+    }
+  };
+
+  const handleRemoveFeature = (index: number) => {
+    setFeatures(features.filter((_, i) => i !== index));
+  };
+
+  // Handle shipping, warranty, return info changes
+  const handleShippingChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setShippingInfo(prev => ({ ...prev, [name]: value }));
+  };
+
+  const handleWarrantyChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setWarrantyInfo(prev => ({ ...prev, [name]: value }));
+  };
+
+  const handleReturnChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setReturnInfo(prev => ({ ...prev, [name]: value }));
+  };
+  
   // Validate form
   const validateForm = () => {
     const newErrors: Record<string, string> = {};
@@ -178,6 +223,14 @@ export default function AddProductPage() {
       newErrors.discount = "Discount must be a percentage between 0 and 100";
     }
     
+    if (features.length === 0) {
+      newErrors.features = "At least one feature is required";
+    }
+    
+    if (shippingInfo.freeShippingThreshold && (isNaN(Number(shippingInfo.freeShippingThreshold)) || Number(shippingInfo.freeShippingThreshold) < 0)) {
+      newErrors.freeShippingThreshold = "Free shipping threshold must be a non-negative number";
+    }
+    
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
@@ -212,7 +265,16 @@ export default function AddProductPage() {
         return;
       }
       
-      if (errors.discount && activeTab !== "marketing") {
+      if (errors.features && activeTab !== "features") {
+        setActiveTab("features");
+        toast.error("Please add at least one feature");
+        return;
+      }
+      
+      if (
+        (errors.discount || errors.freeShippingThreshold) && 
+        activeTab !== "marketing"
+      ) {
         setActiveTab("marketing");
         toast.error("Please check the Marketing tab for errors");
         return;
@@ -248,13 +310,19 @@ export default function AddProductPage() {
         categoryId: product.categoryId,
         featured: product.featured,
         discount: product.discount ? parseFloat(product.discount) : null,
-        images: productImages
+        images: productImages,
+        features,
+        freeShippingThreshold: parseFloat(shippingInfo.freeShippingThreshold),
+        warrantyPeriod: warrantyInfo.warrantyPeriod,
+        warrantyDescription: warrantyInfo.warrantyDescription,
+        returnPeriod: returnInfo.returnPeriod,
+        returnDescription: returnInfo.returnDescription
       };
+      
+      console.log('Creating product with data:', productData);
       
       // Get API URL with fallback
       const API_URL = getUrl();
-      
-      console.log('Creating product with token:', token ? 'Token exists' : 'No token');
       
       const response = await fetch(`${API_URL}/products`, {
         method: 'POST',
@@ -271,6 +339,9 @@ export default function AddProductPage() {
         }
         throw new Error(`Failed to create product: ${response.status}`);
       }
+      
+      const createdProduct = await response.json();
+      console.log('Server response:', createdProduct);
       
       toast.success("Product created successfully");
       router.push('/home/admin/products');
@@ -380,6 +451,17 @@ export default function AddProductPage() {
                       )}
                     </TabsTrigger>
                     <TabsTrigger 
+                      value="features" 
+                      className={`justify-start ${errors.features ? 'text-red-500' : ''}`}
+                    >
+                      Features
+                      {errors.features && (
+                        <span className="ml-auto">
+                          <AlertCircle className="h-4 w-4" />
+                        </span>
+                      )}
+                    </TabsTrigger>
+                    <TabsTrigger 
                       value="marketing" 
                       className={`justify-start ${errors.discount ? 'text-red-500' : ''}`}
                     >
@@ -404,6 +486,8 @@ export default function AddProductPage() {
                       {activeTab === "basic" && "Provide a clear name and detailed description to help customers find your product."}
                       {activeTab === "inventory" && "Set an appropriate low stock threshold to receive alerts when inventory is running low."}
                       {activeTab === "images" && "High-quality images from multiple angles help increase conversion rates."}
+                      {activeTab === "features" && "Highlight the most important features of your product to increase customer interest."}
+                      {activeTab === "marketing" && "Customize shipping, warranty, and return policies to appeal to your customers."}
                     </p>
                   </CardContent>
                 </Card>
@@ -622,6 +706,64 @@ export default function AddProductPage() {
                         </div>
                       </TabsContent>
                       
+                      <TabsContent value="features" className="mt-0">
+                        <div className="space-y-4">
+                          <div>
+                            <Label className={errors.features ? "text-red-500" : ""}>
+                              Product Features *
+                            </Label>
+                            <p className="text-sm text-muted-foreground mb-2">
+                              Add the key features of your product. These will be displayed prominently on the product page.
+                            </p>
+                            
+                            {features.length > 0 && (
+                              <div className="space-y-2 mb-4">
+                                {features.map((feature, index) => (
+                                  <div 
+                                    key={index} 
+                                    className="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-800 rounded-md"
+                                  >
+                                    <div className="flex items-center">
+                                      <Zap className="h-4 w-4 text-blue-500 mr-2" />
+                                      <span>{feature}</span>
+                                    </div>
+                                    <Button 
+                                      variant="ghost" 
+                                      size="sm" 
+                                      onClick={() => handleRemoveFeature(index)}
+                                      className="text-red-500 hover:text-red-700 hover:bg-red-50 p-1 h-auto"
+                                    >
+                                      <X className="h-4 w-4" />
+                                    </Button>
+                                  </div>
+                                ))}
+                              </div>
+                            )}
+                            
+                            <div className="flex gap-2">
+                              <Input
+                                value={newFeature}
+                                onChange={(e) => setNewFeature(e.target.value)}
+                                placeholder="e.g. Fast charging capability"
+                                className="flex-1"
+                              />
+                              <Button 
+                                type="button" 
+                                onClick={handleAddFeature}
+                                disabled={!newFeature.trim()}
+                              >
+                                <Plus className="h-4 w-4 mr-1" />
+                                Add
+                              </Button>
+                            </div>
+                            
+                            {errors.features && (
+                              <p className="mt-2 text-sm text-red-500">{errors.features}</p>
+                            )}
+                          </div>
+                        </div>
+                      </TabsContent>
+                      
                       <TabsContent value="marketing" className="space-y-6 mt-0">
                         <div className="space-y-4">
                           <div className="border p-4 rounded-lg">
@@ -687,6 +829,99 @@ export default function AddProductPage() {
                             </div>
                           </div>
                           
+                          {/* Shipping Policy */}
+                          <div className="border p-4 rounded-lg">
+                            <h3 className="text-base font-medium mb-3">Shipping Policy</h3>
+                            <div className="space-y-3">
+                              <div>
+                                <Label 
+                                  htmlFor="freeShippingThreshold" 
+                                  className={errors.freeShippingThreshold ? "text-red-500" : ""}
+                                >
+                                  Free Shipping Threshold ($)
+                                </Label>
+                                <Input
+                                  id="freeShippingThreshold"
+                                  name="freeShippingThreshold"
+                                  type="number"
+                                  min="0"
+                                  value={shippingInfo.freeShippingThreshold}
+                                  onChange={handleShippingChange}
+                                  className={errors.freeShippingThreshold ? "border-red-500" : ""}
+                                  placeholder="e.g. 50"
+                                />
+                                {errors.freeShippingThreshold && (
+                                  <p className="mt-1 text-sm text-red-500">{errors.freeShippingThreshold}</p>
+                                )}
+                                <p className="mt-1 text-sm text-muted-foreground">
+                                  Set to 0 for free shipping on all orders
+                                </p>
+                              </div>
+                            </div>
+                          </div>
+                          
+                          {/* Warranty Policy */}
+                          <div className="border p-4 rounded-lg">
+                            <h3 className="text-base font-medium mb-3">Warranty Policy</h3>
+                            <div className="space-y-3">
+                              <div>
+                                <Label htmlFor="warrantyPeriod">
+                                  Warranty Period
+                                </Label>
+                                <Input
+                                  id="warrantyPeriod"
+                                  name="warrantyPeriod"
+                                  value={warrantyInfo.warrantyPeriod}
+                                  onChange={handleWarrantyChange}
+                                  placeholder="e.g. 2-Year Warranty"
+                                />
+                              </div>
+                              <div>
+                                <Label htmlFor="warrantyDescription">
+                                  Warranty Description
+                                </Label>
+                                <Input
+                                  id="warrantyDescription"
+                                  name="warrantyDescription"
+                                  value={warrantyInfo.warrantyDescription}
+                                  onChange={handleWarrantyChange}
+                                  placeholder="e.g. Extended coverage"
+                                />
+                              </div>
+                            </div>
+                          </div>
+                          
+                          {/* Return Policy */}
+                          <div className="border p-4 rounded-lg">
+                            <h3 className="text-base font-medium mb-3">Return Policy</h3>
+                            <div className="space-y-3">
+                              <div>
+                                <Label htmlFor="returnPeriod">
+                                  Return Period
+                                </Label>
+                                <Input
+                                  id="returnPeriod"
+                                  name="returnPeriod"
+                                  value={returnInfo.returnPeriod}
+                                  onChange={handleReturnChange}
+                                  placeholder="e.g. 30-Day Returns"
+                                />
+                              </div>
+                              <div>
+                                <Label htmlFor="returnDescription">
+                                  Return Description
+                                </Label>
+                                <Input
+                                  id="returnDescription"
+                                  name="returnDescription"
+                                  value={returnInfo.returnDescription}
+                                  onChange={handleReturnChange}
+                                  placeholder="e.g. Hassle-free returns"
+                                />
+                              </div>
+                            </div>
+                          </div>
+                          
                           <Alert className="bg-blue-50 dark:bg-blue-900/20 border-blue-200 dark:border-blue-800">
                             <Tag className="h-4 w-4 text-blue-600" />
                             <AlertTitle>Marketing Tips</AlertTitle>
@@ -694,7 +929,7 @@ export default function AddProductPage() {
                               <ul className="list-disc pl-5 space-y-1 mt-2">
                                 <li>Featured products get 3.5x more visibility</li>
                                 <li>Products with 10-20% discounts typically see the best conversion rates</li>
-                                <li>Update featured products regularly to keep your storefront fresh</li>
+                                <li>Clear return and warranty policies increase customer trust</li>
                               </ul>
                             </AlertDescription>
                           </Alert>

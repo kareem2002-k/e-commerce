@@ -148,6 +148,12 @@ exports.Prisma.ProductScalarFieldEnum = {
   featured: 'featured',
   discount: 'discount',
   categoryId: 'categoryId',
+  features: 'features',
+  freeShippingThreshold: 'freeShippingThreshold',
+  warrantyPeriod: 'warrantyPeriod',
+  warrantyDescription: 'warrantyDescription',
+  returnPeriod: 'returnPeriod',
+  returnDescription: 'returnDescription',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 };

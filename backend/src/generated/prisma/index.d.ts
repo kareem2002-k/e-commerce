@@ -4637,6 +4637,7 @@ export namespace Prisma {
     stock: number | null
     lowStockThreshold: number | null
     discount: number | null
+    freeShippingThreshold: number | null
   }
 
   export type ProductSumAggregateOutputType = {
@@ -4644,6 +4645,7 @@ export namespace Prisma {
     stock: number | null
     lowStockThreshold: number | null
     discount: number | null
+    freeShippingThreshold: number | null
   }
 
   export type ProductMinAggregateOutputType = {
@@ -4657,6 +4659,11 @@ export namespace Prisma {
     featured: boolean | null
     discount: number | null
     categoryId: string | null
+    freeShippingThreshold: number | null
+    warrantyPeriod: string | null
+    warrantyDescription: string | null
+    returnPeriod: string | null
+    returnDescription: string | null
     createdAt: Date | null
     updatedAt: Date | null
   }
@@ -4672,6 +4679,11 @@ export namespace Prisma {
     featured: boolean | null
     discount: number | null
     categoryId: string | null
+    freeShippingThreshold: number | null
+    warrantyPeriod: string | null
+    warrantyDescription: string | null
+    returnPeriod: string | null
+    returnDescription: string | null
     createdAt: Date | null
     updatedAt: Date | null
   }
@@ -4687,6 +4699,12 @@ export namespace Prisma {
     featured: number
     discount: number
     categoryId: number
+    features: number
+    freeShippingThreshold: number
+    warrantyPeriod: number
+    warrantyDescription: number
+    returnPeriod: number
+    returnDescription: number
     createdAt: number
     updatedAt: number
     _all: number
@@ -4698,6 +4716,7 @@ export namespace Prisma {
     stock?: true
     lowStockThreshold?: true
     discount?: true
+    freeShippingThreshold?: true
   }
 
   export type ProductSumAggregateInputType = {
@@ -4705,6 +4724,7 @@ export namespace Prisma {
     stock?: true
     lowStockThreshold?: true
     discount?: true
+    freeShippingThreshold?: true
   }
 
   export type ProductMinAggregateInputType = {
@@ -4718,6 +4738,11 @@ export namespace Prisma {
     featured?: true
     discount?: true
     categoryId?: true
+    freeShippingThreshold?: true
+    warrantyPeriod?: true
+    warrantyDescription?: true
+    returnPeriod?: true
+    returnDescription?: true
     createdAt?: true
     updatedAt?: true
   }
@@ -4733,6 +4758,11 @@ export namespace Prisma {
     featured?: true
     discount?: true
     categoryId?: true
+    freeShippingThreshold?: true
+    warrantyPeriod?: true
+    warrantyDescription?: true
+    returnPeriod?: true
+    returnDescription?: true
     createdAt?: true
     updatedAt?: true
   }
@@ -4748,6 +4778,12 @@ export namespace Prisma {
     featured?: true
     discount?: true
     categoryId?: true
+    features?: true
+    freeShippingThreshold?: true
+    warrantyPeriod?: true
+    warrantyDescription?: true
+    returnPeriod?: true
+    returnDescription?: true
     createdAt?: true
     updatedAt?: true
     _all?: true
@@ -4850,6 +4886,12 @@ export namespace Prisma {
     featured: boolean
     discount: number | null
     categoryId: string | null
+    features: string[]
+    freeShippingThreshold: number | null
+    warrantyPeriod: string | null
+    warrantyDescription: string | null
+    returnPeriod: string | null
+    returnDescription: string | null
     createdAt: Date
     updatedAt: Date
     _count: ProductCountAggregateOutputType | null
@@ -4884,6 +4926,12 @@ export namespace Prisma {
     featured?: boolean
     discount?: boolean
     categoryId?: boolean
+    features?: boolean
+    freeShippingThreshold?: boolean
+    warrantyPeriod?: boolean
+    warrantyDescription?: boolean
+    returnPeriod?: boolean
+    returnDescription?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     category?: boolean | Product$categoryArgs<ExtArgs>
@@ -4905,6 +4953,12 @@ export namespace Prisma {
     featured?: boolean
     discount?: boolean
     categoryId?: boolean
+    features?: boolean
+    freeShippingThreshold?: boolean
+    warrantyPeriod?: boolean
+    warrantyDescription?: boolean
+    returnPeriod?: boolean
+    returnDescription?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     category?: boolean | Product$categoryArgs<ExtArgs>
@@ -4921,6 +4975,12 @@ export namespace Prisma {
     featured?: boolean
     discount?: boolean
     categoryId?: boolean
+    features?: boolean
+    freeShippingThreshold?: boolean
+    warrantyPeriod?: boolean
+    warrantyDescription?: boolean
+    returnPeriod?: boolean
+    returnDescription?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     category?: boolean | Product$categoryArgs<ExtArgs>
@@ -4937,11 +4997,17 @@ export namespace Prisma {
     featured?: boolean
     discount?: boolean
     categoryId?: boolean
+    features?: boolean
+    freeShippingThreshold?: boolean
+    warrantyPeriod?: boolean
+    warrantyDescription?: boolean
+    returnPeriod?: boolean
+    returnDescription?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }
 
-  export type ProductOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "description" | "sku" | "price" | "stock" | "lowStockThreshold" | "featured" | "discount" | "categoryId" | "createdAt" | "updatedAt", ExtArgs["result"]["product"]>
+  export type ProductOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "description" | "sku" | "price" | "stock" | "lowStockThreshold" | "featured" | "discount" | "categoryId" | "features" | "freeShippingThreshold" | "warrantyPeriod" | "warrantyDescription" | "returnPeriod" | "returnDescription" | "createdAt" | "updatedAt", ExtArgs["result"]["product"]>
   export type ProductInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     category?: boolean | Product$categoryArgs<ExtArgs>
     images?: boolean | Product$imagesArgs<ExtArgs>
@@ -4977,6 +5043,12 @@ export namespace Prisma {
       featured: boolean
       discount: number | null
       categoryId: string | null
+      features: string[]
+      freeShippingThreshold: number | null
+      warrantyPeriod: string | null
+      warrantyDescription: string | null
+      returnPeriod: string | null
+      returnDescription: string | null
       createdAt: Date
       updatedAt: Date
     }, ExtArgs["result"]["product"]>
@@ -5417,6 +5489,12 @@ export namespace Prisma {
     readonly featured: FieldRef<"Product", 'Boolean'>
     readonly discount: FieldRef<"Product", 'Float'>
     readonly categoryId: FieldRef<"Product", 'String'>
+    readonly features: FieldRef<"Product", 'String[]'>
+    readonly freeShippingThreshold: FieldRef<"Product", 'Float'>
+    readonly warrantyPeriod: FieldRef<"Product", 'String'>
+    readonly warrantyDescription: FieldRef<"Product", 'String'>
+    readonly returnPeriod: FieldRef<"Product", 'String'>
+    readonly returnDescription: FieldRef<"Product", 'String'>
     readonly createdAt: FieldRef<"Product", 'DateTime'>
     readonly updatedAt: FieldRef<"Product", 'DateTime'>
   }
@@ -17264,6 +17342,12 @@ export namespace Prisma {
     featured: 'featured',
     discount: 'discount',
     categoryId: 'categoryId',
+    features: 'features',
+    freeShippingThreshold: 'freeShippingThreshold',
+    warrantyPeriod: 'warrantyPeriod',
+    warrantyDescription: 'warrantyDescription',
+    returnPeriod: 'returnPeriod',
+    returnDescription: 'returnDescription',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt'
   };
@@ -17707,6 +17791,12 @@ export namespace Prisma {
     featured?: BoolFilter<"Product"> | boolean
     discount?: FloatNullableFilter<"Product"> | number | null
     categoryId?: StringNullableFilter<"Product"> | string | null
+    features?: StringNullableListFilter<"Product">
+    freeShippingThreshold?: FloatNullableFilter<"Product"> | number | null
+    warrantyPeriod?: StringNullableFilter<"Product"> | string | null
+    warrantyDescription?: StringNullableFilter<"Product"> | string | null
+    returnPeriod?: StringNullableFilter<"Product"> | string | null
+    returnDescription?: StringNullableFilter<"Product"> | string | null
     createdAt?: DateTimeFilter<"Product"> | Date | string
     updatedAt?: DateTimeFilter<"Product"> | Date | string
     category?: XOR<CategoryNullableScalarRelationFilter, CategoryWhereInput> | null
@@ -17727,6 +17817,12 @@ export namespace Prisma {
     featured?: SortOrder
     discount?: SortOrderInput | SortOrder
     categoryId?: SortOrderInput | SortOrder
+    features?: SortOrder
+    freeShippingThreshold?: SortOrderInput | SortOrder
+    warrantyPeriod?: SortOrderInput | SortOrder
+    warrantyDescription?: SortOrderInput | SortOrder
+    returnPeriod?: SortOrderInput | SortOrder
+    returnDescription?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     category?: CategoryOrderByWithRelationInput
@@ -17750,6 +17846,12 @@ export namespace Prisma {
     featured?: BoolFilter<"Product"> | boolean
     discount?: FloatNullableFilter<"Product"> | number | null
     categoryId?: StringNullableFilter<"Product"> | string | null
+    features?: StringNullableListFilter<"Product">
+    freeShippingThreshold?: FloatNullableFilter<"Product"> | number | null
+    warrantyPeriod?: StringNullableFilter<"Product"> | string | null
+    warrantyDescription?: StringNullableFilter<"Product"> | string | null
+    returnPeriod?: StringNullableFilter<"Product"> | string | null
+    returnDescription?: StringNullableFilter<"Product"> | string | null
     createdAt?: DateTimeFilter<"Product"> | Date | string
     updatedAt?: DateTimeFilter<"Product"> | Date | string
     category?: XOR<CategoryNullableScalarRelationFilter, CategoryWhereInput> | null
@@ -17770,6 +17872,12 @@ export namespace Prisma {
     featured?: SortOrder
     discount?: SortOrderInput | SortOrder
     categoryId?: SortOrderInput | SortOrder
+    features?: SortOrder
+    freeShippingThreshold?: SortOrderInput | SortOrder
+    warrantyPeriod?: SortOrderInput | SortOrder
+    warrantyDescription?: SortOrderInput | SortOrder
+    returnPeriod?: SortOrderInput | SortOrder
+    returnDescription?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     _count?: ProductCountOrderByAggregateInput
@@ -17793,6 +17901,12 @@ export namespace Prisma {
     featured?: BoolWithAggregatesFilter<"Product"> | boolean
     discount?: FloatNullableWithAggregatesFilter<"Product"> | number | null
     categoryId?: StringNullableWithAggregatesFilter<"Product"> | string | null
+    features?: StringNullableListFilter<"Product">
+    freeShippingThreshold?: FloatNullableWithAggregatesFilter<"Product"> | number | null
+    warrantyPeriod?: StringNullableWithAggregatesFilter<"Product"> | string | null
+    warrantyDescription?: StringNullableWithAggregatesFilter<"Product"> | string | null
+    returnPeriod?: StringNullableWithAggregatesFilter<"Product"> | string | null
+    returnDescription?: StringNullableWithAggregatesFilter<"Product"> | string | null
     createdAt?: DateTimeWithAggregatesFilter<"Product"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"Product"> | Date | string
   }
@@ -18689,6 +18803,12 @@ export namespace Prisma {
     lowStockThreshold?: number
     featured?: boolean
     discount?: number | null
+    features?: ProductCreatefeaturesInput | string[]
+    freeShippingThreshold?: number | null
+    warrantyPeriod?: string | null
+    warrantyDescription?: string | null
+    returnPeriod?: string | null
+    returnDescription?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     category?: CategoryCreateNestedOneWithoutProductsInput
@@ -18709,6 +18829,12 @@ export namespace Prisma {
     featured?: boolean
     discount?: number | null
     categoryId?: string | null
+    features?: ProductCreatefeaturesInput | string[]
+    freeShippingThreshold?: number | null
+    warrantyPeriod?: string | null
+    warrantyDescription?: string | null
+    returnPeriod?: string | null
+    returnDescription?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     images?: ImageUncheckedCreateNestedManyWithoutProductInput
@@ -18727,6 +18853,12 @@ export namespace Prisma {
     lowStockThreshold?: IntFieldUpdateOperationsInput | number
     featured?: BoolFieldUpdateOperationsInput | boolean
     discount?: NullableFloatFieldUpdateOperationsInput | number | null
+    features?: ProductUpdatefeaturesInput | string[]
+    freeShippingThreshold?: NullableFloatFieldUpdateOperationsInput | number | null
+    warrantyPeriod?: NullableStringFieldUpdateOperationsInput | string | null
+    warrantyDescription?: NullableStringFieldUpdateOperationsInput | string | null
+    returnPeriod?: NullableStringFieldUpdateOperationsInput | string | null
+    returnDescription?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     category?: CategoryUpdateOneWithoutProductsNestedInput
@@ -18747,6 +18879,12 @@ export namespace Prisma {
     featured?: BoolFieldUpdateOperationsInput | boolean
     discount?: NullableFloatFieldUpdateOperationsInput | number | null
     categoryId?: NullableStringFieldUpdateOperationsInput | string | null
+    features?: ProductUpdatefeaturesInput | string[]
+    freeShippingThreshold?: NullableFloatFieldUpdateOperationsInput | number | null
+    warrantyPeriod?: NullableStringFieldUpdateOperationsInput | string | null
+    warrantyDescription?: NullableStringFieldUpdateOperationsInput | string | null
+    returnPeriod?: NullableStringFieldUpdateOperationsInput | string | null
+    returnDescription?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     images?: ImageUncheckedUpdateManyWithoutProductNestedInput
@@ -18766,6 +18904,12 @@ export namespace Prisma {
     featured?: boolean
     discount?: number | null
     categoryId?: string | null
+    features?: ProductCreatefeaturesInput | string[]
+    freeShippingThreshold?: number | null
+    warrantyPeriod?: string | null
+    warrantyDescription?: string | null
+    returnPeriod?: string | null
+    returnDescription?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -18780,6 +18924,12 @@ export namespace Prisma {
     lowStockThreshold?: IntFieldUpdateOperationsInput | number
     featured?: BoolFieldUpdateOperationsInput | boolean
     discount?: NullableFloatFieldUpdateOperationsInput | number | null
+    features?: ProductUpdatefeaturesInput | string[]
+    freeShippingThreshold?: NullableFloatFieldUpdateOperationsInput | number | null
+    warrantyPeriod?: NullableStringFieldUpdateOperationsInput | string | null
+    warrantyDescription?: NullableStringFieldUpdateOperationsInput | string | null
+    returnPeriod?: NullableStringFieldUpdateOperationsInput | string | null
+    returnDescription?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -18795,6 +18945,12 @@ export namespace Prisma {
     featured?: BoolFieldUpdateOperationsInput | boolean
     discount?: NullableFloatFieldUpdateOperationsInput | number | null
     categoryId?: NullableStringFieldUpdateOperationsInput | string | null
+    features?: ProductUpdatefeaturesInput | string[]
+    freeShippingThreshold?: NullableFloatFieldUpdateOperationsInput | number | null
+    warrantyPeriod?: NullableStringFieldUpdateOperationsInput | string | null
+    warrantyDescription?: NullableStringFieldUpdateOperationsInput | string | null
+    returnPeriod?: NullableStringFieldUpdateOperationsInput | string | null
+    returnDescription?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -19855,6 +20011,14 @@ export namespace Prisma {
     not?: NestedFloatNullableFilter<$PrismaModel> | number | null
   }
 
+  export type StringNullableListFilter<$PrismaModel = never> = {
+    equals?: string[] | ListStringFieldRefInput<$PrismaModel> | null
+    has?: string | StringFieldRefInput<$PrismaModel> | null
+    hasEvery?: string[] | ListStringFieldRefInput<$PrismaModel>
+    hasSome?: string[] | ListStringFieldRefInput<$PrismaModel>
+    isEmpty?: boolean
+  }
+
   export type ImageListRelationFilter = {
     every?: ImageWhereInput
     some?: ImageWhereInput
@@ -19896,6 +20060,12 @@ export namespace Prisma {
     featured?: SortOrder
     discount?: SortOrder
     categoryId?: SortOrder
+    features?: SortOrder
+    freeShippingThreshold?: SortOrder
+    warrantyPeriod?: SortOrder
+    warrantyDescription?: SortOrder
+    returnPeriod?: SortOrder
+    returnDescription?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -19905,6 +20075,7 @@ export namespace Prisma {
     stock?: SortOrder
     lowStockThreshold?: SortOrder
     discount?: SortOrder
+    freeShippingThreshold?: SortOrder
   }
 
   export type ProductMaxOrderByAggregateInput = {
@@ -19918,6 +20089,11 @@ export namespace Prisma {
     featured?: SortOrder
     discount?: SortOrder
     categoryId?: SortOrder
+    freeShippingThreshold?: SortOrder
+    warrantyPeriod?: SortOrder
+    warrantyDescription?: SortOrder
+    returnPeriod?: SortOrder
+    returnDescription?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -19933,6 +20109,11 @@ export namespace Prisma {
     featured?: SortOrder
     discount?: SortOrder
     categoryId?: SortOrder
+    freeShippingThreshold?: SortOrder
+    warrantyPeriod?: SortOrder
+    warrantyDescription?: SortOrder
+    returnPeriod?: SortOrder
+    returnDescription?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -19942,6 +20123,7 @@ export namespace Prisma {
     stock?: SortOrder
     lowStockThreshold?: SortOrder
     discount?: SortOrder
+    freeShippingThreshold?: SortOrder
   }
 
   export type FloatWithAggregatesFilter<$PrismaModel = never> = {
@@ -20792,6 +20974,10 @@ export namespace Prisma {
     deleteMany?: ProductScalarWhereInput | ProductScalarWhereInput[]
   }
 
+  export type ProductCreatefeaturesInput = {
+    set: string[]
+  }
+
   export type CategoryCreateNestedOneWithoutProductsInput = {
     create?: XOR<CategoryCreateWithoutProductsInput, CategoryUncheckedCreateWithoutProductsInput>
     connectOrCreate?: CategoryCreateOrConnectWithoutProductsInput
@@ -20880,6 +21066,11 @@ export namespace Prisma {
     decrement?: number
     multiply?: number
     divide?: number
+  }
+
+  export type ProductUpdatefeaturesInput = {
+    set?: string[]
+    push?: string | string[]
   }
 
   export type CategoryUpdateOneWithoutProductsNestedInput = {
@@ -22018,6 +22209,12 @@ export namespace Prisma {
     lowStockThreshold?: number
     featured?: boolean
     discount?: number | null
+    features?: ProductCreatefeaturesInput | string[]
+    freeShippingThreshold?: number | null
+    warrantyPeriod?: string | null
+    warrantyDescription?: string | null
+    returnPeriod?: string | null
+    returnDescription?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     images?: ImageCreateNestedManyWithoutProductInput
@@ -22036,6 +22233,12 @@ export namespace Prisma {
     lowStockThreshold?: number
     featured?: boolean
     discount?: number | null
+    features?: ProductCreatefeaturesInput | string[]
+    freeShippingThreshold?: number | null
+    warrantyPeriod?: string | null
+    warrantyDescription?: string | null
+    returnPeriod?: string | null
+    returnDescription?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     images?: ImageUncheckedCreateNestedManyWithoutProductInput
@@ -22137,6 +22340,12 @@ export namespace Prisma {
     featured?: BoolFilter<"Product"> | boolean
     discount?: FloatNullableFilter<"Product"> | number | null
     categoryId?: StringNullableFilter<"Product"> | string | null
+    features?: StringNullableListFilter<"Product">
+    freeShippingThreshold?: FloatNullableFilter<"Product"> | number | null
+    warrantyPeriod?: StringNullableFilter<"Product"> | string | null
+    warrantyDescription?: StringNullableFilter<"Product"> | string | null
+    returnPeriod?: StringNullableFilter<"Product"> | string | null
+    returnDescription?: StringNullableFilter<"Product"> | string | null
     createdAt?: DateTimeFilter<"Product"> | Date | string
     updatedAt?: DateTimeFilter<"Product"> | Date | string
   }
@@ -22394,6 +22603,12 @@ export namespace Prisma {
     lowStockThreshold?: number
     featured?: boolean
     discount?: number | null
+    features?: ProductCreatefeaturesInput | string[]
+    freeShippingThreshold?: number | null
+    warrantyPeriod?: string | null
+    warrantyDescription?: string | null
+    returnPeriod?: string | null
+    returnDescription?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     category?: CategoryCreateNestedOneWithoutProductsInput
@@ -22413,6 +22628,12 @@ export namespace Prisma {
     featured?: boolean
     discount?: number | null
     categoryId?: string | null
+    features?: ProductCreatefeaturesInput | string[]
+    freeShippingThreshold?: number | null
+    warrantyPeriod?: string | null
+    warrantyDescription?: string | null
+    returnPeriod?: string | null
+    returnDescription?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     orderItems?: OrderItemUncheckedCreateNestedManyWithoutProductInput
@@ -22446,6 +22667,12 @@ export namespace Prisma {
     lowStockThreshold?: IntFieldUpdateOperationsInput | number
     featured?: BoolFieldUpdateOperationsInput | boolean
     discount?: NullableFloatFieldUpdateOperationsInput | number | null
+    features?: ProductUpdatefeaturesInput | string[]
+    freeShippingThreshold?: NullableFloatFieldUpdateOperationsInput | number | null
+    warrantyPeriod?: NullableStringFieldUpdateOperationsInput | string | null
+    warrantyDescription?: NullableStringFieldUpdateOperationsInput | string | null
+    returnPeriod?: NullableStringFieldUpdateOperationsInput | string | null
+    returnDescription?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     category?: CategoryUpdateOneWithoutProductsNestedInput
@@ -22465,6 +22692,12 @@ export namespace Prisma {
     featured?: BoolFieldUpdateOperationsInput | boolean
     discount?: NullableFloatFieldUpdateOperationsInput | number | null
     categoryId?: NullableStringFieldUpdateOperationsInput | string | null
+    features?: ProductUpdatefeaturesInput | string[]
+    freeShippingThreshold?: NullableFloatFieldUpdateOperationsInput | number | null
+    warrantyPeriod?: NullableStringFieldUpdateOperationsInput | string | null
+    warrantyDescription?: NullableStringFieldUpdateOperationsInput | string | null
+    returnPeriod?: NullableStringFieldUpdateOperationsInput | string | null
+    returnDescription?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     orderItems?: OrderItemUncheckedUpdateManyWithoutProductNestedInput
@@ -22607,6 +22840,12 @@ export namespace Prisma {
     lowStockThreshold?: number
     featured?: boolean
     discount?: number | null
+    features?: ProductCreatefeaturesInput | string[]
+    freeShippingThreshold?: number | null
+    warrantyPeriod?: string | null
+    warrantyDescription?: string | null
+    returnPeriod?: string | null
+    returnDescription?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     category?: CategoryCreateNestedOneWithoutProductsInput
@@ -22626,6 +22865,12 @@ export namespace Prisma {
     featured?: boolean
     discount?: number | null
     categoryId?: string | null
+    features?: ProductCreatefeaturesInput | string[]
+    freeShippingThreshold?: number | null
+    warrantyPeriod?: string | null
+    warrantyDescription?: string | null
+    returnPeriod?: string | null
+    returnDescription?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     images?: ImageUncheckedCreateNestedManyWithoutProductInput
@@ -22682,6 +22927,12 @@ export namespace Prisma {
     lowStockThreshold?: IntFieldUpdateOperationsInput | number
     featured?: BoolFieldUpdateOperationsInput | boolean
     discount?: NullableFloatFieldUpdateOperationsInput | number | null
+    features?: ProductUpdatefeaturesInput | string[]
+    freeShippingThreshold?: NullableFloatFieldUpdateOperationsInput | number | null
+    warrantyPeriod?: NullableStringFieldUpdateOperationsInput | string | null
+    warrantyDescription?: NullableStringFieldUpdateOperationsInput | string | null
+    returnPeriod?: NullableStringFieldUpdateOperationsInput | string | null
+    returnDescription?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     category?: CategoryUpdateOneWithoutProductsNestedInput
@@ -22701,6 +22952,12 @@ export namespace Prisma {
     featured?: BoolFieldUpdateOperationsInput | boolean
     discount?: NullableFloatFieldUpdateOperationsInput | number | null
     categoryId?: NullableStringFieldUpdateOperationsInput | string | null
+    features?: ProductUpdatefeaturesInput | string[]
+    freeShippingThreshold?: NullableFloatFieldUpdateOperationsInput | number | null
+    warrantyPeriod?: NullableStringFieldUpdateOperationsInput | string | null
+    warrantyDescription?: NullableStringFieldUpdateOperationsInput | string | null
+    returnPeriod?: NullableStringFieldUpdateOperationsInput | string | null
+    returnDescription?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     images?: ImageUncheckedUpdateManyWithoutProductNestedInput
@@ -23259,6 +23516,12 @@ export namespace Prisma {
     lowStockThreshold?: number
     featured?: boolean
     discount?: number | null
+    features?: ProductCreatefeaturesInput | string[]
+    freeShippingThreshold?: number | null
+    warrantyPeriod?: string | null
+    warrantyDescription?: string | null
+    returnPeriod?: string | null
+    returnDescription?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     category?: CategoryCreateNestedOneWithoutProductsInput
@@ -23278,6 +23541,12 @@ export namespace Prisma {
     featured?: boolean
     discount?: number | null
     categoryId?: string | null
+    features?: ProductCreatefeaturesInput | string[]
+    freeShippingThreshold?: number | null
+    warrantyPeriod?: string | null
+    warrantyDescription?: string | null
+    returnPeriod?: string | null
+    returnDescription?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     images?: ImageUncheckedCreateNestedManyWithoutProductInput
@@ -23354,6 +23623,12 @@ export namespace Prisma {
     lowStockThreshold?: IntFieldUpdateOperationsInput | number
     featured?: BoolFieldUpdateOperationsInput | boolean
     discount?: NullableFloatFieldUpdateOperationsInput | number | null
+    features?: ProductUpdatefeaturesInput | string[]
+    freeShippingThreshold?: NullableFloatFieldUpdateOperationsInput | number | null
+    warrantyPeriod?: NullableStringFieldUpdateOperationsInput | string | null
+    warrantyDescription?: NullableStringFieldUpdateOperationsInput | string | null
+    returnPeriod?: NullableStringFieldUpdateOperationsInput | string | null
+    returnDescription?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     category?: CategoryUpdateOneWithoutProductsNestedInput
@@ -23373,6 +23648,12 @@ export namespace Prisma {
     featured?: BoolFieldUpdateOperationsInput | boolean
     discount?: NullableFloatFieldUpdateOperationsInput | number | null
     categoryId?: NullableStringFieldUpdateOperationsInput | string | null
+    features?: ProductUpdatefeaturesInput | string[]
+    freeShippingThreshold?: NullableFloatFieldUpdateOperationsInput | number | null
+    warrantyPeriod?: NullableStringFieldUpdateOperationsInput | string | null
+    warrantyDescription?: NullableStringFieldUpdateOperationsInput | string | null
+    returnPeriod?: NullableStringFieldUpdateOperationsInput | string | null
+    returnDescription?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     images?: ImageUncheckedUpdateManyWithoutProductNestedInput
@@ -23390,6 +23671,12 @@ export namespace Prisma {
     lowStockThreshold?: number
     featured?: boolean
     discount?: number | null
+    features?: ProductCreatefeaturesInput | string[]
+    freeShippingThreshold?: number | null
+    warrantyPeriod?: string | null
+    warrantyDescription?: string | null
+    returnPeriod?: string | null
+    returnDescription?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     category?: CategoryCreateNestedOneWithoutProductsInput
@@ -23409,6 +23696,12 @@ export namespace Prisma {
     featured?: boolean
     discount?: number | null
     categoryId?: string | null
+    features?: ProductCreatefeaturesInput | string[]
+    freeShippingThreshold?: number | null
+    warrantyPeriod?: string | null
+    warrantyDescription?: string | null
+    returnPeriod?: string | null
+    returnDescription?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     images?: ImageUncheckedCreateNestedManyWithoutProductInput
@@ -23473,6 +23766,12 @@ export namespace Prisma {
     lowStockThreshold?: IntFieldUpdateOperationsInput | number
     featured?: BoolFieldUpdateOperationsInput | boolean
     discount?: NullableFloatFieldUpdateOperationsInput | number | null
+    features?: ProductUpdatefeaturesInput | string[]
+    freeShippingThreshold?: NullableFloatFieldUpdateOperationsInput | number | null
+    warrantyPeriod?: NullableStringFieldUpdateOperationsInput | string | null
+    warrantyDescription?: NullableStringFieldUpdateOperationsInput | string | null
+    returnPeriod?: NullableStringFieldUpdateOperationsInput | string | null
+    returnDescription?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     category?: CategoryUpdateOneWithoutProductsNestedInput
@@ -23492,6 +23791,12 @@ export namespace Prisma {
     featured?: BoolFieldUpdateOperationsInput | boolean
     discount?: NullableFloatFieldUpdateOperationsInput | number | null
     categoryId?: NullableStringFieldUpdateOperationsInput | string | null
+    features?: ProductUpdatefeaturesInput | string[]
+    freeShippingThreshold?: NullableFloatFieldUpdateOperationsInput | number | null
+    warrantyPeriod?: NullableStringFieldUpdateOperationsInput | string | null
+    warrantyDescription?: NullableStringFieldUpdateOperationsInput | string | null
+    returnPeriod?: NullableStringFieldUpdateOperationsInput | string | null
+    returnDescription?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     images?: ImageUncheckedUpdateManyWithoutProductNestedInput
@@ -23771,6 +24076,12 @@ export namespace Prisma {
     lowStockThreshold?: number
     featured?: boolean
     discount?: number | null
+    features?: ProductCreatefeaturesInput | string[]
+    freeShippingThreshold?: number | null
+    warrantyPeriod?: string | null
+    warrantyDescription?: string | null
+    returnPeriod?: string | null
+    returnDescription?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -23807,6 +24118,12 @@ export namespace Prisma {
     lowStockThreshold?: IntFieldUpdateOperationsInput | number
     featured?: BoolFieldUpdateOperationsInput | boolean
     discount?: NullableFloatFieldUpdateOperationsInput | number | null
+    features?: ProductUpdatefeaturesInput | string[]
+    freeShippingThreshold?: NullableFloatFieldUpdateOperationsInput | number | null
+    warrantyPeriod?: NullableStringFieldUpdateOperationsInput | string | null
+    warrantyDescription?: NullableStringFieldUpdateOperationsInput | string | null
+    returnPeriod?: NullableStringFieldUpdateOperationsInput | string | null
+    returnDescription?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     images?: ImageUpdateManyWithoutProductNestedInput
@@ -23825,6 +24142,12 @@ export namespace Prisma {
     lowStockThreshold?: IntFieldUpdateOperationsInput | number
     featured?: BoolFieldUpdateOperationsInput | boolean
     discount?: NullableFloatFieldUpdateOperationsInput | number | null
+    features?: ProductUpdatefeaturesInput | string[]
+    freeShippingThreshold?: NullableFloatFieldUpdateOperationsInput | number | null
+    warrantyPeriod?: NullableStringFieldUpdateOperationsInput | string | null
+    warrantyDescription?: NullableStringFieldUpdateOperationsInput | string | null
+    returnPeriod?: NullableStringFieldUpdateOperationsInput | string | null
+    returnDescription?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     images?: ImageUncheckedUpdateManyWithoutProductNestedInput
@@ -23843,6 +24166,12 @@ export namespace Prisma {
     lowStockThreshold?: IntFieldUpdateOperationsInput | number
     featured?: BoolFieldUpdateOperationsInput | boolean
     discount?: NullableFloatFieldUpdateOperationsInput | number | null
+    features?: ProductUpdatefeaturesInput | string[]
+    freeShippingThreshold?: NullableFloatFieldUpdateOperationsInput | number | null
+    warrantyPeriod?: NullableStringFieldUpdateOperationsInput | string | null
+    warrantyDescription?: NullableStringFieldUpdateOperationsInput | string | null
+    returnPeriod?: NullableStringFieldUpdateOperationsInput | string | null
+    returnDescription?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }

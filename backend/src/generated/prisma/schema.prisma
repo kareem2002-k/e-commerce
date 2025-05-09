@@ -72,24 +72,29 @@ model Category {
 }
 
 model Product {
-  id                String      @id @default(uuid())
-  name              String
-  description       String?
-  sku               String      @unique
-  price             Float
-  stock             Int         @default(0)
-  lowStockThreshold Int         @default(5)
-  featured          Boolean     @default(false)
-  discount          Float?
-  category          Category?   @relation(fields: [categoryId], references: [id])
-  categoryId        String?
-  images            Image[]
-  orderItems        OrderItem[]
-  cartItems         CartItem[]
-  reviews           Review[]
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id                    String      @id @default(uuid())
+  name                  String
+  description           String?
+  sku                   String      @unique
+  price                 Float
+  stock                 Int         @default(0)
+  lowStockThreshold     Int         @default(5)
+  featured              Boolean     @default(false)
+  discount              Float?
+  category              Category?   @relation(fields: [categoryId], references: [id])
+  categoryId            String?
+  images                Image[]
+  orderItems            OrderItem[]
+  cartItems             CartItem[]
+  reviews               Review[]
+  features              String[]
+  freeShippingThreshold Float?      @default(50)
+  warrantyPeriod        String?     @default("2-Year Warranty")
+  warrantyDescription   String?     @default("Extended coverage")
+  returnPeriod          String?     @default("30-Day Returns")
+  returnDescription     String?     @default("Hassle-free returns")
+  createdAt             DateTime    @default(now())
+  updatedAt             DateTime    @updatedAt
 
   @@index([name])
   @@index([price])

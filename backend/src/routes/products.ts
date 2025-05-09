@@ -12,10 +12,32 @@ router.get('/', authenticate, async (req, res) => {
     const products = await prisma.product.findMany({
       include: {
         category: true,
-        images: true
+        images: true,
+        reviews: true
       }
     });
-    res.json(products);
+    
+    // Calculate review metrics for each product
+    const productsWithMetrics = products.map(product => {
+      const reviewCount = product.reviews.length;
+      let rating = 0;
+      
+      if (reviewCount > 0) {
+        const ratingSum = product.reviews.reduce((sum, review) => sum + review.rating, 0);
+        rating = ratingSum / reviewCount;
+      }
+      
+      // Remove full reviews from response
+      const { reviews, ...productWithoutReviews } = product;
+      
+      return {
+        ...productWithoutReviews,
+        reviewCount,
+        rating
+      };
+    });
+    
+    res.json(productsWithMetrics);
   } catch (error) {
     res.status(500).json({ message: 'Error fetching products' });
   }
@@ -90,12 +112,33 @@ router.get('/search', authenticate, async (req, res) => {
       orderBy,
       include: {
         category: true,
-        images: true
+        images: true,
+        reviews: true
       }
     });
     
-    console.log('Search results:', products);
-    res.json(products);
+    // Calculate review metrics for each product
+    const productsWithMetrics = products.map(product => {
+      const reviewCount = product.reviews.length;
+      let rating = 0;
+      
+      if (reviewCount > 0) {
+        const ratingSum = product.reviews.reduce((sum, review) => sum + review.rating, 0);
+        rating = ratingSum / reviewCount;
+      }
+      
+      // Remove full reviews from response
+      const { reviews, ...productWithoutReviews } = product;
+      
+      return {
+        ...productWithoutReviews,
+        reviewCount,
+        rating
+      };
+    });
+    
+    console.log('Search results:', productsWithMetrics);
+    res.json(productsWithMetrics);
   } catch (error) {
     console.error('Search error:', error);
     res.status(500).json({ message: 'Error searching products' });
@@ -110,7 +153,8 @@ router.get('/:id', authenticate, async (req, res) => {
       where: { id },
       include: {
         category: true,
-        images: true
+        images: true,
+        reviews: true
       }
     });
 
@@ -119,7 +163,24 @@ router.get('/:id', authenticate, async (req, res) => {
       return;
     }
 
-    res.json(product);
+    // Calculate review metrics
+    const reviewCount = product.reviews.length;
+    let rating = 0;
+    
+    if (reviewCount > 0) {
+      const ratingSum = product.reviews.reduce((sum, review) => sum + review.rating, 0);
+      rating = ratingSum / reviewCount;
+    }
+
+    // Remove the full reviews array from the response to keep it light
+    const { reviews, ...productWithoutReviews } = product;
+
+    // Return product with review metrics
+    res.json({
+      ...productWithoutReviews,
+      reviewCount,
+      rating
+    });
   } catch (error) {
     res.status(500).json({ message: 'Error fetching product' });
   }
@@ -129,26 +190,55 @@ router.get('/:id', authenticate, async (req, res) => {
 // Create new product
 router.post('/', authenticate, requireAdmin, async (req, res) => {
   try {
-    const { name, description, sku, price, stock, lowStockThreshold, categoryId, images, brand, featured, discount } = req.body;
+    const { 
+      name, 
+      description, 
+      sku, 
+      price, 
+      stock, 
+      lowStockThreshold, 
+      categoryId, 
+      images, 
+      brand, 
+      featured, 
+      discount,
+      features,
+      freeShippingThreshold,
+      warrantyPeriod,
+      warrantyDescription,
+      returnPeriod,
+      returnDescription
+    } = req.body;
     
+    // Include all fields in the productData object
+    const productData = {
+      name,
+      description,
+      sku,
+      price: parseFloat(price),
+      stock: parseInt(stock),
+      lowStockThreshold: parseInt(lowStockThreshold),
+      categoryId,
+      featured: featured || false,
+      discount: discount ? parseFloat(discount) : null,
+      // Add the new fields directly
+      features: Array.isArray(features) ? features : [],
+      freeShippingThreshold: freeShippingThreshold ? parseFloat(freeShippingThreshold) : 50,
+      warrantyPeriod,
+      warrantyDescription,
+      returnPeriod,
+      returnDescription,
+      images: {
+        create: images.map((image: { url: string; altText: string }) => ({
+          url: image.url,
+          altText: image.altText
+        }))
+      }
+    };
+    
+    // Create the product with all fields
     const product = await prisma.product.create({
-      data: {
-        name,
-        description,
-        sku,
-        price: parseFloat(price),
-        stock: parseInt(stock),
-        lowStockThreshold: parseInt(lowStockThreshold),
-        categoryId,
-        featured: featured || false,
-        discount: discount ? parseFloat(discount) : null,
-        images: {
-          create: images.map((image: { url: string; altText: string }) => ({
-            url: image.url,
-            altText: image.altText
-          }))
-        }
-      },
+      data: productData,
       include: {
         category: true,
         images: true
@@ -166,32 +256,61 @@ router.post('/', authenticate, requireAdmin, async (req, res) => {
 router.put('/:id', authenticate, requireAdmin, async (req, res) => {
   try {
     const { id } = req.params;
-    const { name, description, sku, price, stock, lowStockThreshold, categoryId, images } = req.body;
+    const { 
+      name,
+      description,
+      sku,
+      price,
+      stock,
+      lowStockThreshold,
+      categoryId,
+      images,
+      featured,
+      discount,
+      features,
+      freeShippingThreshold,
+      warrantyPeriod,
+      warrantyDescription,
+      returnPeriod,
+      returnDescription
+    } = req.body;
     
     // First, delete all existing images for this product
     await prisma.image.deleteMany({
       where: { productId: id }
     });
     
-    // Then update the product with new data including new images
+    // Include all fields in the productData object
+    const productData = {
+      name,
+      description,
+      sku,
+      price: parseFloat(price),
+      stock: parseInt(stock),
+      lowStockThreshold: parseInt(lowStockThreshold),
+      categoryId,
+      featured: featured || false,
+      discount: discount ? parseFloat(discount) : null,
+      // Add the new fields directly
+      features: Array.isArray(features) ? features : [],
+      freeShippingThreshold: freeShippingThreshold ? parseFloat(freeShippingThreshold) : undefined,
+      warrantyPeriod,
+      warrantyDescription,
+      returnPeriod,
+      returnDescription,
+      // Create new images
+      images: images ? {
+        create: images.map((image: { url: string; altText: string }) => ({
+          url: image.url,
+          altText: image.altText
+        }))
+      } : undefined
+    };
+    
+    // Update the product with all fields
     const updatedProduct = await prisma.product.update({
       where: { id },
-      data: {
-        name,
-        description,
-        sku,
-        price: parseFloat(price),
-        stock: parseInt(stock),
-        lowStockThreshold: parseInt(lowStockThreshold),
-        categoryId,
-        // Create new images
-        images: images ? {
-          create: images.map((image: { url: string; altText: string }) => ({
-            url: image.url,
-            altText: image.altText
-          }))
-        } : undefined
-      },
+      data: productData,
       include: {
         category: true,
         images: true

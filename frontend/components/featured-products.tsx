@@ -28,7 +28,8 @@ export function FeaturedProducts({ products, loading }: FeaturedProductsProps = 
         price: product.price,
         // For demo purposes, set a fake original price for some products to display as "on sale"
         originalPrice: Math.random() > 0.5 ? product.price * 1.2 : undefined,
-        rating: 4 + Math.random(),
+        rating: product.rating || 0,
+        reviewCount: product.reviewCount || 0,
         image: product.images && product.images.length > 0 
           ? product.images[0].url 
           : "/placeholder.svg?height=300&width=300",
