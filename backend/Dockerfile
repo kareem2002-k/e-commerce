@@ -4,14 +4,13 @@ FROM node:20-alpine AS builder
 WORKDIR /app
 
 # Copy package files and TypeScript config
-COPY package*.json ./
-COPY tsconfig.json ./
+COPY package*.json tsconfig.json ./
 
 # Install dependencies
 RUN npm install
 
 # Copy source code
-COPY src/ ./src/
+COPY src ./src
 
 # Build TypeScript code
 RUN npm run build
@@ -34,4 +33,4 @@ COPY --from=builder /app/dist ./dist
 EXPOSE 3000
 
 # Start the application
-CMD ["npm", "start"]
+CMD ["node", "dist/index.js"]
