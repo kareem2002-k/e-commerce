@@ -33,6 +33,18 @@
     --ring: 270 70% 60%;
 
     --radius: 0.5rem;
+    
+    /* Volt Blue Colors */
+    --voltBlue-100: #e0f2ff;
+    --voltBlue-200: #bae6ff;
+    --voltBlue-300: #7cd4fd;
+    --voltBlue-400: #36bffa;
+    --voltBlue-500: #0ba5ec;
+    --voltBlue-600: #0086c9;
+    --voltBlue-700: #026aa2;
+    --voltBlue-800: #065986;
+    --voltBlue-900: #0b4a6f;
+    --voltBlue-950: #082f49;
   }
 
   .dark {
@@ -63,6 +75,18 @@
     --border: 270 30% 15%;
     --input: 270 30% 15%;
     --ring: 270 70% 60%;
+    
+    /* Volt Blue Colors (darker for dark mode) */
+    --voltBlue-100: #134b71;
+    --voltBlue-200: #0e4164;
+    --voltBlue-300: #093754;
+    --voltBlue-400: #082e47;
+    --voltBlue-500: #072842;
+    --voltBlue-600: #05233b;
+    --voltBlue-700: #041d31;
+    --voltBlue-800: #041a2b;
+    --voltBlue-900: #031525;
+    --voltBlue-950: #020e1a;
   }
 }
 
@@ -73,6 +97,37 @@
   body {
     @apply bg-background text-foreground;
   }
+}
+
+/* Homepage Hero and Banner Styles */
+.hero-section {
+  @apply relative overflow-hidden rounded-lg p-6 md:p-10;
+  background: linear-gradient(135deg, var(--voltBlue-900), var(--voltBlue-800));
+}
+
+.dark .hero-section {
+  background: linear-gradient(135deg, var(--voltBlue-950), var(--voltBlue-900));
+}
+
+.hero-glow {
+  @apply absolute inset-0 rounded-full blur-3xl;
+  background: radial-gradient(circle, var(--voltBlue-500, #0ba5ec) 0%, var(--voltBlue-300, #7cd4fd) 100%);
+  opacity: 0.2;
+}
+
+.dark .hero-glow {
+  opacity: 0.1;
+}
+
+.hero-badge {
+  @apply inline-flex items-center gap-2 px-3 py-1 rounded-full border mb-6;
+  background-color: rgba(2, 106, 162, 0.4); /* --voltBlue-700 with opacity */
+  border-color: rgba(0, 134, 201, 0.4); /* --voltBlue-600 with opacity */
+}
+
+.dark .hero-badge {
+  background-color: rgba(4, 29, 49, 0.4); /* Dark --voltBlue-700 with opacity */
+  border-color: rgba(5, 35, 59, 0.4); /* Dark --voltBlue-600 with opacity */
 }
 
 /* Custom styles for VoltEdge */

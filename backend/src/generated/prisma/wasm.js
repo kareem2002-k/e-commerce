@@ -233,6 +233,36 @@ exports.Prisma.CouponScalarFieldEnum = {
   updatedAt: 'updatedAt'
 };
 
+exports.Prisma.HeroSectionScalarFieldEnum = {
+  id: 'id',
+  title: 'title',
+  subtitle: 'subtitle',
+  description: 'description',
+  primaryBtnText: 'primaryBtnText',
+  primaryBtnLink: 'primaryBtnLink',
+  secondaryBtnText: 'secondaryBtnText',
+  secondaryBtnLink: 'secondaryBtnLink',
+  imageUrl: 'imageUrl',
+  active: 'active',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.DealsBannerScalarFieldEnum = {
+  id: 'id',
+  title: 'title',
+  subtitle: 'subtitle',
+  description: 'description',
+  buttonText: 'buttonText',
+  buttonLink: 'buttonLink',
+  discount: 'discount',
+  imageUrl: 'imageUrl',
+  backgroundColor: 'backgroundColor',
+  active: 'active',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -285,7 +315,9 @@ exports.Prisma.ModelName = {
   Order: 'Order',
   OrderItem: 'OrderItem',
   Review: 'Review',
-  Coupon: 'Coupon'
+  Coupon: 'Coupon',
+  HeroSection: 'HeroSection',
+  DealsBanner: 'DealsBanner'
 };
 
 /**

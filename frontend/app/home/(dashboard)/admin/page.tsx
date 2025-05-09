@@ -2,7 +2,7 @@
 
 import { useState } from "react"
 import Link from "next/link"
-import { PlusCircle, Users, ShoppingCart, Package, Settings, BarChart3, FileText, Tag } from "lucide-react"
+import { PlusCircle, Users, ShoppingCart, Package, Settings, BarChart3, FileText, Tag, Layout, ImageIcon } from "lucide-react"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Button } from "@/components/ui/button"
@@ -51,6 +51,20 @@ export default function AdminDashboard() {
       color: "bg-pink-100 dark:bg-pink-900/20"
     },
     {
+      title: "Hero Section",
+      description: "Customize the homepage hero section",
+      icon: <Layout className="h-6 w-6" />,
+      href: "/home/admin/content/hero",
+      color: "bg-indigo-100 dark:bg-indigo-900/20"
+    },
+    {
+      title: "Deals Banner",
+      description: "Manage promotional banners",
+      icon: <ImageIcon className="h-6 w-6" />,
+      href: "/home/admin/content/deals-banner",
+      color: "bg-red-100 dark:bg-red-900/20"
+    },
+    {
       title: "Reports",
       description: "Generate and view reports",
       icon: <FileText className="h-6 w-6" />,
@@ -73,7 +87,7 @@ export default function AdminDashboard() {
           <h2 className="text-3xl font-bold tracking-tight">Admin Dashboard</h2>
           <p className="text-muted-foreground">Manage your e-commerce platform in one place.</p>
         </div>
-        <Button className="flex items-center gap-2">
+        <Button className="flex items-center gap-2" onClick={() => router.push('/home/admin/products/new')}>
           <PlusCircle className="h-4 w-4" />
           <span>New Product</span>
         </Button>
@@ -158,21 +172,37 @@ export default function AdminDashboard() {
         <h3 className="text-lg font-medium mb-2">Quick Actions</h3>
         <Separator className="my-4" />
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-          <Button variant="outline" className="h-20 flex flex-col gap-1">
+          <Button 
+            variant="outline" 
+            className="h-20 flex flex-col gap-1"
+            onClick={() => router.push('/home/admin/products/new')}
+          >
             <Package className="h-5 w-5" />
             <span>Add Product</span>
           </Button>
-          <Button variant="outline" className="h-20 flex flex-col gap-1">
+          <Button 
+            variant="outline" 
+            className="h-20 flex flex-col gap-1"
+            onClick={() => router.push('/home/admin/categories/new')}
+          >
             <Tag className="h-5 w-5" />
             <span>Add Category</span>
           </Button>
-          <Button variant="outline" className="h-20 flex flex-col gap-1">
-            <Users className="h-5 w-5" />
-            <span>Manage Users</span>
+          <Button 
+            variant="outline" 
+            className="h-20 flex flex-col gap-1"
+            onClick={() => router.push('/home/admin/content/hero')}
+          >
+            <Layout className="h-5 w-5" />
+            <span>Edit Hero</span>
           </Button>
-          <Button variant="outline" className="h-20 flex flex-col gap-1">
-            <Settings className="h-5 w-5" />
-            <span>Settings</span>
+          <Button 
+            variant="outline" 
+            className="h-20 flex flex-col gap-1"
+            onClick={() => router.push('/home/admin/content/deals-banner')}
+          >
+            <ImageIcon className="h-5 w-5" />
+            <span>Edit Banner</span>
           </Button>
         </div>
       </div>

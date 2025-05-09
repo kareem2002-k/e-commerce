@@ -9,7 +9,9 @@ import addressRoutes from './routes/addresses';
 import couponRoutes from './routes/coupons';
 import reviewRoutes from './routes/reviews';
 import uploadRoutes from './routes/uploads';
+import contentRoutes from './routes/content';
 import cors from 'cors';
+import { setupDefaultContent } from './setupContent';
 
 // Load environment variables
 dotenv.config();
@@ -39,9 +41,15 @@ app.use('/api/addresses', addressRoutes);
 app.use('/api/coupons', couponRoutes);
 app.use('/api/reviews', reviewRoutes);
 app.use('/api/uploads', uploadRoutes);
+app.use('/api/content', contentRoutes);
 
 
 // Start server
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
+  
+  // Setup default content
+  setupDefaultContent().catch(err => {
+    console.error('Error during content setup:', err);
+  });
 });

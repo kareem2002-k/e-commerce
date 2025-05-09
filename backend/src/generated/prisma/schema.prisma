@@ -203,3 +203,34 @@ model Coupon {
 
   @@index([validUntil])
 }
+
+// Site content management models
+model HeroSection {
+  id               String   @id @default(uuid())
+  title            String?
+  subtitle         String?
+  description      String?
+  primaryBtnText   String?
+  primaryBtnLink   String?
+  secondaryBtnText String?
+  secondaryBtnLink String?
+  imageUrl         String?
+  active           Boolean  @default(true)
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+}
+
+model DealsBanner {
+  id              String   @id @default(uuid())
+  title           String?
+  subtitle        String?
+  description     String?
+  buttonText      String?
+  buttonLink      String?
+  discount        String?
+  imageUrl        String?
+  backgroundColor String?
+  active          Boolean  @default(true)
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+}

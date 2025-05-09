@@ -14,6 +14,7 @@ import { useLoading } from "@/components/voltedge/loading-provider"
 import SectionLoading from "@/components/voltedge/section-loading"
 import { useAuth } from "@/context/AuthContext"
 import { useRouter } from "next/navigation"
+import { useHeroSection, useDealsBanner } from "@/hooks/useContent"
 
 // Extending the Product type for local use to include createdAt
 interface ProductWithDate extends Product {
@@ -27,15 +28,17 @@ export default function HomePage() {
   const { startLoading, stopLoading } = useLoading()
   const { user } = useAuth()
   const router = useRouter()
+  const { heroSection, loading: heroLoading } = useHeroSection()
+  const { dealsBanner, loading: dealsBannerLoading } = useDealsBanner()
 
   // Handle initial page data loading
   useEffect(() => {
-    if (categoriesLoading || featuredLoading) {
+    if (categoriesLoading || featuredLoading || heroLoading || dealsBannerLoading) {
       startLoading("Loading products...")
     } else {
       stopLoading()
     }
-  }, [categoriesLoading, featuredLoading, startLoading, stopLoading])
+  }, [categoriesLoading, featuredLoading, heroLoading, dealsBannerLoading, startLoading, stopLoading])
 
   // Get new arrivals from products
   useEffect(() => {
@@ -65,12 +68,14 @@ export default function HomePage() {
           <div>
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-voltBlue-700/40 dark:bg-voltBlue-800/40 border border-voltBlue-600/40 dark:border-voltBlue-700/40 mb-6">
               <Zap className="h-4 w-4 text-voltBlue-300" />
-              <span className="text-sm text-voltBlue-200 tracking-wide">New Arrivals</span>
+              <span className="text-sm text-voltBlue-200 tracking-wide">
+                {heroSection?.subtitle || "New Arrivals"}
+              </span>
             </div>
 
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-4 tracking-tight">
               <span className="bg-clip-text text-transparent bg-gradient-to-b from-white to-white/80">
-                Cutting-Edge
+                {heroSection?.title?.split(" ")[0] || "Cutting-Edge"}
               </span>
               <br />
               <span
@@ -79,20 +84,29 @@ export default function HomePage() {
                   "font-pacifico",
                 )}
               >
-                Electronics
+                {heroSection?.title?.split(" ").slice(1).join(" ") || "Electronics"}
               </span>
             </h1>
 
             <p className="text-voltBlue-100 text-lg mb-6 max-w-md">
-              Discover the latest in technology with premium devices designed for the modern lifestyle.
+              {heroSection?.description || "Discover the latest in technology with premium devices designed for the modern lifestyle."}
             </p>
 
             <div className="flex flex-wrap gap-4">
-              <Button size="lg" className="rounded-full bg-voltBlue-500 hover:bg-voltBlue-600 text-white">
-                Shop Now
+              <Button 
+                size="lg" 
+                className="rounded-full bg-voltBlue-500 hover:bg-voltBlue-600 text-white"
+                onClick={() => heroSection?.primaryBtnLink && router.push(heroSection.primaryBtnLink)}
+              >
+                {heroSection?.primaryBtnText || "Shop Now"}
               </Button>
-              <Button size="lg" variant="outline" className="rounded-full border-voltBlue-400 text-voltBlue-100">
-                View Deals
+              <Button 
+                size="lg" 
+                variant="outline" 
+                className="rounded-full border-voltBlue-400 text-voltBlue-100"
+                onClick={() => heroSection?.secondaryBtnLink && router.push(heroSection.secondaryBtnLink)}
+              >
+                {heroSection?.secondaryBtnText || "View Deals"}
               </Button>
               
               {user?.isAdmin && (
@@ -110,7 +124,12 @@ export default function HomePage() {
 
           <div className="relative h-[300px] md:h-[400px] flex items-center justify-center">
             <div className="absolute inset-0 bg-gradient-to-r from-voltBlue-500/20 to-voltBlue-300/20 rounded-full blur-3xl" />
-            <div className="relative z-10 w-full h-full bg-[url('/placeholder.svg?height=400&width=400')] bg-contain bg-center bg-no-repeat" />
+            <div 
+              className="relative z-10 w-full h-full bg-contain bg-center bg-no-repeat" 
+              style={{ 
+                backgroundImage: `url('${heroSection?.imageUrl || '/placeholder.svg?height=400&width=400'}')`
+              }}
+            />
           </div>
         </div>
       </section>
@@ -140,7 +159,7 @@ export default function HomePage() {
 
       {/* Deals Banner */}
       <section>
-        <DealsBanner />
+        <DealsBanner customData={dealsBanner} />
       </section>
 
       {/* New Arrivals */}

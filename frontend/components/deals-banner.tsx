@@ -4,27 +4,60 @@ import { motion } from "framer-motion"
 import { Button } from "@/components/ui/button"
 import { Zap } from "lucide-react"
 import { cn } from "@/lib/utils"
+import { DealsBanner as DealsBannerType } from "@/hooks/useContent"
+import { useRouter } from "next/navigation"
 
-export function DealsBanner() {
+interface DealsBannerProps {
+  customData?: DealsBannerType | null;
+}
+
+export function DealsBanner({ customData }: DealsBannerProps) {
+  const router = useRouter();
+  
+  // Default values
+  const title = customData?.title || "Summer Savings Spectacular";
+  const subtitle = customData?.subtitle || "Flash Sale";
+  const description = customData?.description || "Up to 40% off on selected electronics. Limited time offer!";
+  const buttonText = customData?.buttonText || "Shop Now";
+  const buttonLink = customData?.buttonLink || "/home/products";
+  const discount = customData?.discount || "40%";
+  const backgroundColor = customData?.backgroundColor || "var(--voltBlue-600), var(--voltBlue-400)";
+  const imageUrl = customData?.imageUrl || '/placeholder.svg?height=400&width=1200';
+
+  // Check if backgroundColor contains Tailwind classes or CSS variables
+  const isTailwindClass = backgroundColor.includes('from-') && backgroundColor.includes('to-');
+  
   return (
-    <div className="relative overflow-hidden rounded-lg bg-gradient-to-r from-voltBlue-600 to-voltBlue-400 p-6 md:p-8">
-      <div className="absolute inset-0 bg-[url('/placeholder.svg?height=400&width=1200')] opacity-10 mix-blend-overlay" />
+    <div className={isTailwindClass ? 
+      `relative overflow-hidden rounded-lg bg-gradient-to-r ${backgroundColor} p-6 md:p-8` : 
+      "relative overflow-hidden rounded-lg p-6 md:p-8"
+    }
+    style={!isTailwindClass ? { background: `linear-gradient(to right, ${backgroundColor})` } : undefined}
+    >
+      <div 
+        className="absolute inset-0 opacity-10 mix-blend-overlay" 
+        style={imageUrl ? { backgroundImage: `url('${imageUrl}')` } : undefined} 
+      />
 
       <div className="relative z-10 flex flex-col md:flex-row items-center justify-between gap-6">
         <div className="text-center md:text-left">
           <div className="flex items-center justify-center md:justify-start gap-2 mb-2">
             <Zap className="h-5 w-5 text-white" />
-            <span className="text-sm font-medium uppercase tracking-wider text-white/90">Flash Sale</span>
+            <span className="text-sm font-medium uppercase tracking-wider text-white/90">{subtitle}</span>
           </div>
           <h3 className={cn("text-2xl md:text-3xl font-bold text-white mb-2", "font-pacifico")}>
-            Summer Savings Spectacular
+            {title}
           </h3>
-          <p className="text-white/80 max-w-md">Up to 40% off on selected electronics. Limited time offer!</p>
+          <p className="text-white/80 max-w-md">{description}</p>
         </div>
 
         <motion.div initial={{ scale: 0.9 }} animate={{ scale: [0.9, 1.05, 1] }} transition={{ duration: 0.5 }}>
-          <Button size="lg" className="bg-white text-voltBlue-600 hover:bg-white/90 hover:text-voltBlue-700">
-            Shop Now
+          <Button 
+            size="lg" 
+            className="bg-white text-voltBlue-600 hover:bg-white/90 hover:text-voltBlue-700"
+            onClick={() => buttonLink && router.push(buttonLink)}
+          >
+            {buttonText}
           </Button>
         </motion.div>
       </div>

@@ -68,6 +68,16 @@ export type Review = $Result.DefaultSelection<Prisma.$ReviewPayload>
  * 
  */
 export type Coupon = $Result.DefaultSelection<Prisma.$CouponPayload>
+/**
+ * Model HeroSection
+ * 
+ */
+export type HeroSection = $Result.DefaultSelection<Prisma.$HeroSectionPayload>
+/**
+ * Model DealsBanner
+ * 
+ */
+export type DealsBanner = $Result.DefaultSelection<Prisma.$DealsBannerPayload>
 
 /**
  * Enums
@@ -363,6 +373,26 @@ export class PrismaClient<
     * ```
     */
   get coupon(): Prisma.CouponDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.heroSection`: Exposes CRUD operations for the **HeroSection** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more HeroSections
+    * const heroSections = await prisma.heroSection.findMany()
+    * ```
+    */
+  get heroSection(): Prisma.HeroSectionDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.dealsBanner`: Exposes CRUD operations for the **DealsBanner** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more DealsBanners
+    * const dealsBanners = await prisma.dealsBanner.findMany()
+    * ```
+    */
+  get dealsBanner(): Prisma.DealsBannerDelegate<ExtArgs, ClientOptions>;
 }
 
 export namespace Prisma {
@@ -813,7 +843,9 @@ export namespace Prisma {
     Order: 'Order',
     OrderItem: 'OrderItem',
     Review: 'Review',
-    Coupon: 'Coupon'
+    Coupon: 'Coupon',
+    HeroSection: 'HeroSection',
+    DealsBanner: 'DealsBanner'
   };
 
   export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -832,7 +864,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "user" | "category" | "product" | "image" | "cart" | "cartItem" | "address" | "order" | "orderItem" | "review" | "coupon"
+      modelProps: "user" | "category" | "product" | "image" | "cart" | "cartItem" | "address" | "order" | "orderItem" | "review" | "coupon" | "heroSection" | "dealsBanner"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -1650,6 +1682,154 @@ export namespace Prisma {
           }
         }
       }
+      HeroSection: {
+        payload: Prisma.$HeroSectionPayload<ExtArgs>
+        fields: Prisma.HeroSectionFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.HeroSectionFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$HeroSectionPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.HeroSectionFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$HeroSectionPayload>
+          }
+          findFirst: {
+            args: Prisma.HeroSectionFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$HeroSectionPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.HeroSectionFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$HeroSectionPayload>
+          }
+          findMany: {
+            args: Prisma.HeroSectionFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$HeroSectionPayload>[]
+          }
+          create: {
+            args: Prisma.HeroSectionCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$HeroSectionPayload>
+          }
+          createMany: {
+            args: Prisma.HeroSectionCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.HeroSectionCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$HeroSectionPayload>[]
+          }
+          delete: {
+            args: Prisma.HeroSectionDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$HeroSectionPayload>
+          }
+          update: {
+            args: Prisma.HeroSectionUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$HeroSectionPayload>
+          }
+          deleteMany: {
+            args: Prisma.HeroSectionDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.HeroSectionUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.HeroSectionUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$HeroSectionPayload>[]
+          }
+          upsert: {
+            args: Prisma.HeroSectionUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$HeroSectionPayload>
+          }
+          aggregate: {
+            args: Prisma.HeroSectionAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateHeroSection>
+          }
+          groupBy: {
+            args: Prisma.HeroSectionGroupByArgs<ExtArgs>
+            result: $Utils.Optional<HeroSectionGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.HeroSectionCountArgs<ExtArgs>
+            result: $Utils.Optional<HeroSectionCountAggregateOutputType> | number
+          }
+        }
+      }
+      DealsBanner: {
+        payload: Prisma.$DealsBannerPayload<ExtArgs>
+        fields: Prisma.DealsBannerFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.DealsBannerFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DealsBannerPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.DealsBannerFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DealsBannerPayload>
+          }
+          findFirst: {
+            args: Prisma.DealsBannerFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DealsBannerPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.DealsBannerFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DealsBannerPayload>
+          }
+          findMany: {
+            args: Prisma.DealsBannerFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DealsBannerPayload>[]
+          }
+          create: {
+            args: Prisma.DealsBannerCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DealsBannerPayload>
+          }
+          createMany: {
+            args: Prisma.DealsBannerCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.DealsBannerCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DealsBannerPayload>[]
+          }
+          delete: {
+            args: Prisma.DealsBannerDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DealsBannerPayload>
+          }
+          update: {
+            args: Prisma.DealsBannerUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DealsBannerPayload>
+          }
+          deleteMany: {
+            args: Prisma.DealsBannerDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.DealsBannerUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.DealsBannerUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DealsBannerPayload>[]
+          }
+          upsert: {
+            args: Prisma.DealsBannerUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DealsBannerPayload>
+          }
+          aggregate: {
+            args: Prisma.DealsBannerAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateDealsBanner>
+          }
+          groupBy: {
+            args: Prisma.DealsBannerGroupByArgs<ExtArgs>
+            result: $Utils.Optional<DealsBannerGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.DealsBannerCountArgs<ExtArgs>
+            result: $Utils.Optional<DealsBannerCountAggregateOutputType> | number
+          }
+        }
+      }
     }
   } & {
     other: {
@@ -1745,6 +1925,8 @@ export namespace Prisma {
     orderItem?: OrderItemOmit
     review?: ReviewOmit
     coupon?: CouponOmit
+    heroSection?: HeroSectionOmit
+    dealsBanner?: DealsBannerOmit
   }
 
   /* Types for Logging */
@@ -14863,6 +15045,2178 @@ export namespace Prisma {
 
 
   /**
+   * Model HeroSection
+   */
+
+  export type AggregateHeroSection = {
+    _count: HeroSectionCountAggregateOutputType | null
+    _min: HeroSectionMinAggregateOutputType | null
+    _max: HeroSectionMaxAggregateOutputType | null
+  }
+
+  export type HeroSectionMinAggregateOutputType = {
+    id: string | null
+    title: string | null
+    subtitle: string | null
+    description: string | null
+    primaryBtnText: string | null
+    primaryBtnLink: string | null
+    secondaryBtnText: string | null
+    secondaryBtnLink: string | null
+    imageUrl: string | null
+    active: boolean | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type HeroSectionMaxAggregateOutputType = {
+    id: string | null
+    title: string | null
+    subtitle: string | null
+    description: string | null
+    primaryBtnText: string | null
+    primaryBtnLink: string | null
+    secondaryBtnText: string | null
+    secondaryBtnLink: string | null
+    imageUrl: string | null
+    active: boolean | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type HeroSectionCountAggregateOutputType = {
+    id: number
+    title: number
+    subtitle: number
+    description: number
+    primaryBtnText: number
+    primaryBtnLink: number
+    secondaryBtnText: number
+    secondaryBtnLink: number
+    imageUrl: number
+    active: number
+    createdAt: number
+    updatedAt: number
+    _all: number
+  }
+
+
+  export type HeroSectionMinAggregateInputType = {
+    id?: true
+    title?: true
+    subtitle?: true
+    description?: true
+    primaryBtnText?: true
+    primaryBtnLink?: true
+    secondaryBtnText?: true
+    secondaryBtnLink?: true
+    imageUrl?: true
+    active?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type HeroSectionMaxAggregateInputType = {
+    id?: true
+    title?: true
+    subtitle?: true
+    description?: true
+    primaryBtnText?: true
+    primaryBtnLink?: true
+    secondaryBtnText?: true
+    secondaryBtnLink?: true
+    imageUrl?: true
+    active?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type HeroSectionCountAggregateInputType = {
+    id?: true
+    title?: true
+    subtitle?: true
+    description?: true
+    primaryBtnText?: true
+    primaryBtnLink?: true
+    secondaryBtnText?: true
+    secondaryBtnLink?: true
+    imageUrl?: true
+    active?: true
+    createdAt?: true
+    updatedAt?: true
+    _all?: true
+  }
+
+  export type HeroSectionAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which HeroSection to aggregate.
+     */
+    where?: HeroSectionWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of HeroSections to fetch.
+     */
+    orderBy?: HeroSectionOrderByWithRelationInput | HeroSectionOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: HeroSectionWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` HeroSections from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` HeroSections.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned HeroSections
+    **/
+    _count?: true | HeroSectionCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: HeroSectionMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: HeroSectionMaxAggregateInputType
+  }
+
+  export type GetHeroSectionAggregateType<T extends HeroSectionAggregateArgs> = {
+        [P in keyof T & keyof AggregateHeroSection]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateHeroSection[P]>
+      : GetScalarType<T[P], AggregateHeroSection[P]>
+  }
+
+
+
+
+  export type HeroSectionGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: HeroSectionWhereInput
+    orderBy?: HeroSectionOrderByWithAggregationInput | HeroSectionOrderByWithAggregationInput[]
+    by: HeroSectionScalarFieldEnum[] | HeroSectionScalarFieldEnum
+    having?: HeroSectionScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: HeroSectionCountAggregateInputType | true
+    _min?: HeroSectionMinAggregateInputType
+    _max?: HeroSectionMaxAggregateInputType
+  }
+
+  export type HeroSectionGroupByOutputType = {
+    id: string
+    title: string | null
+    subtitle: string | null
+    description: string | null
+    primaryBtnText: string | null
+    primaryBtnLink: string | null
+    secondaryBtnText: string | null
+    secondaryBtnLink: string | null
+    imageUrl: string | null
+    active: boolean
+    createdAt: Date
+    updatedAt: Date
+    _count: HeroSectionCountAggregateOutputType | null
+    _min: HeroSectionMinAggregateOutputType | null
+    _max: HeroSectionMaxAggregateOutputType | null
+  }
+
+  type GetHeroSectionGroupByPayload<T extends HeroSectionGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<HeroSectionGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof HeroSectionGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], HeroSectionGroupByOutputType[P]>
+            : GetScalarType<T[P], HeroSectionGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type HeroSectionSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    title?: boolean
+    subtitle?: boolean
+    description?: boolean
+    primaryBtnText?: boolean
+    primaryBtnLink?: boolean
+    secondaryBtnText?: boolean
+    secondaryBtnLink?: boolean
+    imageUrl?: boolean
+    active?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }, ExtArgs["result"]["heroSection"]>
+
+  export type HeroSectionSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    title?: boolean
+    subtitle?: boolean
+    description?: boolean
+    primaryBtnText?: boolean
+    primaryBtnLink?: boolean
+    secondaryBtnText?: boolean
+    secondaryBtnLink?: boolean
+    imageUrl?: boolean
+    active?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }, ExtArgs["result"]["heroSection"]>
+
+  export type HeroSectionSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    title?: boolean
+    subtitle?: boolean
+    description?: boolean
+    primaryBtnText?: boolean
+    primaryBtnLink?: boolean
+    secondaryBtnText?: boolean
+    secondaryBtnLink?: boolean
+    imageUrl?: boolean
+    active?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }, ExtArgs["result"]["heroSection"]>
+
+  export type HeroSectionSelectScalar = {
+    id?: boolean
+    title?: boolean
+    subtitle?: boolean
+    description?: boolean
+    primaryBtnText?: boolean
+    primaryBtnLink?: boolean
+    secondaryBtnText?: boolean
+    secondaryBtnLink?: boolean
+    imageUrl?: boolean
+    active?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }
+
+  export type HeroSectionOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "title" | "subtitle" | "description" | "primaryBtnText" | "primaryBtnLink" | "secondaryBtnText" | "secondaryBtnLink" | "imageUrl" | "active" | "createdAt" | "updatedAt", ExtArgs["result"]["heroSection"]>
+
+  export type $HeroSectionPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "HeroSection"
+    objects: {}
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      title: string | null
+      subtitle: string | null
+      description: string | null
+      primaryBtnText: string | null
+      primaryBtnLink: string | null
+      secondaryBtnText: string | null
+      secondaryBtnLink: string | null
+      imageUrl: string | null
+      active: boolean
+      createdAt: Date
+      updatedAt: Date
+    }, ExtArgs["result"]["heroSection"]>
+    composites: {}
+  }
+
+  type HeroSectionGetPayload<S extends boolean | null | undefined | HeroSectionDefaultArgs> = $Result.GetResult<Prisma.$HeroSectionPayload, S>
+
+  type HeroSectionCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<HeroSectionFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: HeroSectionCountAggregateInputType | true
+    }
+
+  export interface HeroSectionDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['HeroSection'], meta: { name: 'HeroSection' } }
+    /**
+     * Find zero or one HeroSection that matches the filter.
+     * @param {HeroSectionFindUniqueArgs} args - Arguments to find a HeroSection
+     * @example
+     * // Get one HeroSection
+     * const heroSection = await prisma.heroSection.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends HeroSectionFindUniqueArgs>(args: SelectSubset<T, HeroSectionFindUniqueArgs<ExtArgs>>): Prisma__HeroSectionClient<$Result.GetResult<Prisma.$HeroSectionPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one HeroSection that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {HeroSectionFindUniqueOrThrowArgs} args - Arguments to find a HeroSection
+     * @example
+     * // Get one HeroSection
+     * const heroSection = await prisma.heroSection.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends HeroSectionFindUniqueOrThrowArgs>(args: SelectSubset<T, HeroSectionFindUniqueOrThrowArgs<ExtArgs>>): Prisma__HeroSectionClient<$Result.GetResult<Prisma.$HeroSectionPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first HeroSection that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {HeroSectionFindFirstArgs} args - Arguments to find a HeroSection
+     * @example
+     * // Get one HeroSection
+     * const heroSection = await prisma.heroSection.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends HeroSectionFindFirstArgs>(args?: SelectSubset<T, HeroSectionFindFirstArgs<ExtArgs>>): Prisma__HeroSectionClient<$Result.GetResult<Prisma.$HeroSectionPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first HeroSection that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {HeroSectionFindFirstOrThrowArgs} args - Arguments to find a HeroSection
+     * @example
+     * // Get one HeroSection
+     * const heroSection = await prisma.heroSection.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends HeroSectionFindFirstOrThrowArgs>(args?: SelectSubset<T, HeroSectionFindFirstOrThrowArgs<ExtArgs>>): Prisma__HeroSectionClient<$Result.GetResult<Prisma.$HeroSectionPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more HeroSections that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {HeroSectionFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all HeroSections
+     * const heroSections = await prisma.heroSection.findMany()
+     * 
+     * // Get first 10 HeroSections
+     * const heroSections = await prisma.heroSection.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const heroSectionWithIdOnly = await prisma.heroSection.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends HeroSectionFindManyArgs>(args?: SelectSubset<T, HeroSectionFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$HeroSectionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a HeroSection.
+     * @param {HeroSectionCreateArgs} args - Arguments to create a HeroSection.
+     * @example
+     * // Create one HeroSection
+     * const HeroSection = await prisma.heroSection.create({
+     *   data: {
+     *     // ... data to create a HeroSection
+     *   }
+     * })
+     * 
+     */
+    create<T extends HeroSectionCreateArgs>(args: SelectSubset<T, HeroSectionCreateArgs<ExtArgs>>): Prisma__HeroSectionClient<$Result.GetResult<Prisma.$HeroSectionPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many HeroSections.
+     * @param {HeroSectionCreateManyArgs} args - Arguments to create many HeroSections.
+     * @example
+     * // Create many HeroSections
+     * const heroSection = await prisma.heroSection.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends HeroSectionCreateManyArgs>(args?: SelectSubset<T, HeroSectionCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many HeroSections and returns the data saved in the database.
+     * @param {HeroSectionCreateManyAndReturnArgs} args - Arguments to create many HeroSections.
+     * @example
+     * // Create many HeroSections
+     * const heroSection = await prisma.heroSection.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many HeroSections and only return the `id`
+     * const heroSectionWithIdOnly = await prisma.heroSection.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends HeroSectionCreateManyAndReturnArgs>(args?: SelectSubset<T, HeroSectionCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$HeroSectionPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a HeroSection.
+     * @param {HeroSectionDeleteArgs} args - Arguments to delete one HeroSection.
+     * @example
+     * // Delete one HeroSection
+     * const HeroSection = await prisma.heroSection.delete({
+     *   where: {
+     *     // ... filter to delete one HeroSection
+     *   }
+     * })
+     * 
+     */
+    delete<T extends HeroSectionDeleteArgs>(args: SelectSubset<T, HeroSectionDeleteArgs<ExtArgs>>): Prisma__HeroSectionClient<$Result.GetResult<Prisma.$HeroSectionPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one HeroSection.
+     * @param {HeroSectionUpdateArgs} args - Arguments to update one HeroSection.
+     * @example
+     * // Update one HeroSection
+     * const heroSection = await prisma.heroSection.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends HeroSectionUpdateArgs>(args: SelectSubset<T, HeroSectionUpdateArgs<ExtArgs>>): Prisma__HeroSectionClient<$Result.GetResult<Prisma.$HeroSectionPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more HeroSections.
+     * @param {HeroSectionDeleteManyArgs} args - Arguments to filter HeroSections to delete.
+     * @example
+     * // Delete a few HeroSections
+     * const { count } = await prisma.heroSection.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends HeroSectionDeleteManyArgs>(args?: SelectSubset<T, HeroSectionDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more HeroSections.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {HeroSectionUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many HeroSections
+     * const heroSection = await prisma.heroSection.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends HeroSectionUpdateManyArgs>(args: SelectSubset<T, HeroSectionUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more HeroSections and returns the data updated in the database.
+     * @param {HeroSectionUpdateManyAndReturnArgs} args - Arguments to update many HeroSections.
+     * @example
+     * // Update many HeroSections
+     * const heroSection = await prisma.heroSection.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more HeroSections and only return the `id`
+     * const heroSectionWithIdOnly = await prisma.heroSection.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends HeroSectionUpdateManyAndReturnArgs>(args: SelectSubset<T, HeroSectionUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$HeroSectionPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one HeroSection.
+     * @param {HeroSectionUpsertArgs} args - Arguments to update or create a HeroSection.
+     * @example
+     * // Update or create a HeroSection
+     * const heroSection = await prisma.heroSection.upsert({
+     *   create: {
+     *     // ... data to create a HeroSection
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the HeroSection we want to update
+     *   }
+     * })
+     */
+    upsert<T extends HeroSectionUpsertArgs>(args: SelectSubset<T, HeroSectionUpsertArgs<ExtArgs>>): Prisma__HeroSectionClient<$Result.GetResult<Prisma.$HeroSectionPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of HeroSections.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {HeroSectionCountArgs} args - Arguments to filter HeroSections to count.
+     * @example
+     * // Count the number of HeroSections
+     * const count = await prisma.heroSection.count({
+     *   where: {
+     *     // ... the filter for the HeroSections we want to count
+     *   }
+     * })
+    **/
+    count<T extends HeroSectionCountArgs>(
+      args?: Subset<T, HeroSectionCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], HeroSectionCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a HeroSection.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {HeroSectionAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends HeroSectionAggregateArgs>(args: Subset<T, HeroSectionAggregateArgs>): Prisma.PrismaPromise<GetHeroSectionAggregateType<T>>
+
+    /**
+     * Group by HeroSection.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {HeroSectionGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends HeroSectionGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: HeroSectionGroupByArgs['orderBy'] }
+        : { orderBy?: HeroSectionGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, HeroSectionGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetHeroSectionGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the HeroSection model
+   */
+  readonly fields: HeroSectionFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for HeroSection.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__HeroSectionClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the HeroSection model
+   */
+  interface HeroSectionFieldRefs {
+    readonly id: FieldRef<"HeroSection", 'String'>
+    readonly title: FieldRef<"HeroSection", 'String'>
+    readonly subtitle: FieldRef<"HeroSection", 'String'>
+    readonly description: FieldRef<"HeroSection", 'String'>
+    readonly primaryBtnText: FieldRef<"HeroSection", 'String'>
+    readonly primaryBtnLink: FieldRef<"HeroSection", 'String'>
+    readonly secondaryBtnText: FieldRef<"HeroSection", 'String'>
+    readonly secondaryBtnLink: FieldRef<"HeroSection", 'String'>
+    readonly imageUrl: FieldRef<"HeroSection", 'String'>
+    readonly active: FieldRef<"HeroSection", 'Boolean'>
+    readonly createdAt: FieldRef<"HeroSection", 'DateTime'>
+    readonly updatedAt: FieldRef<"HeroSection", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * HeroSection findUnique
+   */
+  export type HeroSectionFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the HeroSection
+     */
+    select?: HeroSectionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the HeroSection
+     */
+    omit?: HeroSectionOmit<ExtArgs> | null
+    /**
+     * Filter, which HeroSection to fetch.
+     */
+    where: HeroSectionWhereUniqueInput
+  }
+
+  /**
+   * HeroSection findUniqueOrThrow
+   */
+  export type HeroSectionFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the HeroSection
+     */
+    select?: HeroSectionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the HeroSection
+     */
+    omit?: HeroSectionOmit<ExtArgs> | null
+    /**
+     * Filter, which HeroSection to fetch.
+     */
+    where: HeroSectionWhereUniqueInput
+  }
+
+  /**
+   * HeroSection findFirst
+   */
+  export type HeroSectionFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the HeroSection
+     */
+    select?: HeroSectionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the HeroSection
+     */
+    omit?: HeroSectionOmit<ExtArgs> | null
+    /**
+     * Filter, which HeroSection to fetch.
+     */
+    where?: HeroSectionWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of HeroSections to fetch.
+     */
+    orderBy?: HeroSectionOrderByWithRelationInput | HeroSectionOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for HeroSections.
+     */
+    cursor?: HeroSectionWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` HeroSections from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` HeroSections.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of HeroSections.
+     */
+    distinct?: HeroSectionScalarFieldEnum | HeroSectionScalarFieldEnum[]
+  }
+
+  /**
+   * HeroSection findFirstOrThrow
+   */
+  export type HeroSectionFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the HeroSection
+     */
+    select?: HeroSectionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the HeroSection
+     */
+    omit?: HeroSectionOmit<ExtArgs> | null
+    /**
+     * Filter, which HeroSection to fetch.
+     */
+    where?: HeroSectionWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of HeroSections to fetch.
+     */
+    orderBy?: HeroSectionOrderByWithRelationInput | HeroSectionOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for HeroSections.
+     */
+    cursor?: HeroSectionWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` HeroSections from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` HeroSections.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of HeroSections.
+     */
+    distinct?: HeroSectionScalarFieldEnum | HeroSectionScalarFieldEnum[]
+  }
+
+  /**
+   * HeroSection findMany
+   */
+  export type HeroSectionFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the HeroSection
+     */
+    select?: HeroSectionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the HeroSection
+     */
+    omit?: HeroSectionOmit<ExtArgs> | null
+    /**
+     * Filter, which HeroSections to fetch.
+     */
+    where?: HeroSectionWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of HeroSections to fetch.
+     */
+    orderBy?: HeroSectionOrderByWithRelationInput | HeroSectionOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing HeroSections.
+     */
+    cursor?: HeroSectionWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` HeroSections from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` HeroSections.
+     */
+    skip?: number
+    distinct?: HeroSectionScalarFieldEnum | HeroSectionScalarFieldEnum[]
+  }
+
+  /**
+   * HeroSection create
+   */
+  export type HeroSectionCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the HeroSection
+     */
+    select?: HeroSectionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the HeroSection
+     */
+    omit?: HeroSectionOmit<ExtArgs> | null
+    /**
+     * The data needed to create a HeroSection.
+     */
+    data: XOR<HeroSectionCreateInput, HeroSectionUncheckedCreateInput>
+  }
+
+  /**
+   * HeroSection createMany
+   */
+  export type HeroSectionCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many HeroSections.
+     */
+    data: HeroSectionCreateManyInput | HeroSectionCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * HeroSection createManyAndReturn
+   */
+  export type HeroSectionCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the HeroSection
+     */
+    select?: HeroSectionSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the HeroSection
+     */
+    omit?: HeroSectionOmit<ExtArgs> | null
+    /**
+     * The data used to create many HeroSections.
+     */
+    data: HeroSectionCreateManyInput | HeroSectionCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * HeroSection update
+   */
+  export type HeroSectionUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the HeroSection
+     */
+    select?: HeroSectionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the HeroSection
+     */
+    omit?: HeroSectionOmit<ExtArgs> | null
+    /**
+     * The data needed to update a HeroSection.
+     */
+    data: XOR<HeroSectionUpdateInput, HeroSectionUncheckedUpdateInput>
+    /**
+     * Choose, which HeroSection to update.
+     */
+    where: HeroSectionWhereUniqueInput
+  }
+
+  /**
+   * HeroSection updateMany
+   */
+  export type HeroSectionUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update HeroSections.
+     */
+    data: XOR<HeroSectionUpdateManyMutationInput, HeroSectionUncheckedUpdateManyInput>
+    /**
+     * Filter which HeroSections to update
+     */
+    where?: HeroSectionWhereInput
+    /**
+     * Limit how many HeroSections to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * HeroSection updateManyAndReturn
+   */
+  export type HeroSectionUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the HeroSection
+     */
+    select?: HeroSectionSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the HeroSection
+     */
+    omit?: HeroSectionOmit<ExtArgs> | null
+    /**
+     * The data used to update HeroSections.
+     */
+    data: XOR<HeroSectionUpdateManyMutationInput, HeroSectionUncheckedUpdateManyInput>
+    /**
+     * Filter which HeroSections to update
+     */
+    where?: HeroSectionWhereInput
+    /**
+     * Limit how many HeroSections to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * HeroSection upsert
+   */
+  export type HeroSectionUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the HeroSection
+     */
+    select?: HeroSectionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the HeroSection
+     */
+    omit?: HeroSectionOmit<ExtArgs> | null
+    /**
+     * The filter to search for the HeroSection to update in case it exists.
+     */
+    where: HeroSectionWhereUniqueInput
+    /**
+     * In case the HeroSection found by the `where` argument doesn't exist, create a new HeroSection with this data.
+     */
+    create: XOR<HeroSectionCreateInput, HeroSectionUncheckedCreateInput>
+    /**
+     * In case the HeroSection was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<HeroSectionUpdateInput, HeroSectionUncheckedUpdateInput>
+  }
+
+  /**
+   * HeroSection delete
+   */
+  export type HeroSectionDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the HeroSection
+     */
+    select?: HeroSectionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the HeroSection
+     */
+    omit?: HeroSectionOmit<ExtArgs> | null
+    /**
+     * Filter which HeroSection to delete.
+     */
+    where: HeroSectionWhereUniqueInput
+  }
+
+  /**
+   * HeroSection deleteMany
+   */
+  export type HeroSectionDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which HeroSections to delete
+     */
+    where?: HeroSectionWhereInput
+    /**
+     * Limit how many HeroSections to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * HeroSection without action
+   */
+  export type HeroSectionDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the HeroSection
+     */
+    select?: HeroSectionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the HeroSection
+     */
+    omit?: HeroSectionOmit<ExtArgs> | null
+  }
+
+
+  /**
+   * Model DealsBanner
+   */
+
+  export type AggregateDealsBanner = {
+    _count: DealsBannerCountAggregateOutputType | null
+    _min: DealsBannerMinAggregateOutputType | null
+    _max: DealsBannerMaxAggregateOutputType | null
+  }
+
+  export type DealsBannerMinAggregateOutputType = {
+    id: string | null
+    title: string | null
+    subtitle: string | null
+    description: string | null
+    buttonText: string | null
+    buttonLink: string | null
+    discount: string | null
+    imageUrl: string | null
+    backgroundColor: string | null
+    active: boolean | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type DealsBannerMaxAggregateOutputType = {
+    id: string | null
+    title: string | null
+    subtitle: string | null
+    description: string | null
+    buttonText: string | null
+    buttonLink: string | null
+    discount: string | null
+    imageUrl: string | null
+    backgroundColor: string | null
+    active: boolean | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type DealsBannerCountAggregateOutputType = {
+    id: number
+    title: number
+    subtitle: number
+    description: number
+    buttonText: number
+    buttonLink: number
+    discount: number
+    imageUrl: number
+    backgroundColor: number
+    active: number
+    createdAt: number
+    updatedAt: number
+    _all: number
+  }
+
+
+  export type DealsBannerMinAggregateInputType = {
+    id?: true
+    title?: true
+    subtitle?: true
+    description?: true
+    buttonText?: true
+    buttonLink?: true
+    discount?: true
+    imageUrl?: true
+    backgroundColor?: true
+    active?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type DealsBannerMaxAggregateInputType = {
+    id?: true
+    title?: true
+    subtitle?: true
+    description?: true
+    buttonText?: true
+    buttonLink?: true
+    discount?: true
+    imageUrl?: true
+    backgroundColor?: true
+    active?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type DealsBannerCountAggregateInputType = {
+    id?: true
+    title?: true
+    subtitle?: true
+    description?: true
+    buttonText?: true
+    buttonLink?: true
+    discount?: true
+    imageUrl?: true
+    backgroundColor?: true
+    active?: true
+    createdAt?: true
+    updatedAt?: true
+    _all?: true
+  }
+
+  export type DealsBannerAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which DealsBanner to aggregate.
+     */
+    where?: DealsBannerWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of DealsBanners to fetch.
+     */
+    orderBy?: DealsBannerOrderByWithRelationInput | DealsBannerOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: DealsBannerWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` DealsBanners from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` DealsBanners.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned DealsBanners
+    **/
+    _count?: true | DealsBannerCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: DealsBannerMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: DealsBannerMaxAggregateInputType
+  }
+
+  export type GetDealsBannerAggregateType<T extends DealsBannerAggregateArgs> = {
+        [P in keyof T & keyof AggregateDealsBanner]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateDealsBanner[P]>
+      : GetScalarType<T[P], AggregateDealsBanner[P]>
+  }
+
+
+
+
+  export type DealsBannerGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: DealsBannerWhereInput
+    orderBy?: DealsBannerOrderByWithAggregationInput | DealsBannerOrderByWithAggregationInput[]
+    by: DealsBannerScalarFieldEnum[] | DealsBannerScalarFieldEnum
+    having?: DealsBannerScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: DealsBannerCountAggregateInputType | true
+    _min?: DealsBannerMinAggregateInputType
+    _max?: DealsBannerMaxAggregateInputType
+  }
+
+  export type DealsBannerGroupByOutputType = {
+    id: string
+    title: string | null
+    subtitle: string | null
+    description: string | null
+    buttonText: string | null
+    buttonLink: string | null
+    discount: string | null
+    imageUrl: string | null
+    backgroundColor: string | null
+    active: boolean
+    createdAt: Date
+    updatedAt: Date
+    _count: DealsBannerCountAggregateOutputType | null
+    _min: DealsBannerMinAggregateOutputType | null
+    _max: DealsBannerMaxAggregateOutputType | null
+  }
+
+  type GetDealsBannerGroupByPayload<T extends DealsBannerGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<DealsBannerGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof DealsBannerGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], DealsBannerGroupByOutputType[P]>
+            : GetScalarType<T[P], DealsBannerGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type DealsBannerSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    title?: boolean
+    subtitle?: boolean
+    description?: boolean
+    buttonText?: boolean
+    buttonLink?: boolean
+    discount?: boolean
+    imageUrl?: boolean
+    backgroundColor?: boolean
+    active?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }, ExtArgs["result"]["dealsBanner"]>
+
+  export type DealsBannerSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    title?: boolean
+    subtitle?: boolean
+    description?: boolean
+    buttonText?: boolean
+    buttonLink?: boolean
+    discount?: boolean
+    imageUrl?: boolean
+    backgroundColor?: boolean
+    active?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }, ExtArgs["result"]["dealsBanner"]>
+
+  export type DealsBannerSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    title?: boolean
+    subtitle?: boolean
+    description?: boolean
+    buttonText?: boolean
+    buttonLink?: boolean
+    discount?: boolean
+    imageUrl?: boolean
+    backgroundColor?: boolean
+    active?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }, ExtArgs["result"]["dealsBanner"]>
+
+  export type DealsBannerSelectScalar = {
+    id?: boolean
+    title?: boolean
+    subtitle?: boolean
+    description?: boolean
+    buttonText?: boolean
+    buttonLink?: boolean
+    discount?: boolean
+    imageUrl?: boolean
+    backgroundColor?: boolean
+    active?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }
+
+  export type DealsBannerOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "title" | "subtitle" | "description" | "buttonText" | "buttonLink" | "discount" | "imageUrl" | "backgroundColor" | "active" | "createdAt" | "updatedAt", ExtArgs["result"]["dealsBanner"]>
+
+  export type $DealsBannerPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "DealsBanner"
+    objects: {}
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      title: string | null
+      subtitle: string | null
+      description: string | null
+      buttonText: string | null
+      buttonLink: string | null
+      discount: string | null
+      imageUrl: string | null
+      backgroundColor: string | null
+      active: boolean
+      createdAt: Date
+      updatedAt: Date
+    }, ExtArgs["result"]["dealsBanner"]>
+    composites: {}
+  }
+
+  type DealsBannerGetPayload<S extends boolean | null | undefined | DealsBannerDefaultArgs> = $Result.GetResult<Prisma.$DealsBannerPayload, S>
+
+  type DealsBannerCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<DealsBannerFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: DealsBannerCountAggregateInputType | true
+    }
+
+  export interface DealsBannerDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['DealsBanner'], meta: { name: 'DealsBanner' } }
+    /**
+     * Find zero or one DealsBanner that matches the filter.
+     * @param {DealsBannerFindUniqueArgs} args - Arguments to find a DealsBanner
+     * @example
+     * // Get one DealsBanner
+     * const dealsBanner = await prisma.dealsBanner.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends DealsBannerFindUniqueArgs>(args: SelectSubset<T, DealsBannerFindUniqueArgs<ExtArgs>>): Prisma__DealsBannerClient<$Result.GetResult<Prisma.$DealsBannerPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one DealsBanner that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {DealsBannerFindUniqueOrThrowArgs} args - Arguments to find a DealsBanner
+     * @example
+     * // Get one DealsBanner
+     * const dealsBanner = await prisma.dealsBanner.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends DealsBannerFindUniqueOrThrowArgs>(args: SelectSubset<T, DealsBannerFindUniqueOrThrowArgs<ExtArgs>>): Prisma__DealsBannerClient<$Result.GetResult<Prisma.$DealsBannerPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first DealsBanner that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {DealsBannerFindFirstArgs} args - Arguments to find a DealsBanner
+     * @example
+     * // Get one DealsBanner
+     * const dealsBanner = await prisma.dealsBanner.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends DealsBannerFindFirstArgs>(args?: SelectSubset<T, DealsBannerFindFirstArgs<ExtArgs>>): Prisma__DealsBannerClient<$Result.GetResult<Prisma.$DealsBannerPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first DealsBanner that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {DealsBannerFindFirstOrThrowArgs} args - Arguments to find a DealsBanner
+     * @example
+     * // Get one DealsBanner
+     * const dealsBanner = await prisma.dealsBanner.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends DealsBannerFindFirstOrThrowArgs>(args?: SelectSubset<T, DealsBannerFindFirstOrThrowArgs<ExtArgs>>): Prisma__DealsBannerClient<$Result.GetResult<Prisma.$DealsBannerPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more DealsBanners that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {DealsBannerFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all DealsBanners
+     * const dealsBanners = await prisma.dealsBanner.findMany()
+     * 
+     * // Get first 10 DealsBanners
+     * const dealsBanners = await prisma.dealsBanner.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const dealsBannerWithIdOnly = await prisma.dealsBanner.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends DealsBannerFindManyArgs>(args?: SelectSubset<T, DealsBannerFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$DealsBannerPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a DealsBanner.
+     * @param {DealsBannerCreateArgs} args - Arguments to create a DealsBanner.
+     * @example
+     * // Create one DealsBanner
+     * const DealsBanner = await prisma.dealsBanner.create({
+     *   data: {
+     *     // ... data to create a DealsBanner
+     *   }
+     * })
+     * 
+     */
+    create<T extends DealsBannerCreateArgs>(args: SelectSubset<T, DealsBannerCreateArgs<ExtArgs>>): Prisma__DealsBannerClient<$Result.GetResult<Prisma.$DealsBannerPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many DealsBanners.
+     * @param {DealsBannerCreateManyArgs} args - Arguments to create many DealsBanners.
+     * @example
+     * // Create many DealsBanners
+     * const dealsBanner = await prisma.dealsBanner.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends DealsBannerCreateManyArgs>(args?: SelectSubset<T, DealsBannerCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many DealsBanners and returns the data saved in the database.
+     * @param {DealsBannerCreateManyAndReturnArgs} args - Arguments to create many DealsBanners.
+     * @example
+     * // Create many DealsBanners
+     * const dealsBanner = await prisma.dealsBanner.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many DealsBanners and only return the `id`
+     * const dealsBannerWithIdOnly = await prisma.dealsBanner.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends DealsBannerCreateManyAndReturnArgs>(args?: SelectSubset<T, DealsBannerCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$DealsBannerPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a DealsBanner.
+     * @param {DealsBannerDeleteArgs} args - Arguments to delete one DealsBanner.
+     * @example
+     * // Delete one DealsBanner
+     * const DealsBanner = await prisma.dealsBanner.delete({
+     *   where: {
+     *     // ... filter to delete one DealsBanner
+     *   }
+     * })
+     * 
+     */
+    delete<T extends DealsBannerDeleteArgs>(args: SelectSubset<T, DealsBannerDeleteArgs<ExtArgs>>): Prisma__DealsBannerClient<$Result.GetResult<Prisma.$DealsBannerPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one DealsBanner.
+     * @param {DealsBannerUpdateArgs} args - Arguments to update one DealsBanner.
+     * @example
+     * // Update one DealsBanner
+     * const dealsBanner = await prisma.dealsBanner.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends DealsBannerUpdateArgs>(args: SelectSubset<T, DealsBannerUpdateArgs<ExtArgs>>): Prisma__DealsBannerClient<$Result.GetResult<Prisma.$DealsBannerPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more DealsBanners.
+     * @param {DealsBannerDeleteManyArgs} args - Arguments to filter DealsBanners to delete.
+     * @example
+     * // Delete a few DealsBanners
+     * const { count } = await prisma.dealsBanner.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends DealsBannerDeleteManyArgs>(args?: SelectSubset<T, DealsBannerDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more DealsBanners.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {DealsBannerUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many DealsBanners
+     * const dealsBanner = await prisma.dealsBanner.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends DealsBannerUpdateManyArgs>(args: SelectSubset<T, DealsBannerUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more DealsBanners and returns the data updated in the database.
+     * @param {DealsBannerUpdateManyAndReturnArgs} args - Arguments to update many DealsBanners.
+     * @example
+     * // Update many DealsBanners
+     * const dealsBanner = await prisma.dealsBanner.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more DealsBanners and only return the `id`
+     * const dealsBannerWithIdOnly = await prisma.dealsBanner.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends DealsBannerUpdateManyAndReturnArgs>(args: SelectSubset<T, DealsBannerUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$DealsBannerPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one DealsBanner.
+     * @param {DealsBannerUpsertArgs} args - Arguments to update or create a DealsBanner.
+     * @example
+     * // Update or create a DealsBanner
+     * const dealsBanner = await prisma.dealsBanner.upsert({
+     *   create: {
+     *     // ... data to create a DealsBanner
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the DealsBanner we want to update
+     *   }
+     * })
+     */
+    upsert<T extends DealsBannerUpsertArgs>(args: SelectSubset<T, DealsBannerUpsertArgs<ExtArgs>>): Prisma__DealsBannerClient<$Result.GetResult<Prisma.$DealsBannerPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of DealsBanners.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {DealsBannerCountArgs} args - Arguments to filter DealsBanners to count.
+     * @example
+     * // Count the number of DealsBanners
+     * const count = await prisma.dealsBanner.count({
+     *   where: {
+     *     // ... the filter for the DealsBanners we want to count
+     *   }
+     * })
+    **/
+    count<T extends DealsBannerCountArgs>(
+      args?: Subset<T, DealsBannerCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], DealsBannerCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a DealsBanner.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {DealsBannerAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends DealsBannerAggregateArgs>(args: Subset<T, DealsBannerAggregateArgs>): Prisma.PrismaPromise<GetDealsBannerAggregateType<T>>
+
+    /**
+     * Group by DealsBanner.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {DealsBannerGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends DealsBannerGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: DealsBannerGroupByArgs['orderBy'] }
+        : { orderBy?: DealsBannerGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, DealsBannerGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetDealsBannerGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the DealsBanner model
+   */
+  readonly fields: DealsBannerFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for DealsBanner.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__DealsBannerClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the DealsBanner model
+   */
+  interface DealsBannerFieldRefs {
+    readonly id: FieldRef<"DealsBanner", 'String'>
+    readonly title: FieldRef<"DealsBanner", 'String'>
+    readonly subtitle: FieldRef<"DealsBanner", 'String'>
+    readonly description: FieldRef<"DealsBanner", 'String'>
+    readonly buttonText: FieldRef<"DealsBanner", 'String'>
+    readonly buttonLink: FieldRef<"DealsBanner", 'String'>
+    readonly discount: FieldRef<"DealsBanner", 'String'>
+    readonly imageUrl: FieldRef<"DealsBanner", 'String'>
+    readonly backgroundColor: FieldRef<"DealsBanner", 'String'>
+    readonly active: FieldRef<"DealsBanner", 'Boolean'>
+    readonly createdAt: FieldRef<"DealsBanner", 'DateTime'>
+    readonly updatedAt: FieldRef<"DealsBanner", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * DealsBanner findUnique
+   */
+  export type DealsBannerFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DealsBanner
+     */
+    select?: DealsBannerSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DealsBanner
+     */
+    omit?: DealsBannerOmit<ExtArgs> | null
+    /**
+     * Filter, which DealsBanner to fetch.
+     */
+    where: DealsBannerWhereUniqueInput
+  }
+
+  /**
+   * DealsBanner findUniqueOrThrow
+   */
+  export type DealsBannerFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DealsBanner
+     */
+    select?: DealsBannerSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DealsBanner
+     */
+    omit?: DealsBannerOmit<ExtArgs> | null
+    /**
+     * Filter, which DealsBanner to fetch.
+     */
+    where: DealsBannerWhereUniqueInput
+  }
+
+  /**
+   * DealsBanner findFirst
+   */
+  export type DealsBannerFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DealsBanner
+     */
+    select?: DealsBannerSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DealsBanner
+     */
+    omit?: DealsBannerOmit<ExtArgs> | null
+    /**
+     * Filter, which DealsBanner to fetch.
+     */
+    where?: DealsBannerWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of DealsBanners to fetch.
+     */
+    orderBy?: DealsBannerOrderByWithRelationInput | DealsBannerOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for DealsBanners.
+     */
+    cursor?: DealsBannerWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` DealsBanners from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` DealsBanners.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of DealsBanners.
+     */
+    distinct?: DealsBannerScalarFieldEnum | DealsBannerScalarFieldEnum[]
+  }
+
+  /**
+   * DealsBanner findFirstOrThrow
+   */
+  export type DealsBannerFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DealsBanner
+     */
+    select?: DealsBannerSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DealsBanner
+     */
+    omit?: DealsBannerOmit<ExtArgs> | null
+    /**
+     * Filter, which DealsBanner to fetch.
+     */
+    where?: DealsBannerWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of DealsBanners to fetch.
+     */
+    orderBy?: DealsBannerOrderByWithRelationInput | DealsBannerOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for DealsBanners.
+     */
+    cursor?: DealsBannerWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` DealsBanners from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` DealsBanners.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of DealsBanners.
+     */
+    distinct?: DealsBannerScalarFieldEnum | DealsBannerScalarFieldEnum[]
+  }
+
+  /**
+   * DealsBanner findMany
+   */
+  export type DealsBannerFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DealsBanner
+     */
+    select?: DealsBannerSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DealsBanner
+     */
+    omit?: DealsBannerOmit<ExtArgs> | null
+    /**
+     * Filter, which DealsBanners to fetch.
+     */
+    where?: DealsBannerWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of DealsBanners to fetch.
+     */
+    orderBy?: DealsBannerOrderByWithRelationInput | DealsBannerOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing DealsBanners.
+     */
+    cursor?: DealsBannerWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` DealsBanners from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` DealsBanners.
+     */
+    skip?: number
+    distinct?: DealsBannerScalarFieldEnum | DealsBannerScalarFieldEnum[]
+  }
+
+  /**
+   * DealsBanner create
+   */
+  export type DealsBannerCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DealsBanner
+     */
+    select?: DealsBannerSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DealsBanner
+     */
+    omit?: DealsBannerOmit<ExtArgs> | null
+    /**
+     * The data needed to create a DealsBanner.
+     */
+    data: XOR<DealsBannerCreateInput, DealsBannerUncheckedCreateInput>
+  }
+
+  /**
+   * DealsBanner createMany
+   */
+  export type DealsBannerCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many DealsBanners.
+     */
+    data: DealsBannerCreateManyInput | DealsBannerCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * DealsBanner createManyAndReturn
+   */
+  export type DealsBannerCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DealsBanner
+     */
+    select?: DealsBannerSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the DealsBanner
+     */
+    omit?: DealsBannerOmit<ExtArgs> | null
+    /**
+     * The data used to create many DealsBanners.
+     */
+    data: DealsBannerCreateManyInput | DealsBannerCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * DealsBanner update
+   */
+  export type DealsBannerUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DealsBanner
+     */
+    select?: DealsBannerSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DealsBanner
+     */
+    omit?: DealsBannerOmit<ExtArgs> | null
+    /**
+     * The data needed to update a DealsBanner.
+     */
+    data: XOR<DealsBannerUpdateInput, DealsBannerUncheckedUpdateInput>
+    /**
+     * Choose, which DealsBanner to update.
+     */
+    where: DealsBannerWhereUniqueInput
+  }
+
+  /**
+   * DealsBanner updateMany
+   */
+  export type DealsBannerUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update DealsBanners.
+     */
+    data: XOR<DealsBannerUpdateManyMutationInput, DealsBannerUncheckedUpdateManyInput>
+    /**
+     * Filter which DealsBanners to update
+     */
+    where?: DealsBannerWhereInput
+    /**
+     * Limit how many DealsBanners to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * DealsBanner updateManyAndReturn
+   */
+  export type DealsBannerUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DealsBanner
+     */
+    select?: DealsBannerSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the DealsBanner
+     */
+    omit?: DealsBannerOmit<ExtArgs> | null
+    /**
+     * The data used to update DealsBanners.
+     */
+    data: XOR<DealsBannerUpdateManyMutationInput, DealsBannerUncheckedUpdateManyInput>
+    /**
+     * Filter which DealsBanners to update
+     */
+    where?: DealsBannerWhereInput
+    /**
+     * Limit how many DealsBanners to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * DealsBanner upsert
+   */
+  export type DealsBannerUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DealsBanner
+     */
+    select?: DealsBannerSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DealsBanner
+     */
+    omit?: DealsBannerOmit<ExtArgs> | null
+    /**
+     * The filter to search for the DealsBanner to update in case it exists.
+     */
+    where: DealsBannerWhereUniqueInput
+    /**
+     * In case the DealsBanner found by the `where` argument doesn't exist, create a new DealsBanner with this data.
+     */
+    create: XOR<DealsBannerCreateInput, DealsBannerUncheckedCreateInput>
+    /**
+     * In case the DealsBanner was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<DealsBannerUpdateInput, DealsBannerUncheckedUpdateInput>
+  }
+
+  /**
+   * DealsBanner delete
+   */
+  export type DealsBannerDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DealsBanner
+     */
+    select?: DealsBannerSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DealsBanner
+     */
+    omit?: DealsBannerOmit<ExtArgs> | null
+    /**
+     * Filter which DealsBanner to delete.
+     */
+    where: DealsBannerWhereUniqueInput
+  }
+
+  /**
+   * DealsBanner deleteMany
+   */
+  export type DealsBannerDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which DealsBanners to delete
+     */
+    where?: DealsBannerWhereInput
+    /**
+     * Limit how many DealsBanners to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * DealsBanner without action
+   */
+  export type DealsBannerDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DealsBanner
+     */
+    select?: DealsBannerSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DealsBanner
+     */
+    omit?: DealsBannerOmit<ExtArgs> | null
+  }
+
+
+  /**
    * Enums
    */
 
@@ -15020,6 +17374,42 @@ export namespace Prisma {
   };
 
   export type CouponScalarFieldEnum = (typeof CouponScalarFieldEnum)[keyof typeof CouponScalarFieldEnum]
+
+
+  export const HeroSectionScalarFieldEnum: {
+    id: 'id',
+    title: 'title',
+    subtitle: 'subtitle',
+    description: 'description',
+    primaryBtnText: 'primaryBtnText',
+    primaryBtnLink: 'primaryBtnLink',
+    secondaryBtnText: 'secondaryBtnText',
+    secondaryBtnLink: 'secondaryBtnLink',
+    imageUrl: 'imageUrl',
+    active: 'active',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+  };
+
+  export type HeroSectionScalarFieldEnum = (typeof HeroSectionScalarFieldEnum)[keyof typeof HeroSectionScalarFieldEnum]
+
+
+  export const DealsBannerScalarFieldEnum: {
+    id: 'id',
+    title: 'title',
+    subtitle: 'subtitle',
+    description: 'description',
+    buttonText: 'buttonText',
+    buttonLink: 'buttonLink',
+    discount: 'discount',
+    imageUrl: 'imageUrl',
+    backgroundColor: 'backgroundColor',
+    active: 'active',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+  };
+
+  export type DealsBannerScalarFieldEnum = (typeof DealsBannerScalarFieldEnum)[keyof typeof DealsBannerScalarFieldEnum]
 
 
   export const SortOrder: {
@@ -15973,6 +18363,180 @@ export namespace Prisma {
     updatedAt?: DateTimeWithAggregatesFilter<"Coupon"> | Date | string
   }
 
+  export type HeroSectionWhereInput = {
+    AND?: HeroSectionWhereInput | HeroSectionWhereInput[]
+    OR?: HeroSectionWhereInput[]
+    NOT?: HeroSectionWhereInput | HeroSectionWhereInput[]
+    id?: StringFilter<"HeroSection"> | string
+    title?: StringNullableFilter<"HeroSection"> | string | null
+    subtitle?: StringNullableFilter<"HeroSection"> | string | null
+    description?: StringNullableFilter<"HeroSection"> | string | null
+    primaryBtnText?: StringNullableFilter<"HeroSection"> | string | null
+    primaryBtnLink?: StringNullableFilter<"HeroSection"> | string | null
+    secondaryBtnText?: StringNullableFilter<"HeroSection"> | string | null
+    secondaryBtnLink?: StringNullableFilter<"HeroSection"> | string | null
+    imageUrl?: StringNullableFilter<"HeroSection"> | string | null
+    active?: BoolFilter<"HeroSection"> | boolean
+    createdAt?: DateTimeFilter<"HeroSection"> | Date | string
+    updatedAt?: DateTimeFilter<"HeroSection"> | Date | string
+  }
+
+  export type HeroSectionOrderByWithRelationInput = {
+    id?: SortOrder
+    title?: SortOrderInput | SortOrder
+    subtitle?: SortOrderInput | SortOrder
+    description?: SortOrderInput | SortOrder
+    primaryBtnText?: SortOrderInput | SortOrder
+    primaryBtnLink?: SortOrderInput | SortOrder
+    secondaryBtnText?: SortOrderInput | SortOrder
+    secondaryBtnLink?: SortOrderInput | SortOrder
+    imageUrl?: SortOrderInput | SortOrder
+    active?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type HeroSectionWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    AND?: HeroSectionWhereInput | HeroSectionWhereInput[]
+    OR?: HeroSectionWhereInput[]
+    NOT?: HeroSectionWhereInput | HeroSectionWhereInput[]
+    title?: StringNullableFilter<"HeroSection"> | string | null
+    subtitle?: StringNullableFilter<"HeroSection"> | string | null
+    description?: StringNullableFilter<"HeroSection"> | string | null
+    primaryBtnText?: StringNullableFilter<"HeroSection"> | string | null
+    primaryBtnLink?: StringNullableFilter<"HeroSection"> | string | null
+    secondaryBtnText?: StringNullableFilter<"HeroSection"> | string | null
+    secondaryBtnLink?: StringNullableFilter<"HeroSection"> | string | null
+    imageUrl?: StringNullableFilter<"HeroSection"> | string | null
+    active?: BoolFilter<"HeroSection"> | boolean
+    createdAt?: DateTimeFilter<"HeroSection"> | Date | string
+    updatedAt?: DateTimeFilter<"HeroSection"> | Date | string
+  }, "id">
+
+  export type HeroSectionOrderByWithAggregationInput = {
+    id?: SortOrder
+    title?: SortOrderInput | SortOrder
+    subtitle?: SortOrderInput | SortOrder
+    description?: SortOrderInput | SortOrder
+    primaryBtnText?: SortOrderInput | SortOrder
+    primaryBtnLink?: SortOrderInput | SortOrder
+    secondaryBtnText?: SortOrderInput | SortOrder
+    secondaryBtnLink?: SortOrderInput | SortOrder
+    imageUrl?: SortOrderInput | SortOrder
+    active?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    _count?: HeroSectionCountOrderByAggregateInput
+    _max?: HeroSectionMaxOrderByAggregateInput
+    _min?: HeroSectionMinOrderByAggregateInput
+  }
+
+  export type HeroSectionScalarWhereWithAggregatesInput = {
+    AND?: HeroSectionScalarWhereWithAggregatesInput | HeroSectionScalarWhereWithAggregatesInput[]
+    OR?: HeroSectionScalarWhereWithAggregatesInput[]
+    NOT?: HeroSectionScalarWhereWithAggregatesInput | HeroSectionScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"HeroSection"> | string
+    title?: StringNullableWithAggregatesFilter<"HeroSection"> | string | null
+    subtitle?: StringNullableWithAggregatesFilter<"HeroSection"> | string | null
+    description?: StringNullableWithAggregatesFilter<"HeroSection"> | string | null
+    primaryBtnText?: StringNullableWithAggregatesFilter<"HeroSection"> | string | null
+    primaryBtnLink?: StringNullableWithAggregatesFilter<"HeroSection"> | string | null
+    secondaryBtnText?: StringNullableWithAggregatesFilter<"HeroSection"> | string | null
+    secondaryBtnLink?: StringNullableWithAggregatesFilter<"HeroSection"> | string | null
+    imageUrl?: StringNullableWithAggregatesFilter<"HeroSection"> | string | null
+    active?: BoolWithAggregatesFilter<"HeroSection"> | boolean
+    createdAt?: DateTimeWithAggregatesFilter<"HeroSection"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"HeroSection"> | Date | string
+  }
+
+  export type DealsBannerWhereInput = {
+    AND?: DealsBannerWhereInput | DealsBannerWhereInput[]
+    OR?: DealsBannerWhereInput[]
+    NOT?: DealsBannerWhereInput | DealsBannerWhereInput[]
+    id?: StringFilter<"DealsBanner"> | string
+    title?: StringNullableFilter<"DealsBanner"> | string | null
+    subtitle?: StringNullableFilter<"DealsBanner"> | string | null
+    description?: StringNullableFilter<"DealsBanner"> | string | null
+    buttonText?: StringNullableFilter<"DealsBanner"> | string | null
+    buttonLink?: StringNullableFilter<"DealsBanner"> | string | null
+    discount?: StringNullableFilter<"DealsBanner"> | string | null
+    imageUrl?: StringNullableFilter<"DealsBanner"> | string | null
+    backgroundColor?: StringNullableFilter<"DealsBanner"> | string | null
+    active?: BoolFilter<"DealsBanner"> | boolean
+    createdAt?: DateTimeFilter<"DealsBanner"> | Date | string
+    updatedAt?: DateTimeFilter<"DealsBanner"> | Date | string
+  }
+
+  export type DealsBannerOrderByWithRelationInput = {
+    id?: SortOrder
+    title?: SortOrderInput | SortOrder
+    subtitle?: SortOrderInput | SortOrder
+    description?: SortOrderInput | SortOrder
+    buttonText?: SortOrderInput | SortOrder
+    buttonLink?: SortOrderInput | SortOrder
+    discount?: SortOrderInput | SortOrder
+    imageUrl?: SortOrderInput | SortOrder
+    backgroundColor?: SortOrderInput | SortOrder
+    active?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type DealsBannerWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    AND?: DealsBannerWhereInput | DealsBannerWhereInput[]
+    OR?: DealsBannerWhereInput[]
+    NOT?: DealsBannerWhereInput | DealsBannerWhereInput[]
+    title?: StringNullableFilter<"DealsBanner"> | string | null
+    subtitle?: StringNullableFilter<"DealsBanner"> | string | null
+    description?: StringNullableFilter<"DealsBanner"> | string | null
+    buttonText?: StringNullableFilter<"DealsBanner"> | string | null
+    buttonLink?: StringNullableFilter<"DealsBanner"> | string | null
+    discount?: StringNullableFilter<"DealsBanner"> | string | null
+    imageUrl?: StringNullableFilter<"DealsBanner"> | string | null
+    backgroundColor?: StringNullableFilter<"DealsBanner"> | string | null
+    active?: BoolFilter<"DealsBanner"> | boolean
+    createdAt?: DateTimeFilter<"DealsBanner"> | Date | string
+    updatedAt?: DateTimeFilter<"DealsBanner"> | Date | string
+  }, "id">
+
+  export type DealsBannerOrderByWithAggregationInput = {
+    id?: SortOrder
+    title?: SortOrderInput | SortOrder
+    subtitle?: SortOrderInput | SortOrder
+    description?: SortOrderInput | SortOrder
+    buttonText?: SortOrderInput | SortOrder
+    buttonLink?: SortOrderInput | SortOrder
+    discount?: SortOrderInput | SortOrder
+    imageUrl?: SortOrderInput | SortOrder
+    backgroundColor?: SortOrderInput | SortOrder
+    active?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    _count?: DealsBannerCountOrderByAggregateInput
+    _max?: DealsBannerMaxOrderByAggregateInput
+    _min?: DealsBannerMinOrderByAggregateInput
+  }
+
+  export type DealsBannerScalarWhereWithAggregatesInput = {
+    AND?: DealsBannerScalarWhereWithAggregatesInput | DealsBannerScalarWhereWithAggregatesInput[]
+    OR?: DealsBannerScalarWhereWithAggregatesInput[]
+    NOT?: DealsBannerScalarWhereWithAggregatesInput | DealsBannerScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"DealsBanner"> | string
+    title?: StringNullableWithAggregatesFilter<"DealsBanner"> | string | null
+    subtitle?: StringNullableWithAggregatesFilter<"DealsBanner"> | string | null
+    description?: StringNullableWithAggregatesFilter<"DealsBanner"> | string | null
+    buttonText?: StringNullableWithAggregatesFilter<"DealsBanner"> | string | null
+    buttonLink?: StringNullableWithAggregatesFilter<"DealsBanner"> | string | null
+    discount?: StringNullableWithAggregatesFilter<"DealsBanner"> | string | null
+    imageUrl?: StringNullableWithAggregatesFilter<"DealsBanner"> | string | null
+    backgroundColor?: StringNullableWithAggregatesFilter<"DealsBanner"> | string | null
+    active?: BoolWithAggregatesFilter<"DealsBanner"> | boolean
+    createdAt?: DateTimeWithAggregatesFilter<"DealsBanner"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"DealsBanner"> | Date | string
+  }
+
   export type UserCreateInput = {
     id?: string
     email: string
@@ -16814,6 +19378,216 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
+  export type HeroSectionCreateInput = {
+    id?: string
+    title?: string | null
+    subtitle?: string | null
+    description?: string | null
+    primaryBtnText?: string | null
+    primaryBtnLink?: string | null
+    secondaryBtnText?: string | null
+    secondaryBtnLink?: string | null
+    imageUrl?: string | null
+    active?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type HeroSectionUncheckedCreateInput = {
+    id?: string
+    title?: string | null
+    subtitle?: string | null
+    description?: string | null
+    primaryBtnText?: string | null
+    primaryBtnLink?: string | null
+    secondaryBtnText?: string | null
+    secondaryBtnLink?: string | null
+    imageUrl?: string | null
+    active?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type HeroSectionUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    title?: NullableStringFieldUpdateOperationsInput | string | null
+    subtitle?: NullableStringFieldUpdateOperationsInput | string | null
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    primaryBtnText?: NullableStringFieldUpdateOperationsInput | string | null
+    primaryBtnLink?: NullableStringFieldUpdateOperationsInput | string | null
+    secondaryBtnText?: NullableStringFieldUpdateOperationsInput | string | null
+    secondaryBtnLink?: NullableStringFieldUpdateOperationsInput | string | null
+    imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    active?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type HeroSectionUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    title?: NullableStringFieldUpdateOperationsInput | string | null
+    subtitle?: NullableStringFieldUpdateOperationsInput | string | null
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    primaryBtnText?: NullableStringFieldUpdateOperationsInput | string | null
+    primaryBtnLink?: NullableStringFieldUpdateOperationsInput | string | null
+    secondaryBtnText?: NullableStringFieldUpdateOperationsInput | string | null
+    secondaryBtnLink?: NullableStringFieldUpdateOperationsInput | string | null
+    imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    active?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type HeroSectionCreateManyInput = {
+    id?: string
+    title?: string | null
+    subtitle?: string | null
+    description?: string | null
+    primaryBtnText?: string | null
+    primaryBtnLink?: string | null
+    secondaryBtnText?: string | null
+    secondaryBtnLink?: string | null
+    imageUrl?: string | null
+    active?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type HeroSectionUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    title?: NullableStringFieldUpdateOperationsInput | string | null
+    subtitle?: NullableStringFieldUpdateOperationsInput | string | null
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    primaryBtnText?: NullableStringFieldUpdateOperationsInput | string | null
+    primaryBtnLink?: NullableStringFieldUpdateOperationsInput | string | null
+    secondaryBtnText?: NullableStringFieldUpdateOperationsInput | string | null
+    secondaryBtnLink?: NullableStringFieldUpdateOperationsInput | string | null
+    imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    active?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type HeroSectionUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    title?: NullableStringFieldUpdateOperationsInput | string | null
+    subtitle?: NullableStringFieldUpdateOperationsInput | string | null
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    primaryBtnText?: NullableStringFieldUpdateOperationsInput | string | null
+    primaryBtnLink?: NullableStringFieldUpdateOperationsInput | string | null
+    secondaryBtnText?: NullableStringFieldUpdateOperationsInput | string | null
+    secondaryBtnLink?: NullableStringFieldUpdateOperationsInput | string | null
+    imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    active?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type DealsBannerCreateInput = {
+    id?: string
+    title?: string | null
+    subtitle?: string | null
+    description?: string | null
+    buttonText?: string | null
+    buttonLink?: string | null
+    discount?: string | null
+    imageUrl?: string | null
+    backgroundColor?: string | null
+    active?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type DealsBannerUncheckedCreateInput = {
+    id?: string
+    title?: string | null
+    subtitle?: string | null
+    description?: string | null
+    buttonText?: string | null
+    buttonLink?: string | null
+    discount?: string | null
+    imageUrl?: string | null
+    backgroundColor?: string | null
+    active?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type DealsBannerUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    title?: NullableStringFieldUpdateOperationsInput | string | null
+    subtitle?: NullableStringFieldUpdateOperationsInput | string | null
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    buttonText?: NullableStringFieldUpdateOperationsInput | string | null
+    buttonLink?: NullableStringFieldUpdateOperationsInput | string | null
+    discount?: NullableStringFieldUpdateOperationsInput | string | null
+    imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    backgroundColor?: NullableStringFieldUpdateOperationsInput | string | null
+    active?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type DealsBannerUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    title?: NullableStringFieldUpdateOperationsInput | string | null
+    subtitle?: NullableStringFieldUpdateOperationsInput | string | null
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    buttonText?: NullableStringFieldUpdateOperationsInput | string | null
+    buttonLink?: NullableStringFieldUpdateOperationsInput | string | null
+    discount?: NullableStringFieldUpdateOperationsInput | string | null
+    imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    backgroundColor?: NullableStringFieldUpdateOperationsInput | string | null
+    active?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type DealsBannerCreateManyInput = {
+    id?: string
+    title?: string | null
+    subtitle?: string | null
+    description?: string | null
+    buttonText?: string | null
+    buttonLink?: string | null
+    discount?: string | null
+    imageUrl?: string | null
+    backgroundColor?: string | null
+    active?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type DealsBannerUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    title?: NullableStringFieldUpdateOperationsInput | string | null
+    subtitle?: NullableStringFieldUpdateOperationsInput | string | null
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    buttonText?: NullableStringFieldUpdateOperationsInput | string | null
+    buttonLink?: NullableStringFieldUpdateOperationsInput | string | null
+    discount?: NullableStringFieldUpdateOperationsInput | string | null
+    imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    backgroundColor?: NullableStringFieldUpdateOperationsInput | string | null
+    active?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type DealsBannerUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    title?: NullableStringFieldUpdateOperationsInput | string | null
+    subtitle?: NullableStringFieldUpdateOperationsInput | string | null
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    buttonText?: NullableStringFieldUpdateOperationsInput | string | null
+    buttonLink?: NullableStringFieldUpdateOperationsInput | string | null
+    discount?: NullableStringFieldUpdateOperationsInput | string | null
+    imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    backgroundColor?: NullableStringFieldUpdateOperationsInput | string | null
+    active?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
   export type StringFilter<$PrismaModel = never> = {
     equals?: string | StringFieldRefInput<$PrismaModel>
     in?: string[] | ListStringFieldRefInput<$PrismaModel>
@@ -17642,6 +20416,96 @@ export namespace Prisma {
     _sum?: NestedIntNullableFilter<$PrismaModel>
     _min?: NestedIntNullableFilter<$PrismaModel>
     _max?: NestedIntNullableFilter<$PrismaModel>
+  }
+
+  export type HeroSectionCountOrderByAggregateInput = {
+    id?: SortOrder
+    title?: SortOrder
+    subtitle?: SortOrder
+    description?: SortOrder
+    primaryBtnText?: SortOrder
+    primaryBtnLink?: SortOrder
+    secondaryBtnText?: SortOrder
+    secondaryBtnLink?: SortOrder
+    imageUrl?: SortOrder
+    active?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type HeroSectionMaxOrderByAggregateInput = {
+    id?: SortOrder
+    title?: SortOrder
+    subtitle?: SortOrder
+    description?: SortOrder
+    primaryBtnText?: SortOrder
+    primaryBtnLink?: SortOrder
+    secondaryBtnText?: SortOrder
+    secondaryBtnLink?: SortOrder
+    imageUrl?: SortOrder
+    active?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type HeroSectionMinOrderByAggregateInput = {
+    id?: SortOrder
+    title?: SortOrder
+    subtitle?: SortOrder
+    description?: SortOrder
+    primaryBtnText?: SortOrder
+    primaryBtnLink?: SortOrder
+    secondaryBtnText?: SortOrder
+    secondaryBtnLink?: SortOrder
+    imageUrl?: SortOrder
+    active?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type DealsBannerCountOrderByAggregateInput = {
+    id?: SortOrder
+    title?: SortOrder
+    subtitle?: SortOrder
+    description?: SortOrder
+    buttonText?: SortOrder
+    buttonLink?: SortOrder
+    discount?: SortOrder
+    imageUrl?: SortOrder
+    backgroundColor?: SortOrder
+    active?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type DealsBannerMaxOrderByAggregateInput = {
+    id?: SortOrder
+    title?: SortOrder
+    subtitle?: SortOrder
+    description?: SortOrder
+    buttonText?: SortOrder
+    buttonLink?: SortOrder
+    discount?: SortOrder
+    imageUrl?: SortOrder
+    backgroundColor?: SortOrder
+    active?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type DealsBannerMinOrderByAggregateInput = {
+    id?: SortOrder
+    title?: SortOrder
+    subtitle?: SortOrder
+    description?: SortOrder
+    buttonText?: SortOrder
+    buttonLink?: SortOrder
+    discount?: SortOrder
+    imageUrl?: SortOrder
+    backgroundColor?: SortOrder
+    active?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
   }
 
   export type CartCreateNestedManyWithoutUserInput = {
