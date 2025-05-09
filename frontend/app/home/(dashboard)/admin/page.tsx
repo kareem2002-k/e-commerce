@@ -63,6 +63,13 @@ export default function AdminDashboard() {
       icon: <ImageIcon className="h-6 w-6" />,
       href: "/home/admin/content/deals-banner",
       color: "bg-red-100 dark:bg-red-900/20"
+    },
+    {
+      title: "Coupons",
+      description: "Manage coupons",
+      icon: <FileText className="h-6 w-6" />,
+      href: "/home/admin/coupons",
+      color: "bg-orange-100 dark:bg-orange-900/20"
     }
   ]
 
