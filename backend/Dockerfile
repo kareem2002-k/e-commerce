@@ -14,6 +14,8 @@ RUN npm install -g pnpm ts-node typescript
 # Install root dependencies
 RUN pnpm install
 
+RUN pnpm install bcrypt
+
 WORKDIR /app/backend
 
 # Rebuild bcrypt from source inside container
