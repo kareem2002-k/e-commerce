@@ -29,7 +29,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Category, ProductImage, Product } from "@/types";
 import { Switch } from "@/components/ui/switch";
-
+import { getUrl } from "@/utils";
 export default function EditProductPage() {
   const router = useRouter();
   const params = useParams();
@@ -78,7 +78,7 @@ export default function EditProductPage() {
     try {
       setFetchingProduct(true);
       // Get API URL with fallback
-      const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001';
+      const API_URL = getUrl();
       
       const response = await fetch(`${API_URL}/products/${productId}`, {
         headers: { 
@@ -126,7 +126,7 @@ export default function EditProductPage() {
   const fetchCategories = async () => {
     try {
       // Get API URL with fallback
-      const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001';
+      const API_URL = getUrl();
       
       const response = await fetch(`${API_URL}/categories`, {
         headers: { 
@@ -310,7 +310,7 @@ export default function EditProductPage() {
     
     try {
       // Get API URL with fallback
-      const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001';
+      const API_URL = getUrl();
 
       // Format product data
       const productData = {

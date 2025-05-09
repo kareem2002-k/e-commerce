@@ -22,7 +22,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Input } from '@/components/ui/input';
-
+import { getUrl } from '@/utils'; 
 interface Address {
   id: string;
   streetAddress: string;
@@ -76,7 +76,7 @@ export default function CheckoutPage() {
   const totalAmount = discountedSubtotal + shippingCost + taxAmount;
   
   // Get API URL with fallback
-  const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001';
+  const API_URL = getUrl();
   
   // Fetch user addresses
   useEffect(() => {

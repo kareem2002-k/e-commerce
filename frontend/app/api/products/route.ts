@@ -1,12 +1,12 @@
 import { NextResponse } from "next/server";
-
+import { getUrl } from '@/utils';
 export async function GET(request: Request) {
   try {
     // EXTRACT BEARER TOKEN FROM HEADER 
     const authHeader = request.headers.get("Authorization");
     const token = authHeader ? authHeader.split(" ")[1] : null;
     // Forward authorization header from original request
-    const response = await fetch("http://localhost:3001/products", {
+    const response = await fetch(`${getUrl()}/products`, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
@@ -43,7 +43,7 @@ export async function POST(request: Request) {
       headers["Authorization"] = authHeader;
     }
 
-    const response = await fetch("http://localhost:3001/products", {
+    const response = await fetch(`${getUrl()}/products`, {
       method: "POST",
       headers: headers,
 

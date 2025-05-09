@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-
+import { getUrl } from '@/utils';
 export async function GET(
   request: Request,
   { params }: { params: { id: string } }
@@ -11,7 +11,7 @@ export async function GET(
       const token = authHeader ? authHeader.split(" ")[1] : null;
 
     const id = (await params).id;
-    const response = await fetch(`http://localhost:3001/products/${id}`, {
+    const response = await fetch(`${getUrl()}/products/${id}`, {
       headers: {
         'Authorization': `Bearer ${token}`,
       },
@@ -50,7 +50,7 @@ export async function PUT(
       headers['Authorization'] = authHeader;
     }
     
-    const response = await fetch(`http://localhost:3001/products/${id}`, {
+    const response = await fetch(`${getUrl()}/products/${id}`, {
       method: 'PUT',
       headers,
       body: JSON.stringify(body),
@@ -97,7 +97,7 @@ export async function DELETE(
       headers['Authorization'] = authHeader;
     }
     
-    const response = await fetch(`http://localhost:3001/products/${id}`, {
+    const response = await fetch(`${getUrl()}/products/${id}`, {
       method: 'DELETE',
       headers,
     });

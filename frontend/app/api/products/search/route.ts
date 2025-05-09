@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-
+import { getUrl } from '@/utils';
 export async function GET(request: NextRequest) {
   try {
     // Extract authentication token
@@ -11,7 +11,7 @@ export async function GET(request: NextRequest) {
     const searchParams = url.searchParams;
     
     // Forward these parameters to the backend
-    const backendUrl = new URL("http://localhost:3001/products/search");
+    const backendUrl = new URL(`${getUrl()}/products/search`);
     
     // Forward all parameters directly to backend
     searchParams.forEach((value, key) => {

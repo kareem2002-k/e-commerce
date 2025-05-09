@@ -1,8 +1,9 @@
 import { NextResponse } from 'next/server';
+import { getUrl } from '@/utils';
 
 export async function GET() {
   try {
-    const response = await fetch('http://localhost:3001/categories');
+    const response = await fetch(`${getUrl()}/categories`);
     if (!response.ok) {
       return NextResponse.json({ error: 'Failed to fetch categories' }, { status: response.status });
     }
@@ -29,7 +30,7 @@ export async function POST(request: Request) {
       headers['Authorization'] = authHeader;
     }
     
-    const response = await fetch('http://localhost:3001/categories', {
+    const response = await fetch(`${getUrl()}/categories`, {
       method: 'POST',
       headers,
       body: JSON.stringify(body),

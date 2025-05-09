@@ -1,12 +1,12 @@
 import { NextResponse } from 'next/server';
-
+import { getUrl } from '@/utils';
 export async function GET(
   request: Request,
   { params }: { params: { id: string } }
 ) {
   try {
     const id = params.id;
-    const response = await fetch(`http://localhost:3001/categories/${id}`);
+    const response = await fetch(`${getUrl()}/categories/${id}`);
     
     if (!response.ok) {
       return NextResponse.json({ error: 'Category not found' }, { status: response.status });
@@ -39,7 +39,7 @@ export async function PUT(
       headers['Authorization'] = authHeader;
     }
     
-    const response = await fetch(`http://localhost:3001/categories/${id}`, {
+    const response = await fetch(`${getUrl()}/categories/${id}`, {
       method: 'PUT',
       headers,
       body: JSON.stringify(body),
@@ -84,7 +84,7 @@ export async function DELETE(
       headers['Authorization'] = authHeader;
     }
     
-    const response = await fetch(`http://localhost:3001/categories/${id}`, {
+    const response = await fetch(`${getUrl()}/categories/${id}`, {
       method: 'DELETE',
       headers,
     });

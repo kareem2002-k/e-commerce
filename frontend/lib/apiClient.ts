@@ -1,6 +1,7 @@
 import axios from 'axios';
+import { getUrl } from '@/utils';
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001/api';
+const API_URL = getUrl();
 
 const apiClient = axios.create({
   baseURL: API_URL,

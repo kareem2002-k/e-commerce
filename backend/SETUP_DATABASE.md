@@ -60,7 +60,7 @@ DATABASE_URL="postgresql://postgres:[YOUR-PASSWORD]@[YOUR-HOST].supabase.co:6543
 JWT_SECRET="your-secret-key-change-this-in-production"
 
 # Server port
-PORT=3001
+PORT=3002
 ```
 
 5. **Run Prisma Migrations**:

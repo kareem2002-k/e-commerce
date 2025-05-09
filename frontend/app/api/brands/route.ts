@@ -3,7 +3,7 @@ import { NextResponse } from 'next/server';
 export async function GET() {
   try {
     // Fetch all products to extract unique brands
-    const response = await fetch('http://localhost:3001/products');
+    const response = await fetch('http://localhost:3002/products');
     
     if (!response.ok) {
       return NextResponse.json(

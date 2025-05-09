@@ -29,7 +29,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Category, ProductImage } from "@/types";
 import { Switch } from "@/components/ui/switch";
-  
+import { getUrl } from "@/utils"; 
 
 
 
@@ -77,7 +77,7 @@ export default function AddProductPage() {
 
         setLoading(true);
         // Get API URL with fallback
-        const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001';
+        const API_URL = getUrl();
 
         const response = await fetch(`${API_URL}/categories`, {
           headers: { 
@@ -324,7 +324,7 @@ export default function AddProductPage() {
       };
       
       // Get API URL with fallback
-      const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001';
+      const API_URL = getUrl();
       
       console.log('Creating product with token:', token ? 'Token exists' : 'No token');
       

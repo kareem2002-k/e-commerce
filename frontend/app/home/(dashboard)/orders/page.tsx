@@ -17,7 +17,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { ChevronRight, Download, ExternalLink, FileText, Package, Search, ShoppingBag, Truck } from "lucide-react"
 import { cn, formatCurrency } from "@/lib/utils"
-
+import { getUrl } from "@/utils";
 // Order interfaces
 interface OrderItem {
   id: string;
@@ -91,7 +91,7 @@ export default function OrdersPage() {
   const [dateFilter, setDateFilter] = useState("all")
 
   // Get API URL with fallback
-  const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'
+  const API_URL = getUrl();
 
   useEffect(() => {
     if (token) {

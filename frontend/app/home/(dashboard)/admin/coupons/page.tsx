@@ -46,6 +46,8 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
+import { getUrl } from '@/utils';
+
 
 interface Coupon {
   id: string;
@@ -83,7 +85,7 @@ export default function AdminCouponsPage() {
   });
   
   // Get API URL with fallback
-  const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001';
+  const API_URL = getUrl();
   
   // Fetch coupons
   useEffect(() => {
