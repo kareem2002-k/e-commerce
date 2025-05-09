@@ -233,8 +233,8 @@ export default function AddProductPage() {
       // No need to upload images here - they're already uploaded to Supabase using the ImageUploader
       // Just use the image URLs and alt text directly
       const productImages = images.map(image => ({
-        url: image.url,
-        altText: image.altText
+            url: image.url,
+            altText: image.altText
       }));
       
       // Format product data
@@ -609,7 +609,7 @@ export default function AddProductPage() {
                                 altText: img.altText
                               }))}
                               label=""
-                            />
+                                  />
                             
                             {errors.images && (
                               <p className="mt-2 text-sm text-red-500">{errors.images}</p>
