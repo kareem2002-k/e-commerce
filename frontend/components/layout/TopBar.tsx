@@ -179,7 +179,7 @@ export default function TopBar() {
                 </div>
                 <DropdownMenuItem 
                   className="cursor-pointer flex items-center mt-2 focus:bg-purple-50 dark:focus:bg-purple-900/20"
-                  onClick={() => router.push('/profile')}
+                  onClick={() => router.push('/home/profile')}
                 >
                   <User className="mr-2 h-4 w-4 text-purple-600" />
                   Profile
@@ -384,7 +384,7 @@ export default function TopBar() {
                       variant="outline"
                       className="justify-start w-full border-purple-100 dark:border-purple-900/20"
                       onClick={() => {
-                        router.push('/profile');
+                        router.push('/home/profile');
                         setMobileMenuOpen(false);
                       }}
                     >
