@@ -63,21 +63,7 @@ export default function AdminDashboard() {
       icon: <ImageIcon className="h-6 w-6" />,
       href: "/home/admin/content/deals-banner",
       color: "bg-red-100 dark:bg-red-900/20"
-    },
-    {
-      title: "Reports",
-      description: "Generate and view reports",
-      icon: <FileText className="h-6 w-6" />,
-      href: "/home/admin/reports",
-      color: "bg-orange-100 dark:bg-orange-900/20"
-    },
-    {
-      title: "Settings",
-      description: "Configure store settings",
-      icon: <Settings className="h-6 w-6" />,
-      href: "/home/admin/settings",
-      color: "bg-gray-100 dark:bg-gray-800/50"
-    },
+    }
   ]
 
   return (
@@ -96,9 +82,6 @@ export default function AdminDashboard() {
       <Tabs defaultValue="overview" value={activeTab} onValueChange={setActiveTab} className="space-y-4">
         <TabsList>
           <TabsTrigger value="overview">Overview</TabsTrigger>
-          <TabsTrigger value="analytics">Analytics</TabsTrigger>
-          <TabsTrigger value="reports">Reports</TabsTrigger>
-          <TabsTrigger value="notifications">Notifications</TabsTrigger>
         </TabsList>
         <TabsContent value="overview" className="space-y-4">
           <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
@@ -125,47 +108,7 @@ export default function AdminDashboard() {
           </div>
         </TabsContent>
         
-        <TabsContent value="analytics" className="space-y-4">
-          <Card>
-            <CardHeader>
-              <CardTitle>Analytics Dashboard</CardTitle>
-              <CardDescription>View detailed statistics about your store's performance</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div className="h-[300px] flex items-center justify-center border border-dashed rounded-md">
-                <p className="text-muted-foreground">Analytics charts will appear here</p>
-              </div>
-            </CardContent>
-          </Card>
-        </TabsContent>
-        
-        <TabsContent value="reports" className="space-y-4">
-          <Card>
-            <CardHeader>
-              <CardTitle>Reports Center</CardTitle>
-              <CardDescription>Generate and download reports</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div className="h-[300px] flex items-center justify-center border border-dashed rounded-md">
-                <p className="text-muted-foreground">Report templates will appear here</p>
-              </div>
-            </CardContent>
-          </Card>
-        </TabsContent>
-        
-        <TabsContent value="notifications" className="space-y-4">
-          <Card>
-            <CardHeader>
-              <CardTitle>Notifications</CardTitle>
-              <CardDescription>System and user notifications</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div className="h-[300px] flex items-center justify-center border border-dashed rounded-md">
-                <p className="text-muted-foreground">No new notifications</p>
-              </div>
-            </CardContent>
-          </Card>
-        </TabsContent>
+       
       </Tabs>
       
       <div>
