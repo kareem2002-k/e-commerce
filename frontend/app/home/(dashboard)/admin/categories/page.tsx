@@ -390,7 +390,7 @@ export default function CategoriesPage() {
             
             <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
               <Button 
-                onClick={() => router.push('/admin/categories/new')}
+                onClick={() => router.push('/home/admin/categories/new')}
                 className="bg-blue-600 hover:bg-blue-700 text-white"
               >
                 <FolderPlus className="mr-2 h-4 w-4" />
@@ -542,7 +542,7 @@ export default function CategoriesPage() {
                 Create your first category to organize your products
               </p>
               <Button 
-                onClick={() => router.push('/admin/categories/new')}
+                onClick={() => router.push('/home/admin/categories/new')}
                 className="bg-blue-600 hover:bg-blue-700"
               >
                 <Plus className="mr-2 h-4 w-4" />
