@@ -2,7 +2,7 @@
 
 import { useState } from "react"
 import Link from "next/link"
-import { PlusCircle, Users, ShoppingCart, Package, Settings, BarChart3, FileText, Tag, Layout, ImageIcon } from "lucide-react"
+import { PlusCircle, Users, ShoppingCart, Package, Settings, BarChart3, FileText, Tag, Layout, ImageIcon, MegaphoneIcon } from "lucide-react"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Button } from "@/components/ui/button"
@@ -66,10 +66,17 @@ export default function AdminDashboard() {
     },
     {
       title: "Coupons",
-      description: "Manage coupons",
+      description: "Manage discount coupons",
       icon: <FileText className="h-6 w-6" />,
       href: "/home/admin/coupons",
       color: "bg-orange-100 dark:bg-orange-900/20"
+    },
+    {
+      title: "Campaigns",
+      description: "Manage marketing campaigns and track performance",
+      icon: <MegaphoneIcon className="h-6 w-6" />,
+      href: "/home/admin/campaigns",
+      color: "bg-emerald-100 dark:bg-emerald-900/20"
     }
   ]
 
@@ -121,7 +128,7 @@ export default function AdminDashboard() {
       <div>
         <h3 className="text-lg font-medium mb-2">Quick Actions</h3>
         <Separator className="my-4" />
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+        <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
           <Button 
             variant="outline" 
             className="h-20 flex flex-col gap-1"
@@ -153,6 +160,14 @@ export default function AdminDashboard() {
           >
             <ImageIcon className="h-5 w-5" />
             <span>Edit Banner</span>
+          </Button>
+          <Button 
+            variant="outline" 
+            className="h-20 flex flex-col gap-1"
+            onClick={() => router.push('/home/admin/campaigns')}
+          >
+            <MegaphoneIcon className="h-5 w-5" />
+            <span>Campaigns</span>
           </Button>
         </div>
       </div>

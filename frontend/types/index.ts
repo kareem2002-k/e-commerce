@@ -63,6 +63,34 @@ export type Product = {
   returnDescription?: string; // Return description
 };
 
+// Campaign type
+export type Campaign = {
+  id: string;
+  name: string;
+  description?: string;
+  imageUrl?: string;
+  couponId: string;
+  isActive: boolean;
+  clickCount: number;
+  conversionCount: number;
+  startDate: string;
+  endDate: string;
+  position?: string;
+  createdAt: string;
+  updatedAt: string;
+  coupon?: {
+    id: string;
+    code: string;
+    discountType: 'PERCENTAGE' | 'FIXED_AMOUNT';
+    discountValue: number;
+    description?: string;
+    validFrom: string;
+    validUntil: string;
+    usageLimit?: number;
+    usedCount: number;
+  };
+};
+
 // Define form schema
 export const loginSchema = z.object({
   email: z.string().email({ message: "Please enter a valid email address" }),

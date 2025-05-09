@@ -122,6 +122,24 @@ export default function CheckoutPage() {
       if (response.data.valid) {
         setAppliedCoupon(response.data.coupon);
         toast.success('Coupon applied successfully!');
+        
+        // Check if this coupon is associated with any active campaign
+        try {
+          const campaignsResponse = await axios.get(`${API_URL}/campaigns`);
+          const activeCampaign = campaignsResponse.data.find(
+            (campaign: any) => 
+              campaign.coupon?.code === response.data.coupon.code && 
+              campaign.isActive
+          );
+          
+          // If associated with an active campaign, track conversion
+          if (activeCampaign) {
+            await axios.post(`${API_URL}/campaigns/track/${activeCampaign.id}/conversion`);
+          }
+        } catch (campaignError) {
+          console.error('Error tracking campaign conversion:', campaignError);
+          // Continue with checkout even if tracking fails
+        }
       } else {
         setAppliedCoupon(null);
         toast.error(response.data.message || 'Invalid coupon code');

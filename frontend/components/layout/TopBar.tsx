@@ -203,7 +203,7 @@ export default function TopBar() {
                 {user?.isAdmin && (
                   <DropdownMenuItem 
                     className="cursor-pointer flex items-center focus:bg-purple-50 dark:focus:bg-purple-900/20"
-                    onClick={() => router.push('/admin/coupons')}
+                    onClick={() => router.push('/home/admin/coupons')}
                   >
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
@@ -222,6 +222,30 @@ export default function TopBar() {
                       <path d="M9 16l3 3 3-3" />
                     </svg>
                     Manage Coupons
+                  </DropdownMenuItem>
+                )}
+                {user?.isAdmin && (
+                  <DropdownMenuItem 
+                    className="cursor-pointer flex items-center focus:bg-purple-50 dark:focus:bg-purple-900/20"
+                    onClick={() => router.push('/home/admin/campaigns')}
+                  >
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      className="mr-2 h-4 w-4 text-purple-600"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    >
+                      <path d="M10.5 21h3c.8 0 1.5-.7 1.5-1.5v-3c0-.8-.7-1.5-1.5-1.5h-3c-.8 0-1.5.7-1.5 1.5v3c0 .8.7 1.5 1.5 1.5z" />
+                      <path d="M3 16.5v3c0 .8.7 1.5 1.5 1.5h3c.8 0 1.5-.7 1.5-1.5v-3c0-.8-.7-1.5-1.5-1.5h-3c-.8 0-1.5.7-1.5 1.5z" />
+                      <path d="M12 3h3c.8 0 1.5.7 1.5 1.5v3c0 .8-.7 1.5-1.5 1.5h-3c-.8 0-1.5-.7-1.5-1.5v-3c0-.8.7-1.5 1.5-1.5z" />
+                      <path d="M16.5 10.5c.8 0 1.5.7 1.5 1.5v3c0 .8-.7 1.5-1.5 1.5" />
+                      <path d="M10.5 3h-6c-.8 0-1.5.7-1.5 1.5v6c0 .8.7 1.5 1.5 1.5" />
+                    </svg>
+                    Marketing Campaigns
                   </DropdownMenuItem>
                 )}
                 <DropdownMenuItem 
@@ -357,11 +381,26 @@ export default function TopBar() {
                     transition={{ delay: (navItems.length + 0.5) * 0.1 }}
                   >
                     <Link
-                      href="/admin/coupons"
+                      href="/home/admin/coupons"
                       className="text-lg font-medium py-2 px-2 block transition-colors rounded-md hover:bg-red-50 dark:hover:bg-red-900/20 text-red-600"
                       onClick={() => setMobileMenuOpen(false)}
                     >
                       Manage Coupons
+                    </Link>
+                  </motion.div>
+                )}
+                {user?.isAdmin && (
+                  <motion.div
+                    initial={{ opacity: 0, x: 50 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: (navItems.length + 1) * 0.1 }}
+                  >
+                    <Link
+                      href="/home/admin/campaigns"
+                      className="text-lg font-medium py-2 px-2 block transition-colors rounded-md hover:bg-red-50 dark:hover:bg-red-900/20 text-red-600"
+                      onClick={() => setMobileMenuOpen(false)}
+                    >
+                      Marketing Campaigns
                     </Link>
                   </motion.div>
                 )}

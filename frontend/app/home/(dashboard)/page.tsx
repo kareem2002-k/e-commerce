@@ -15,6 +15,7 @@ import SectionLoading from "@/components/voltedge/section-loading"
 import { useAuth } from "@/context/AuthContext"
 import { useRouter } from "next/navigation"
 import { useHeroSection, useDealsBanner } from "@/hooks/useContent"
+import { CampaignBanner } from "@/components/campaign-banner"
 
 // Extending the Product type for local use to include createdAt
 interface ProductWithDate extends Product {
@@ -133,6 +134,9 @@ export default function HomePage() {
           </div>
         </div>
       </section>
+
+      {/* Active Campaign Banner */}
+      <CampaignBanner />
 
       {/* Categories */}
       {categories && categories.length > 0 && (

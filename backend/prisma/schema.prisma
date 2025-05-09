@@ -204,10 +204,32 @@ model Coupon {
   usageLimit     Int?
   usedCount      Int          @default(0)
   orders         Order[]      @relation("OrderCoupons")
+  campaigns      Campaign[]
   createdAt      DateTime     @default(now())
   updatedAt      DateTime     @updatedAt
 
   @@index([validUntil])
+}
+
+// Campaign model for marketing campaigns
+model Campaign {
+  id             String    @id @default(uuid())
+  name           String    
+  description    String?
+  imageUrl       String?
+  coupon         Coupon    @relation(fields: [couponId], references: [id])
+  couponId       String
+  isActive       Boolean   @default(false)
+  clickCount     Int       @default(0)
+  conversionCount Int      @default(0)
+  startDate      DateTime
+  endDate        DateTime
+  position       String?   // e.g., "homepage_top", "homepage_bottom"
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+
+  @@index([isActive])
+  @@index([couponId])
 }
 
 // Site content management models
