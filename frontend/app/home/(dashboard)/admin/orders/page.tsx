@@ -47,6 +47,11 @@ import { useRouter } from "next/navigation"
 import { useOrders } from "@/hooks/useOrders"
 import { Order } from "@/types"
 import { Skeleton } from "@/components/ui/skeleton"
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import axios from "axios"
+import { getUrl } from "@/utils"
+import { Textarea } from "@/components/ui/textarea"
+import { cn, formatCurrency } from "@/lib/utils"
 
 // Order status options
 const ORDER_STATUSES = [
@@ -67,6 +72,23 @@ const PAYMENT_STATUSES = [
   "REFUNDED"
 ] as const
 
+// Refund status and reason mappings
+const REFUND_STATUSES = [
+  "REQUESTED",
+  "APPROVED",
+  "REJECTED",
+  "PROCESSED"
+] as const;
+
+const REFUND_REASON_LABELS: Record<string, string> = {
+  "DAMAGED": "Item arrived damaged",
+  "WRONG_ITEM": "Received wrong item",
+  "NOT_AS_DESCRIBED": "Item not as described",
+  "ARRIVED_LATE": "Item arrived too late",
+  "CHANGED_MIND": "Changed mind",
+  "OTHER": "Other reason"
+};
+
 // Helper function to format date
 const formatDate = (dateString: string): string => {
   const date = new Date(dateString);
@@ -79,11 +101,56 @@ const formatDate = (dateString: string): string => {
   }).format(date);
 };
 
+// Add Refund type definition right after imports
+interface Refund {
+  id: string;
+  orderId: string;
+  amount: number;
+  reason: string;
+  description: string | null;
+  status: string;
+  requestedAt: string;
+  processedAt: string | null;
+  adminNotes: string | null;
+  refundMethod: string | null;
+  transactionId: string | null;
+  order: {
+    id: string;
+    totalAmount: number;
+    user: {
+      id: string;
+      name: string;
+      email: string;
+    }
+  }
+}
+
+// Update the getStatusBadgeClassNames function to use className instead of variant
+const getStatusBadgeClassNames = (status: string): string => {
+  switch (status) {
+    case 'PENDING': return "bg-gray-100 text-gray-800 border-gray-300"
+    case 'CONFIRMED': return "bg-blue-100 text-blue-800 border-blue-300"
+    case 'PROCESSING': return "bg-purple-100 text-purple-800 border-purple-300"
+    case 'SHIPPED': return "bg-indigo-100 text-indigo-800 border-indigo-300"
+    case 'DELIVERED': return "bg-green-100 text-green-800 border-green-300"
+    case 'CANCELLED': return "bg-red-100 text-red-800 border-red-300"
+    case 'RETURNED': return "bg-amber-100 text-amber-800 border-amber-300"
+    case 'PAID': return "bg-green-100 text-green-800 border-green-300"
+    case 'FAILED': return "bg-red-100 text-red-800 border-red-300"
+    case 'REFUNDED': return "bg-amber-100 text-amber-800 border-amber-300"
+    case 'REQUESTED': return "bg-blue-100 text-blue-800 border-blue-300"
+    case 'APPROVED': return "bg-green-100 text-green-800 border-green-300"
+    case 'REJECTED': return "bg-red-100 text-red-800 border-red-300"
+    case 'PROCESSED': return "bg-indigo-100 text-indigo-800 border-indigo-300"
+    default: return "bg-gray-100 text-gray-800 border-gray-300"
+  }
+};
+
 export default function AdminOrdersPage() {
   const { orders, loading, error, fetchOrders, updateOrderStatus } = useOrders();
   const { toast } = useToast();
   const router = useRouter();
-  const { user } = useAuth();
+  const { user, token } = useAuth();
   
   const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
   const [statusDialogOpen, setStatusDialogOpen] = useState(false);
@@ -94,6 +161,17 @@ export default function AdminOrdersPage() {
   const [searchQuery, setSearchQuery] = useState("");
   const [refreshing, setRefreshing] = useState(false);
   const [updatingStatus, setUpdatingStatus] = useState(false);
+  const [activeTab, setActiveTab] = useState<"orders" | "refunds">("orders");
+  const [refunds, setRefunds] = useState<Refund[]>([]);
+  const [loadingRefunds, setLoadingRefunds] = useState(false);
+  const [refundStatusFilter, setRefundStatusFilter] = useState("ALL");
+  const [selectedRefund, setSelectedRefund] = useState<Refund | null>(null);
+  const [processingRefund, setProcessingRefund] = useState(false);
+  const [refundDialogOpen, setRefundDialogOpen] = useState(false);
+  const [refundNotes, setRefundNotes] = useState("");
+  const [newRefundStatus, setNewRefundStatus] = useState("");
+  const [refundMethod, setRefundMethod] = useState("");
+  const [transactionId, setTransactionId] = useState("");
 
   // Redirect if not admin
   useEffect(() => {
@@ -157,19 +235,87 @@ export default function AdminOrdersPage() {
     setRefreshing(false);
   };
 
-  const getStatusBadgeVariant = (status: string) => {
-    switch (status) {
-      case 'PENDING': return "outline"
-      case 'CONFIRMED': return "secondary"
-      case 'PROCESSING': return "default"
-      case 'SHIPPED': return "blue"
-      case 'DELIVERED': return "green"
-      case 'CANCELLED': return "destructive"
-      case 'RETURNED': return "yellow"
-      case 'PAID': return "green"
-      case 'FAILED': return "destructive"
-      case 'REFUNDED': return "yellow"
-      default: return "outline"
+  const fetchRefunds = async () => {
+    try {
+      setLoadingRefunds(true);
+      const API_URL = getUrl();
+      const response = await axios.get(
+        `${API_URL}/orders/admin/refunds${refundStatusFilter !== "ALL" ? `?status=${refundStatusFilter}` : ""}`, 
+        {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        }
+      );
+      setRefunds(response.data);
+    } catch (error) {
+      console.error("Error fetching refunds:", error);
+      toast({
+        title: "Error",
+        description: "Failed to load refund requests",
+        variant: "destructive"
+      });
+    } finally {
+      setLoadingRefunds(false);
+    }
+  };
+
+  useEffect(() => {
+    if (activeTab === "refunds" && user?.isAdmin) {
+      fetchRefunds();
+    }
+  }, [activeTab, refundStatusFilter, user]);
+
+  const openRefundProcessDialog = (refund: Refund) => {
+    setSelectedRefund(refund);
+    setNewRefundStatus(refund.status);
+    setRefundNotes(refund.adminNotes || "");
+    setRefundMethod(refund.refundMethod || "");
+    setTransactionId(refund.transactionId || "");
+    setRefundDialogOpen(true);
+  };
+
+  const handleProcessRefund = async () => {
+    if (!selectedRefund) return;
+    
+    try {
+      setProcessingRefund(true);
+      
+      const API_URL = getUrl();
+      const response = await axios.put(
+        `${API_URL}/orders/admin/refunds/${selectedRefund.id}`,
+        {
+          status: newRefundStatus,
+          adminNotes: refundNotes,
+          refundMethod,
+          transactionId
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        }
+      );
+      
+      // Refresh refunds list
+      await fetchRefunds();
+      
+      // Close dialog
+      setRefundDialogOpen(false);
+      
+      toast({
+        title: "Success",
+        description: "Refund status updated successfully",
+      });
+    } catch (error) {
+      console.error("Error processing refund:", error);
+      toast({
+        title: "Error",
+        description: "Failed to update refund status",
+        variant: "destructive"
+      });
+    } finally {
+      setProcessingRefund(false);
     }
   };
 
@@ -200,146 +346,251 @@ export default function AdminOrdersPage() {
         </Button>
       </div>
       
-      <Card>
-        <CardHeader>
-          <CardTitle>Orders</CardTitle>
-          <CardDescription>
-            Manage customer orders, update their status and track deliveries.
-          </CardDescription>
-          
-          <div className="flex flex-col sm:flex-row gap-4 mt-4">
-            <div className="flex-1 flex gap-2">
-              <div className="relative flex-1">
-                <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
-                <Input
-                  placeholder="Search by order ID or customer..."
-                  className="pl-8"
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                />
-              </div>
+      <Tabs value={activeTab} onValueChange={(value) => setActiveTab(value as "orders" | "refunds")} className="w-full">
+        <TabsList className="grid w-[400px] grid-cols-2">
+          <TabsTrigger value="orders">Orders</TabsTrigger>
+          <TabsTrigger value="refunds">Refund Requests</TabsTrigger>
+        </TabsList>
+        
+        <TabsContent value="orders">
+          <Card>
+            <CardHeader>
+              <CardTitle>Orders</CardTitle>
+              <CardDescription>
+                Manage customer orders, update their status and track deliveries.
+              </CardDescription>
               
-              <Button
-                variant="outline"
-                onClick={() => {
-                  setSearchQuery("");
-                  setStatusFilter("ALL");
-                }}
-              >
-                Reset
-              </Button>
-            </div>
+              <div className="flex flex-col sm:flex-row gap-4 mt-4">
+                <div className="flex-1 flex gap-2">
+                  <div className="relative flex-1">
+                    <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
+                    <Input
+                      placeholder="Search by order ID or customer..."
+                      className="pl-8"
+                      value={searchQuery}
+                      onChange={(e) => setSearchQuery(e.target.value)}
+                    />
+                  </div>
+                  
+                  <Button
+                    variant="outline"
+                    onClick={() => {
+                      setSearchQuery("");
+                      setStatusFilter("ALL");
+                    }}
+                  >
+                    Reset
+                  </Button>
+                </div>
+                
+                <div className="flex gap-2 items-center">
+                  <Filter className="h-4 w-4 text-muted-foreground" />
+                  <Select value={statusFilter} onValueChange={setStatusFilter}>
+                    <SelectTrigger className="w-[180px]">
+                      <SelectValue placeholder="Filter by status" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="ALL">All Orders</SelectItem>
+                      {ORDER_STATUSES.map(status => (
+                        <SelectItem key={status} value={status}>
+                          {status.charAt(0) + status.slice(1).toLowerCase()}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+              </div>
+            </CardHeader>
             
-            <div className="flex gap-2 items-center">
-              <Filter className="h-4 w-4 text-muted-foreground" />
-              <Select value={statusFilter} onValueChange={setStatusFilter}>
+            <CardContent>
+              {loading ? (
+                <div className="space-y-3">
+                  {Array.from({ length: 5 }).map((_, index) => (
+                    <div key={index} className="flex items-center space-x-4">
+                      <Skeleton className="h-12 w-full" />
+                    </div>
+                  ))}
+                </div>
+              ) : error ? (
+                <div className="text-center py-10 text-muted-foreground">
+                  <p className="text-destructive mb-2">{error}</p>
+                  <Button onClick={handleRefresh} variant="outline">Try Again</Button>
+                </div>
+              ) : filteredOrders.length === 0 ? (
+                <div className="text-center py-10 text-muted-foreground">
+                  {orders.length === 0 ? 
+                    "No orders found in the system." : 
+                    "No orders match your filter criteria. Try changing the filters."}
+                </div>
+              ) : (
+                <div className="rounded-md border">
+                  <Table>
+                    <TableHeader>
+                      <TableRow>
+                        <TableHead>Order ID</TableHead>
+                        <TableHead>Date</TableHead>
+                        <TableHead>Customer</TableHead>
+                        <TableHead>Amount</TableHead>
+                        <TableHead>Status</TableHead>
+                        <TableHead>Payment</TableHead>
+                        <TableHead className="text-right">Actions</TableHead>
+                      </TableRow>
+                    </TableHeader>
+                    <TableBody>
+                      {filteredOrders.map((order) => (
+                        <TableRow key={order.id} onClick={() => router.push(`/home/admin/orders/${order.id}`)}>
+                          <TableCell className="font-medium">{order.id.slice(0, 8)}</TableCell>
+                          <TableCell>{formatDate(order.createdAt)}</TableCell>
+                          <TableCell>
+                            {order.user ? (
+                              <>
+                                <div>{order.user.name}</div>
+                                <div className="text-sm text-muted-foreground">{order.user.email}</div>
+                              </>
+                            ) : (
+                              <div className="flex items-center text-muted-foreground">
+                                <UserIcon className="h-4 w-4 mr-2" />
+                                <span>User unavailable</span>
+                              </div>
+                            )}
+                          </TableCell>
+                          <TableCell>${order.totalAmount.toFixed(2)}</TableCell>
+                          <TableCell>
+                            <Badge className={getStatusBadgeClassNames(order.orderStatus)}>
+                              {order.orderStatus}
+                            </Badge>
+                          </TableCell>
+                          <TableCell>
+                            <Badge className={getStatusBadgeClassNames(order.paymentStatus)}>
+                              {order.paymentStatus}
+                            </Badge>
+                          </TableCell>
+                          <TableCell className="text-right">
+                            <DropdownMenu>
+                              <DropdownMenuTrigger asChild>
+                                <Button variant="ghost" className="h-8 w-8 p-0">
+                                  <span className="sr-only">Open menu</span>
+                                  <MoreHorizontal className="h-4 w-4" />
+                                </Button>
+                              </DropdownMenuTrigger>
+                              <DropdownMenuContent align="end">
+                                <DropdownMenuItem onClick={() => openStatusDialog(order)}>
+                                  Update Status
+                                </DropdownMenuItem>
+                                <DropdownMenuItem
+                                  onClick={() => router.push(`/home/admin/orders/${order.id}`)}
+                                >
+                                  View Details
+                                </DropdownMenuItem>
+                              </DropdownMenuContent>
+                            </DropdownMenu>
+                          </TableCell>
+                        </TableRow>
+                      ))}
+                    </TableBody>
+                  </Table>
+                </div>
+              )}
+            </CardContent>
+          </Card>
+        </TabsContent>
+        
+        <TabsContent value="refunds">
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="text-xl font-semibold">Refund Management</h2>
+            
+            <div className="flex items-center space-x-2">
+              <Select 
+                value={refundStatusFilter} 
+                onValueChange={setRefundStatusFilter}
+              >
                 <SelectTrigger className="w-[180px]">
                   <SelectValue placeholder="Filter by status" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="ALL">All Orders</SelectItem>
-                  {ORDER_STATUSES.map(status => (
-                    <SelectItem key={status} value={status}>
-                      {status.charAt(0) + status.slice(1).toLowerCase()}
-                    </SelectItem>
+                  <SelectItem value="ALL">All Statuses</SelectItem>
+                  {REFUND_STATUSES.map((status) => (
+                    <SelectItem key={status} value={status}>{status}</SelectItem>
                   ))}
                 </SelectContent>
               </Select>
+              
+              <Button 
+                variant="outline" 
+                size="sm" 
+                onClick={fetchRefunds}
+                disabled={loadingRefunds}
+              >
+                <RefreshCw className={`h-4 w-4 mr-2 ${loadingRefunds ? 'animate-spin' : ''}`} />
+                Refresh
+              </Button>
             </div>
           </div>
-        </CardHeader>
-        
-        <CardContent>
-          {loading ? (
-            <div className="space-y-3">
-              {Array.from({ length: 5 }).map((_, index) => (
-                <div key={index} className="flex items-center space-x-4">
-                  <Skeleton className="h-12 w-full" />
+          
+          <Card>
+            <CardContent className="p-0">
+              {loadingRefunds ? (
+                <div className="p-8 flex justify-center">
+                  <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
                 </div>
-              ))}
-            </div>
-          ) : error ? (
-            <div className="text-center py-10 text-muted-foreground">
-              <p className="text-destructive mb-2">{error}</p>
-              <Button onClick={handleRefresh} variant="outline">Try Again</Button>
-            </div>
-          ) : filteredOrders.length === 0 ? (
-            <div className="text-center py-10 text-muted-foreground">
-              {orders.length === 0 ? 
-                "No orders found in the system." : 
-                "No orders match your filter criteria. Try changing the filters."}
-            </div>
-          ) : (
-            <div className="rounded-md border">
-              <Table>
-                <TableHeader>
-                  <TableRow>
-                    <TableHead>Order ID</TableHead>
-                    <TableHead>Date</TableHead>
-                    <TableHead>Customer</TableHead>
-                    <TableHead>Amount</TableHead>
-                    <TableHead>Status</TableHead>
-                    <TableHead>Payment</TableHead>
-                    <TableHead className="text-right">Actions</TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {filteredOrders.map((order) => (
-                    <TableRow key={order.id} onClick={() => router.push(`/home/admin/orders/${order.id}`)}>
-                      <TableCell className="font-medium">{order.id.slice(0, 8)}</TableCell>
-                      <TableCell>{formatDate(order.createdAt)}</TableCell>
-                      <TableCell>
-                        {order.user ? (
-                          <>
-                            <div>{order.user.name}</div>
-                            <div className="text-sm text-muted-foreground">{order.user.email}</div>
-                          </>
-                        ) : (
-                          <div className="flex items-center text-muted-foreground">
-                            <UserIcon className="h-4 w-4 mr-2" />
-                            <span>User unavailable</span>
-                          </div>
-                        )}
-                      </TableCell>
-                      <TableCell>${order.totalAmount.toFixed(2)}</TableCell>
-                      <TableCell>
-                        <Badge variant={getStatusBadgeVariant(order.orderStatus) as any}>
-                          {order.orderStatus}
-                        </Badge>
-                      </TableCell>
-                      <TableCell>
-                        <Badge variant={getStatusBadgeVariant(order.paymentStatus) as any}>
-                          {order.paymentStatus}
-                        </Badge>
-                      </TableCell>
-                      <TableCell className="text-right">
-                        <DropdownMenu>
-                          <DropdownMenuTrigger asChild>
-                            <Button variant="ghost" className="h-8 w-8 p-0">
-                              <span className="sr-only">Open menu</span>
-                              <MoreHorizontal className="h-4 w-4" />
-                            </Button>
-                          </DropdownMenuTrigger>
-                          <DropdownMenuContent align="end">
-                            <DropdownMenuItem onClick={() => openStatusDialog(order)}>
-                              Update Status
-                            </DropdownMenuItem>
-                            <DropdownMenuItem
-                              onClick={() => router.push(`/home/admin/orders/${order.id}`)}
-                            >
-                              View Details
-                            </DropdownMenuItem>
-                          </DropdownMenuContent>
-                        </DropdownMenu>
-                      </TableCell>
+              ) : refunds.length === 0 ? (
+                <div className="p-8 text-center">
+                  <p className="text-muted-foreground">No refund requests found</p>
+                </div>
+              ) : (
+                <Table>
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead>Date</TableHead>
+                      <TableHead>Order ID</TableHead>
+                      <TableHead>Customer</TableHead>
+                      <TableHead>Amount</TableHead>
+                      <TableHead>Reason</TableHead>
+                      <TableHead>Status</TableHead>
+                      <TableHead className="text-right">Actions</TableHead>
                     </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
-            </div>
-          )}
-        </CardContent>
-      </Card>
+                  </TableHeader>
+                  <TableBody>
+                    {refunds.map((refund) => (
+                      <TableRow key={refund.id}>
+                        <TableCell>
+                          {formatDate(refund.requestedAt)}
+                        </TableCell>
+                        <TableCell className="font-medium">
+                          {refund.orderId.substring(0, 8)}...
+                        </TableCell>
+                        <TableCell>
+                          {refund.order.user.name || refund.order.user.email}
+                        </TableCell>
+                        <TableCell>
+                          {formatCurrency(refund.amount)}
+                        </TableCell>
+                        <TableCell>
+                          {REFUND_REASON_LABELS[refund.reason] || refund.reason}
+                        </TableCell>
+                        <TableCell>
+                          <Badge className={getStatusBadgeClassNames(refund.status)}>
+                            {refund.status}
+                          </Badge>
+                        </TableCell>
+                        <TableCell className="text-right">
+                          <Button 
+                            variant="ghost" 
+                            size="sm" 
+                            onClick={() => openRefundProcessDialog(refund)}
+                          >
+                            Process
+                          </Button>
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              )}
+            </CardContent>
+          </Card>
+        </TabsContent>
+      </Tabs>
       
       {/* Status Update Dialog */}
       <Dialog open={statusDialogOpen} onOpenChange={setStatusDialogOpen}>
@@ -400,6 +651,120 @@ export default function AdminOrdersPage() {
             <Button onClick={handleUpdateOrderStatus} disabled={updatingStatus}>
               {updatingStatus && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
               Save Changes
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+      
+      <Dialog open={refundDialogOpen} onOpenChange={setRefundDialogOpen}>
+        <DialogContent className="sm:max-w-[500px]">
+          <DialogHeader>
+            <DialogTitle>Process Refund Request</DialogTitle>
+            <DialogDescription>
+              Update the status of this refund request
+            </DialogDescription>
+          </DialogHeader>
+          
+          <div className="grid gap-4 py-4">
+            <div className="grid gap-2">
+              <div className="flex items-center justify-between">
+                <span className="text-sm font-medium">Order ID:</span>
+                <span>{selectedRefund?.orderId}</span>
+              </div>
+              <div className="flex items-center justify-between">
+                <span className="text-sm font-medium">Customer:</span>
+                <span>{selectedRefund?.order.user.name || selectedRefund?.order.user.email}</span>
+              </div>
+              <div className="flex items-center justify-between">
+                <span className="text-sm font-medium">Requested Amount:</span>
+                <span>{selectedRefund ? formatCurrency(selectedRefund.amount) : '-'}</span>
+              </div>
+              <div className="flex items-center justify-between">
+                <span className="text-sm font-medium">Reason:</span>
+                <span>{selectedRefund ? (REFUND_REASON_LABELS[selectedRefund.reason] || selectedRefund.reason) : '-'}</span>
+              </div>
+              {selectedRefund?.description && (
+                <div className="mt-2">
+                  <span className="text-sm font-medium">Customer Description:</span>
+                  <p className="text-sm mt-1 p-2 bg-muted rounded">{selectedRefund.description}</p>
+                </div>
+              )}
+            </div>
+            
+            <div className="grid gap-2">
+              <label htmlFor="status" className="text-sm font-medium">
+                Status
+              </label>
+              <Select value={newRefundStatus} onValueChange={setNewRefundStatus}>
+                <SelectTrigger>
+                  <SelectValue placeholder="Select status" />
+                </SelectTrigger>
+                <SelectContent>
+                  {REFUND_STATUSES.map((status) => (
+                    <SelectItem key={status} value={status}>{status}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+            
+            <div className="grid gap-2">
+              <label htmlFor="refundMethod" className="text-sm font-medium">
+                Refund Method
+              </label>
+              <Select value={refundMethod} onValueChange={setRefundMethod}>
+                <SelectTrigger>
+                  <SelectValue placeholder="Select method" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="ORIGINAL_PAYMENT">Original Payment Method</SelectItem>
+                  <SelectItem value="STORE_CREDIT">Store Credit</SelectItem>
+                  <SelectItem value="BANK_TRANSFER">Bank Transfer</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+            
+            <div className="grid gap-2">
+              <label htmlFor="transactionId" className="text-sm font-medium">
+                Transaction ID (optional)
+              </label>
+              <Input
+                id="transactionId"
+                value={transactionId}
+                onChange={(e) => setTransactionId(e.target.value)}
+                placeholder="External transaction reference"
+              />
+            </div>
+            
+            <div className="grid gap-2">
+              <label htmlFor="notes" className="text-sm font-medium">
+                Admin Notes
+              </label>
+              <Textarea
+                id="notes"
+                value={refundNotes}
+                onChange={(e) => setRefundNotes(e.target.value)}
+                rows={3}
+                placeholder="Add notes about this refund"
+              />
+            </div>
+          </div>
+          
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setRefundDialogOpen(false)}>
+              Cancel
+            </Button>
+            <Button 
+              onClick={handleProcessRefund}
+              disabled={processingRefund}
+            >
+              {processingRefund ? (
+                <>
+                  <RefreshCw className="mr-2 h-4 w-4 animate-spin" />
+                  Processing...
+                </>
+              ) : (
+                'Save Changes'
+              )}
             </Button>
           </DialogFooter>
         </DialogContent>

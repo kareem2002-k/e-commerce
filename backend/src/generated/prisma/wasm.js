@@ -330,6 +330,20 @@ exports.Prisma.TaxRateScalarFieldEnum = {
   updatedAt: 'updatedAt'
 };
 
+exports.Prisma.RefundScalarFieldEnum = {
+  id: 'id',
+  orderId: 'orderId',
+  amount: 'amount',
+  reason: 'reason',
+  description: 'description',
+  status: 'status',
+  requestedAt: 'requestedAt',
+  processedAt: 'processedAt',
+  adminNotes: 'adminNotes',
+  refundMethod: 'refundMethod',
+  transactionId: 'transactionId'
+};
+
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -363,12 +377,29 @@ exports.OrderStatus = exports.$Enums.OrderStatus = {
   SHIPPED: 'SHIPPED',
   DELIVERED: 'DELIVERED',
   CANCELLED: 'CANCELLED',
-  REFUNDED: 'REFUNDED'
+  REFUNDED: 'REFUNDED',
+  RETURNED: 'RETURNED'
 };
 
 exports.DiscountType = exports.$Enums.DiscountType = {
   FIXED: 'FIXED',
   PERCENTAGE: 'PERCENTAGE'
+};
+
+exports.RefundReason = exports.$Enums.RefundReason = {
+  DAMAGED: 'DAMAGED',
+  WRONG_ITEM: 'WRONG_ITEM',
+  NOT_AS_DESCRIBED: 'NOT_AS_DESCRIBED',
+  ARRIVED_LATE: 'ARRIVED_LATE',
+  CHANGED_MIND: 'CHANGED_MIND',
+  OTHER: 'OTHER'
+};
+
+exports.RefundStatus = exports.$Enums.RefundStatus = {
+  REQUESTED: 'REQUESTED',
+  APPROVED: 'APPROVED',
+  REJECTED: 'REJECTED',
+  PROCESSED: 'PROCESSED'
 };
 
 exports.Prisma.ModelName = {
@@ -388,7 +419,8 @@ exports.Prisma.ModelName = {
   DealsBanner: 'DealsBanner',
   ShippingMethod: 'ShippingMethod',
   ShippingRate: 'ShippingRate',
-  TaxRate: 'TaxRate'
+  TaxRate: 'TaxRate',
+  Refund: 'Refund'
 };
 
 /**

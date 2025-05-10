@@ -492,6 +492,100 @@ router.get('/admin/all', requireAdmin, async (req, res) => {
   }
 });
 
+// Admin: Get all refund requests
+router.get('/admin/refunds', requireAdmin, async (req, res) => {
+  try {
+    const { status } = req.query;
+    
+    const where: any = {};
+    
+    // Filter by status if provided
+    if (status && typeof status === 'string') {
+      where.status = status;
+    }
+    
+    const refunds = await prisma.refund.findMany({
+      where,
+      include: {
+        order: {
+          include: {
+            user: {
+              select: {
+                id: true,
+                name: true,
+                email: true
+              }
+            }
+          }
+        }
+      },
+      orderBy: {
+        requestedAt: 'desc'
+      }
+    });
+    
+    res.json(refunds);
+  } catch (error) {
+    console.error('Error fetching refunds:', error);
+    res.status(500).json({ message: 'Error fetching refunds' });
+  }
+});
+
+// Admin: Process a refund request
+router.put('/admin/refunds/:id', requireAdmin, async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { status, adminNotes, refundMethod, transactionId } = req.body;
+    
+    // Find the refund
+    const refund = await prisma.refund.findUnique({
+      where: { id },
+      include: {
+        order: true
+      }
+    });
+    
+    if (!refund) {
+      res.status(404).json({ message: 'Refund request not found' });
+      return;
+    }
+    
+    // Update the refund
+    const updatedRefund = await prisma.refund.update({
+      where: { id },
+      data: {
+        status,
+        adminNotes,
+        refundMethod,
+        transactionId,
+        processedAt: ['APPROVED', 'REJECTED', 'PROCESSED'].includes(status) ? new Date() : undefined
+      },
+      include: {
+        order: true
+      }
+    });
+    
+    // If refund is approved, update order payment status
+    if (status === 'APPROVED' || status === 'PROCESSED') {
+      await prisma.order.update({
+        where: { id: refund.orderId },
+        data: {
+          paymentStatus: 'REFUNDED',
+          orderStatus: 'REFUNDED'
+        }
+      });
+      
+      // Here you would add code to process the actual refund through your payment provider
+      // e.g. Stripe, PayPal, etc.
+    }
+    
+    res.json(updatedRefund);
+  } catch (error) {
+    console.error('Error processing refund:', error);
+    res.status(500).json({ message: 'Error processing refund' });
+  }
+});
+
 // Update order status (admin only)
 router.put('/:id/status', requireAdmin, async (req, res) => {
   try {
@@ -524,6 +618,114 @@ router.put('/:id/status', requireAdmin, async (req, res) => {
     res.json(updatedOrder);
   } catch (error) {
     res.status(500).json({ message: 'Error updating order status' });
+  }
+});
+
+// Request a refund (user)
+router.post('/:id/refund/request', async (req, res) => {
+  try {
+    const userId = req.userId;
+    const { id } = req.params;
+    const { amount, reason, description } = req.body;
+    
+    // First check if the order exists and belongs to the user
+    const order = await prisma.order.findUnique({
+      where: { id },
+      include: {
+        refunds: true
+      }
+    });
+    
+    if (!order) {
+      res.status(404).json({ message: 'Order not found' });
+      return;
+    }
+    
+    if (order.userId !== userId) {
+      res.status(403).json({ message: 'Not authorized to request refund for this order' });
+      return;
+    }
+    
+    // Check if order is in a refundable state
+    if (!['DELIVERED', 'SHIPPED'].includes(order.orderStatus)) {
+      res.status(400).json({ 
+        message: 'Refund can only be requested for delivered or shipped orders' 
+      });
+      return;
+    }
+    
+    // Check if a refund has already been requested
+    if (order.refunds.some(refund => ['REQUESTED', 'APPROVED', 'PROCESSED'].includes(refund.status))) {
+      res.status(400).json({ message: 'A refund has already been requested for this order' });
+      return;
+    }
+    
+    // Validate refund amount
+    if (!amount || amount <= 0 || amount > order.totalAmount) {
+      res.status(400).json({ 
+        message: 'Invalid refund amount. Must be greater than 0 and not more than the order total.' 
+      });
+      return;
+    }
+    
+    // Create the refund request
+    const refund = await prisma.refund.create({
+      data: {
+        order: {
+          connect: { id: order.id }
+        },
+        amount,
+        reason,
+        description
+      }
+    });
+    
+    // Update order status to indicate a refund is in progress
+    await prisma.order.update({
+      where: { id: order.id },
+      data: {
+        orderStatus: 'RETURNED'
+      }
+    });
+    
+    res.status(201).json(refund);
+  } catch (error) {
+    console.error('Error requesting refund:', error);
+    res.status(500).json({ message: 'Error requesting refund' });
+  }
+});
+
+// Get refund requests for a specific order (user)
+router.get('/:id/refunds', async (req, res) => {
+  try {
+    const userId = req.userId;
+    const { id } = req.params;
+    
+    // Check if the order exists and belongs to the user
+    const order = await prisma.order.findUnique({
+      where: { id }
+    });
+    
+    if (!order) {
+       res.status(404).json({ message: 'Order not found' });
+       return;
+    }
+    
+    if (order.userId !== userId) {
+      res.status(403).json({ message: 'Not authorized to view refunds for this order' });
+      return;
+    }
+    
+    // Fetch refund requests
+    const refunds = await prisma.refund.findMany({
+      where: { orderId: id },
+      orderBy: { requestedAt: 'desc' }
+    });
+    
+    res.json(refunds);
+  } catch (error) {
+    console.error('Error fetching refunds:', error);
+    res.status(500).json({ message: 'Error fetching refunds' });
   }
 });
 

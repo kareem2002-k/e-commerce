@@ -15,9 +15,19 @@ import { Input } from "@/components/ui/input"
 import { Separator } from "@/components/ui/separator"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { ChevronRight, Download, ExternalLink, FileText, Package, Search, ShoppingBag, Truck } from "lucide-react"
+import { ChevronRight, Download, ExternalLink, FileText, Package, Search, ShoppingBag, Truck, RefreshCw } from "lucide-react"
 import { cn, formatCurrency } from "@/lib/utils"
 import { getUrl } from "@/utils";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog"
+import { Textarea } from "@/components/ui/textarea"
+
 // Order interfaces
 interface OrderItem {
   id: string;
@@ -43,6 +53,20 @@ interface Address {
   country: string;
 }
 
+interface Refund {
+  id: string;
+  orderId: string;
+  amount: number;
+  reason: string;
+  description: string | null;
+  status: string;
+  requestedAt: string;
+  processedAt: string | null;
+  adminNotes: string | null;
+  refundMethod: string | null;
+  transactionId: string | null;
+}
+
 interface Order {
   id: string;
   userId: string;
@@ -57,6 +81,7 @@ interface Order {
   orderItems: OrderItem[];
   shippingAddress: Address;
   billingAddress: Address;
+  refunds?: Refund[];
 }
 
 const getStatusColor = (status: string) => {
@@ -89,6 +114,13 @@ export default function OrdersPage() {
   const [searchTerm, setSearchTerm] = useState("")
   const [statusFilter, setStatusFilter] = useState("all")
   const [dateFilter, setDateFilter] = useState("all")
+  const [refundDialogOpen, setRefundDialogOpen] = useState(false)
+  const [selectedOrderForRefund, setSelectedOrderForRefund] = useState<Order | null>(null)
+  const [refundAmount, setRefundAmount] = useState<string>("")
+  const [refundReason, setRefundReason] = useState<string>("")
+  const [refundDescription, setRefundDescription] = useState<string>("")
+  const [isRequestingRefund, setIsRequestingRefund] = useState(false)
+  const [refundError, setRefundError] = useState<string | null>(null)
 
   // Get API URL with fallback
   const API_URL = getUrl();
@@ -189,6 +221,66 @@ export default function OrdersPage() {
   }
 
   const currentOrder = selectedOrder ? orders.find((order) => order.id === selectedOrder) : null
+
+  const handleRefundRequest = async () => {
+    if (!selectedOrderForRefund || !refundAmount || !refundReason) {
+      setRefundError("Please fill in all required fields")
+      return
+    }
+
+    const amount = parseFloat(refundAmount)
+    if (isNaN(amount) || amount <= 0 || amount > selectedOrderForRefund.totalAmount) {
+      setRefundError(`Amount must be between 0 and ${formatCurrency(selectedOrderForRefund.totalAmount)}`)
+      return
+    }
+
+    try {
+      setIsRequestingRefund(true)
+      setRefundError(null)
+
+      const response = await axios.post(
+        `${API_URL}/api/orders/${selectedOrderForRefund.id}/refund/request`,
+        {
+          amount,
+          reason: refundReason,
+          description: refundDescription
+        },
+        { headers: { Authorization: `Bearer ${token}` } }
+      )
+
+      // Refresh orders to show updated status
+      await fetchOrders()
+      
+      // Close dialog and reset form
+      setRefundDialogOpen(false)
+      setSelectedOrderForRefund(null)
+      setRefundAmount("")
+      setRefundReason("")
+      setRefundDescription("")
+      
+      toast.success("Refund request submitted successfully")
+    } catch (error: any) {
+      console.error("Error requesting refund:", error)
+      setRefundError(error.response?.data?.message || "Failed to submit refund request")
+    } finally {
+      setIsRequestingRefund(false)
+    }
+  }
+
+  const openRefundDialog = (order: Order) => {
+    setSelectedOrderForRefund(order)
+    setRefundAmount(order.totalAmount.toString())
+    setRefundDialogOpen(true)
+  }
+
+  const hasRefundRequest = (order: Order) => {
+    return order.refunds && order.refunds.length > 0
+  }
+
+  const getRefundStatus = (order: Order) => {
+    if (!order.refunds || order.refunds.length === 0) return null
+    return order.refunds[0].status
+  }
 
   if (loading) {
     return (
@@ -514,31 +606,152 @@ export default function OrdersPage() {
                 </div>
               </div>
             </div>
+
+            <div className="flex items-center justify-between mt-4">
+              <div className="text-sm text-gray-500">
+                Order placed on {new Date(currentOrder.createdAt).toLocaleDateString()}
+              </div>
+              <div className="flex gap-2">
+                {["PENDING", "CONFIRMED"].includes(currentOrder.orderStatus) && (
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => handleCancelOrder(currentOrder.id)}
+                    disabled={loadingCancel[currentOrder.id]}
+                  >
+                    {loadingCancel[currentOrder.id] ? (
+                      <span className="flex items-center">
+                        <span className="mr-2 h-4 w-4 animate-spin rounded-full border-2 border-b-transparent"></span>
+                        Cancelling...
+                      </span>
+                    ) : (
+                      "Cancel Order"
+                    )}
+                  </Button>
+                )}
+                
+                {["DELIVERED", "SHIPPED"].includes(currentOrder.orderStatus) && !hasRefundRequest(currentOrder) && (
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => openRefundDialog(currentOrder)}
+                  >
+                    Request Refund
+                  </Button>
+                )}
+              </div>
+            </div>
+
+            {hasRefundRequest(currentOrder) && (
+              <div className="mt-4 p-3 bg-yellow-50 border border-yellow-200 rounded-md">
+                <h4 className="font-medium text-yellow-800">Refund {getRefundStatus(currentOrder)?.toLowerCase()}</h4>
+                <p className="text-sm text-yellow-700 mt-1">
+                  {getRefundStatus(currentOrder) === "REQUESTED" && "Your refund request is being reviewed."}
+                  {getRefundStatus(currentOrder) === "APPROVED" && "Your refund has been approved and is being processed."}
+                  {getRefundStatus(currentOrder) === "PROCESSED" && "Your refund has been processed."}
+                  {getRefundStatus(currentOrder) === "REJECTED" && "Your refund request was not approved. Please contact customer service."}
+                </p>
+              </div>
+            )}
           </CardContent>
           <CardFooter className="flex justify-between">
             <Button variant="outline" onClick={() => router.push('/home/products')}>
               <FileText className="mr-2 h-4 w-4" />
               Buy Again
             </Button>
-            {(currentOrder.orderStatus.toUpperCase() === 'PENDING' || currentOrder.orderStatus.toUpperCase() === 'CONFIRMED') && (
-              <Button 
-                variant="destructive"
-                onClick={() => handleCancelOrder(currentOrder.id)}
-                disabled={loadingCancel[currentOrder.id]}
-              >
-                {loadingCancel[currentOrder.id] ? (
-                  <>
-                    <div className="h-4 w-4 animate-spin rounded-full border-2 border-current border-t-transparent mr-2" />
-                    Cancelling...
-                  </>
-                ) : (
-                  'Cancel Order'
-                )}
-            </Button>
-            )}
           </CardFooter>
         </Card>
       )}
+
+      <Dialog open={refundDialogOpen} onOpenChange={setRefundDialogOpen}>
+        <DialogContent className="sm:max-w-[425px]">
+          <DialogHeader>
+            <DialogTitle>Request a Refund</DialogTitle>
+            <DialogDescription>
+              Please provide details for your refund request.
+            </DialogDescription>
+          </DialogHeader>
+          
+          {refundError && (
+            <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-2 rounded-md mb-4">
+              {refundError}
+            </div>
+          )}
+          
+          <div className="grid gap-4 py-4">
+            <div className="grid grid-cols-4 items-center gap-4">
+              <label htmlFor="amount" className="text-right text-sm font-medium">
+                Amount
+              </label>
+              <Input
+                id="amount"
+                type="number"
+                step="0.01"
+                value={refundAmount}
+                onChange={(e) => setRefundAmount(e.target.value)}
+                className="col-span-3"
+                min="0.01"
+                max={selectedOrderForRefund?.totalAmount || 0}
+              />
+            </div>
+            
+            <div className="grid grid-cols-4 items-center gap-4">
+              <label htmlFor="reason" className="text-right text-sm font-medium">
+                Reason
+              </label>
+              <Select value={refundReason} onValueChange={setRefundReason}>
+                <SelectTrigger className="col-span-3">
+                  <SelectValue placeholder="Select a reason" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="DAMAGED">Item arrived damaged</SelectItem>
+                  <SelectItem value="WRONG_ITEM">Received wrong item</SelectItem>
+                  <SelectItem value="NOT_AS_DESCRIBED">Item not as described</SelectItem>
+                  <SelectItem value="ARRIVED_LATE">Item arrived too late</SelectItem>
+                  <SelectItem value="CHANGED_MIND">Changed my mind</SelectItem>
+                  <SelectItem value="OTHER">Other reason</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+            
+            <div className="grid grid-cols-4 items-center gap-4">
+              <label htmlFor="description" className="text-right text-sm font-medium">
+                Details
+              </label>
+              <Textarea
+                id="description"
+                placeholder="Please provide more details about your refund request"
+                value={refundDescription}
+                onChange={(e) => setRefundDescription(e.target.value)}
+                className="col-span-3"
+                rows={3}
+              />
+            </div>
+          </div>
+          
+          <DialogFooter>
+            <Button 
+              variant="outline" 
+              onClick={() => setRefundDialogOpen(false)}
+            >
+              Cancel
+            </Button>
+            <Button 
+              onClick={handleRefundRequest}
+              disabled={isRequestingRefund}
+            >
+              {isRequestingRefund ? (
+                <>
+                  <RefreshCw className="mr-2 h-4 w-4 animate-spin" />
+                  Processing...
+                </>
+              ) : (
+                'Submit Request'
+              )}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   )
 }
