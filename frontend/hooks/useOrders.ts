@@ -52,7 +52,8 @@ export function useOrders() {
 
   const updateOrderStatus = async (orderId: string, orderStatus: string, paymentStatus: string) => {
     try {
-      const response = await fetch(`/api/orders/${orderId}/status`, {
+      const API_URL = getUrl();
+      const response = await fetch(`${API_URL}/orders/${orderId}/status`, {
         method: 'PUT',
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -112,7 +113,8 @@ export function useOrderDetails(orderId: string) {
       setLoading(true);
       setError(null);
       
-      const response = await fetch(`/api/orders/${orderId}`, {
+      const API_URL = getUrl();
+      const response = await fetch(`${API_URL}/orders/${orderId}`, {
         headers: {
           'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json',
@@ -146,7 +148,8 @@ export function useOrderDetails(orderId: string) {
     if (!order) return null;
     
     try {
-      const response = await fetch(`/api/orders/${orderId}/status`, {
+      const API_URL = getUrl();
+      const response = await fetch(`${API_URL}/orders/${orderId}/status`, {
         method: 'PUT',
         headers: {
           'Authorization': `Bearer ${token}`,

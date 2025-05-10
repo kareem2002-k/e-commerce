@@ -7,7 +7,7 @@ import { ShoppingCart, Plus, Minus, Check } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { Product } from '@/types';
 import { useAuth } from '@/context/AuthContext';
-
+import { getUrl } from '@/utils';
 interface AddToCartButtonProps {
   productId: string;
   stock: number;
@@ -40,7 +40,8 @@ export default function AddToCartButton({
     
     const fetchProduct = async () => {
       try { 
-        const response = await fetch(`/api/products/${productId}`, {
+        const API_URL = getUrl();
+        const response = await fetch(`${API_URL}/products/${productId}`, {
           headers: {
             'Authorization': `Bearer ${token}`
           }
@@ -65,8 +66,9 @@ export default function AddToCartButton({
     // Either use the product from state or attempt one last fetch
     if (!product) {
       try {
+        const API_URL = getUrl();
         // One last attempt to fetch product details if not available
-        const response = await fetch(`/api/products/${productId}`, {
+        const response = await fetch(`${API_URL}/products/${productId}`, {
           headers: {
             'Authorization': `Bearer ${token}`
           }

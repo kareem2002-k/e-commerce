@@ -56,7 +56,8 @@ export function ProductReviews({ productId, rating, reviewCount }: ProductReview
   const fetchReviews = async () => {
     try {
       setLoading(true)
-      const response = await fetch(`/api/reviews/product/${productId}`, {
+      const API_URL = getUrl();
+      const response = await fetch(`${API_URL}/reviews/product/${productId}`, {
         headers: {
           'Authorization': `Bearer ${token}`
         }

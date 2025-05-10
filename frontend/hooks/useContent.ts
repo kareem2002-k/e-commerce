@@ -43,7 +43,8 @@ export const useHeroSection = () => {
     const fetchHeroSection = async () => {
       try {
         setLoading(true);
-        const res = await fetch(`/api/content/hero`);
+        const API_URL = getUrl();
+        const res = await fetch(`${API_URL}/content/hero`);
         
         if (!res.ok) {
           throw new Error('Failed to fetch hero section');
@@ -76,7 +77,8 @@ export const useDealsBanner = () => {
     const fetchDealsBanner = async () => {
       try {
         setLoading(true);
-        const res = await fetch(`/api/content/deals-banner`);
+        const API_URL = getUrl();
+        const res = await fetch(`${API_URL}/content/deals-banner`);
         
         if (!res.ok) {
           throw new Error('Failed to fetch deals banner');
@@ -111,7 +113,8 @@ export const useAdminContent = () => {
   const fetchHeroSections = async () => {
     try {
       setLoading(true);
-      const res = await fetch(`/api/content/admin/hero`, {
+      const API_URL = getUrl();
+      const res = await fetch(`${API_URL}/content/admin/hero`, {
         headers: {
           Authorization: `Bearer ${token}`
         }
@@ -136,7 +139,8 @@ export const useAdminContent = () => {
   const fetchDealsBanners = async () => {
     try {
       setLoading(true);
-      const res = await fetch(`/api/content/admin/deals-banner`, {
+      const API_URL = getUrl();
+      const res = await fetch(`${API_URL}/content/admin/deals-banner`, {
         headers: {
           Authorization: `Bearer ${token}`
         }
@@ -162,9 +166,10 @@ export const useAdminContent = () => {
     try {
       setLoading(true);
       const method = heroData.id ? 'PUT' : 'POST';
+      const API_URL = getUrl();
       const url = heroData.id 
-        ? `/api/content/admin/hero/${heroData.id}`
-        : `/api/content/admin/hero`;
+        ? `${API_URL}/content/admin/hero/${heroData.id}`
+        : `${API_URL}/content/admin/hero`;
       
       const res = await fetch(url, {
         method,
@@ -195,7 +200,8 @@ export const useAdminContent = () => {
   const deleteHeroSection = async (id: string) => {
     try {
       setLoading(true);
-      const res = await fetch(`/api/content/admin/hero/${id}`, {
+      const API_URL = getUrl();
+      const res = await fetch(`${API_URL}/content/admin/hero/${id}`, {
         method: 'DELETE',
         headers: {
           Authorization: `Bearer ${token}`
@@ -221,9 +227,10 @@ export const useAdminContent = () => {
     try {
       setLoading(true);
       const method = bannerData.id ? 'PUT' : 'POST';
+      const API_URL = getUrl();
       const url = bannerData.id 
-        ? `/api/content/admin/deals-banner/${bannerData.id}`
-        : `/api/content/admin/deals-banner`;
+        ? `${API_URL}/content/admin/deals-banner/${bannerData.id}`
+        : `${API_URL}/content/admin/deals-banner`;
       
       const res = await fetch(url, {
         method,
@@ -254,7 +261,8 @@ export const useAdminContent = () => {
   const deleteDealsBanner = async (id: string) => {
     try {
       setLoading(true);
-      const res = await fetch(`/api/content/admin/deals-banner/${id}`, {
+        const API_URL = getUrl();
+      const res = await fetch(`${API_URL}/content/admin/deals-banner/${id}`, {
         method: 'DELETE',
         headers: {
           Authorization: `Bearer ${token}`

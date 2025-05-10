@@ -125,7 +125,8 @@ export default function AdminProductsPage() {
       console.log('Fetching products with token:', token ? 'Token exists' : 'No token');
       setLoading(true);
       
-      const response = await fetch(`/api/products`, {
+      const API_URL = getUrl();
+      const response = await fetch(`${API_URL}/products`, {
         headers: { 
           'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json'
@@ -181,7 +182,8 @@ export default function AdminProductsPage() {
         return;
       }
 
-      const response = await fetch(`/api/categories`, {
+      const API_URL = getUrl();
+      const response = await fetch(`${API_URL}/categories`, {
         headers: { 
           'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json'
@@ -301,7 +303,8 @@ export default function AdminProductsPage() {
       
       console.log(user.email);
       
-      const response = await fetch(`/api/products/${productToDelete.id}`, {
+      const API_URL = getUrl();
+      const response = await fetch(`${API_URL}/products/${productToDelete.id}`, {
         method: 'DELETE',
         headers: {
           'Authorization': `Bearer ${token}`

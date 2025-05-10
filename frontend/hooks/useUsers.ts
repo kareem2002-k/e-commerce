@@ -57,7 +57,8 @@ export function useUsers() {
 
   const promoteToAdmin = async (userId: string) => {
     try {
-      const response = await fetch(`/api/users/${userId}/promote`, {
+      const API_URL = getUrl();
+      const response = await fetch(`${API_URL}/users/${userId}/promote`, {
         method: 'PUT',
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -97,7 +98,8 @@ export function useUsers() {
 
   const deleteUser = async (userId: string) => {
     try {
-      const response = await fetch(`/api/users/${userId}`, {
+      const API_URL = getUrl();
+      const response = await fetch(`${API_URL}/users/${userId}`, {
         method: 'DELETE',
         headers: {
           'Authorization': `Bearer ${token}`,
