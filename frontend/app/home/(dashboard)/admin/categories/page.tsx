@@ -167,7 +167,7 @@ export default function CategoriesPage() {
   
   // Edit category
   const handleEditCategory = (categoryId: string) => {
-    router.push(`/admin/categories/edit/${categoryId}`);
+    router.push(`/home/admin/categories/edit/${categoryId}`);
   };
   
   // Delete category
