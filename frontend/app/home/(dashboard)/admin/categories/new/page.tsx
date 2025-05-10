@@ -233,10 +233,10 @@ export default function AddCategoryPage() {
                     Saving...
                   </span>
                 ) : (
-                  <>
+                  <span className="flex items-center">
                     <Save className="mr-2 h-4 w-4" />
                     Save Category
-                  </>
+                  </span>
                 )}
               </Button>
             </motion.div>
@@ -373,7 +373,7 @@ export default function AddCategoryPage() {
                             Saving...
                           </span>
                         ) : (
-                          <>Create Category</>
+                          <span>Create Category</span>
                         )}
                       </Button>
                     </motion.div>

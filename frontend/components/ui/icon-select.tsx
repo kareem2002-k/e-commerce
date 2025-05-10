@@ -1,8 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { Check } from "lucide-react";
-import * as LucideIcons from "lucide-react";
+import { Check, ChevronsUpDown, Tag } from "lucide-react";
 import { cn } from "@/lib/utils";
 import {
   Command,
@@ -19,46 +18,40 @@ import {
 } from "@/components/ui/popover";
 import { Button } from "@/components/ui/button";
 
-// Most common e-commerce related icons to display first
-const commonIcons = [
-  "Laptop",
-  "Smartphone",
-  "Headphones",
-  "Watch",
-  "Camera",
-  "Tv",
-  "Speaker",
-  "Gamepad",
-  "Home",
-  "Store",
-  "ShoppingCart",
-  "Package",
-  "Gift",
-  "Tag",
-  "Shirt",
-  "Shoe",
-  "Keyboard",
-  "Mouse",
-  "Printer",
-  "Server",
-  "Cpu",
-  "Monitor",
-  "HardDrive",
-  "Microphone",
-];
+// Import specific icons one by one to avoid dynamic rendering issues
+import { 
+  Laptop, Smartphone, Headphones, Watch, Camera, Tv,
+  Speaker, Gamepad, Home, Store, ShoppingCart, Package,
+  Gift, Tag as TagIcon, Shirt, Keyboard, Mouse, Cpu, Monitor,
+  HardDrive, Check as CheckIcon, ChevronsUpDown as ChevronsIcon
+} from "lucide-react";
 
-// Get all icons from Lucide
-const allIconNames = Object.keys(LucideIcons).filter(
-  (key) => typeof LucideIcons[key as keyof typeof LucideIcons] === "function" && key !== "default"
-);
+// Static icon mapping
+const iconMap = {
+  "Laptop": Laptop,
+  "Smartphone": Smartphone,
+  "Headphones": Headphones,
+  "Watch": Watch,
+  "Camera": Camera,
+  "Tv": Tv,
+  "Speaker": Speaker,
+  "Gamepad": Gamepad,
+  "Home": Home,
+  "Store": Store,
+  "ShoppingCart": ShoppingCart,
+  "Package": Package,
+  "Gift": Gift,
+  "Tag": TagIcon,
+  "Shirt": Shirt,
+  "Keyboard": Keyboard,
+  "Mouse": Mouse,
+  "Cpu": Cpu,
+  "Monitor": Monitor,
+  "HardDrive": HardDrive,
+};
 
-// Sort the icons - common icons first, then alphabetically
-const iconNames = [
-  ...commonIcons.filter(name => allIconNames.includes(name)),
-  ...allIconNames
-    .filter(name => !commonIcons.includes(name))
-    .sort()
-];
+// Icon names array
+const iconNames = Object.keys(iconMap);
 
 type IconSelectProps = {
   value: string;
@@ -68,9 +61,22 @@ type IconSelectProps = {
 
 export function IconSelect({ value, onChange, placeholder = "Select an icon..." }: IconSelectProps) {
   const [open, setOpen] = React.useState(false);
-  
-  // Get the current icon component
-  const IconComponent = value ? LucideIcons[value as keyof typeof LucideIcons] : null;
+
+  // Safely get icon component
+  const getIconComponent = (iconName: string) => {
+    const IconComponent = iconMap[iconName as keyof typeof iconMap];
+    return IconComponent || TagIcon;
+  };
+
+  // Render a selected icon
+  const renderSelectedIcon = () => {
+    if (!value || !iconMap[value as keyof typeof iconMap]) {
+      return null;
+    }
+    
+    const IconComponent = getIconComponent(value);
+    return <IconComponent className="mr-2 h-4 w-4" />;
+  };
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
@@ -83,13 +89,13 @@ export function IconSelect({ value, onChange, placeholder = "Select an icon..." 
         >
           {value ? (
             <div className="flex items-center">
-              {IconComponent && <IconComponent className="mr-2 h-4 w-4" />}
+              {renderSelectedIcon()}
               <span>{value}</span>
             </div>
           ) : (
             <span className="text-muted-foreground">{placeholder}</span>
           )}
-          <LucideIcons.ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+          <ChevronsIcon className="ml-2 h-4 w-4 shrink-0 opacity-50" />
         </Button>
       </PopoverTrigger>
       <PopoverContent className="w-[300px] p-0">
@@ -99,7 +105,8 @@ export function IconSelect({ value, onChange, placeholder = "Select an icon..." 
           <CommandList className="max-h-[300px]">
             <CommandGroup>
               {iconNames.map((iconName) => {
-                const Icon = LucideIcons[iconName as keyof typeof LucideIcons];
+                const IconComponent = getIconComponent(iconName);
+                
                 return (
                   <CommandItem
                     key={iconName}
@@ -110,10 +117,10 @@ export function IconSelect({ value, onChange, placeholder = "Select an icon..." 
                     }}
                     className="flex items-center"
                   >
-                    <Icon className="mr-2 h-4 w-4" />
+                    <IconComponent className="mr-2 h-4 w-4" />
                     <span>{iconName}</span>
                     {value === iconName && (
-                      <Check className="ml-auto h-4 w-4" />
+                      <CheckIcon className="ml-auto h-4 w-4" />
                     )}
                   </CommandItem>
                 );
