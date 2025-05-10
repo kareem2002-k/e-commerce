@@ -1,9 +1,10 @@
 import { NextResponse } from 'next/server';
+import { getUrl } from '@/utils/index';
 
 export async function GET() {
   try {
     // Fetch all products to extract unique brands
-    const response = await fetch('http://localhost:3002/products');
+    const response = await fetch(`${getUrl()}/products`);
     
     if (!response.ok) {
       return NextResponse.json(
