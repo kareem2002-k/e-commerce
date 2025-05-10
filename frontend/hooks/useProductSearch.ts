@@ -68,12 +68,31 @@ export function useProductSearch(initialFilters: SearchFilters = {}) {
     try {
       // Make API request with abort signal
       const API_URL = getUrl();
-      const response = await fetch(`${API_URL}/products/search?${searchParamsString}`, {
+      const url = new URL(`${API_URL}/products/search?${searchParamsString}`);
+      const searchParams = new URLSearchParams();
+       // Handle parameter name conversion (searchTerm → q) for text search
+    const searchTerm = url.searchParams.get('searchTerm') || url.searchParams.get('q');
+    if (searchTerm) {
+      searchParams.append('q', searchTerm);
+      console.log('Searching for text:', searchTerm);
+    }
+    
+    // Forward other parameters directly, ensuring we capture price range
+    ['category', 'minPrice', 'maxPrice', 'sortBy', 'brands'].forEach(param => {
+      const value = url.searchParams.get(param);
+      if (value) {
+        searchParams.append(param, value);
+        console.log(`Filter applied: ${param}=${value}`);
+      }
+    });
+
+    const backendUrl = new URL(`${getUrl()}/products/search`);
+      backendUrl.search = searchParams.toString();
+      const response = await fetch(backendUrl.toString(), {
         headers: {
           'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json'
         },
-        signal: currentRequest.current.signal
       });
       
       if (!response.ok) {
