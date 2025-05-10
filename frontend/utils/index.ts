@@ -1,8 +1,9 @@
-// Get env or global url if in development use localhost if in production use the global url
 export const getUrl = () => {
-  if (process.env.NODE_ENV === 'development') {
-    return 'http://localhost:3002/api'
+  if (typeof window !== 'undefined') {
+    // We're in the browser — use the public env variable
+    return process.env.NEXT_PUBLIC_BACKEND_URL;
   }
-  return process.env.BACKEND_URL
-}
 
+  // For SSR/server-side (optional)
+  return process.env.BACKEND_URL;
+};
