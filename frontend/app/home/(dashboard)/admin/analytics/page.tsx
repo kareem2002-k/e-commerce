@@ -628,12 +628,12 @@ export default function AdminAnalytics() {
                         {product.stock} / {product.lowStockThreshold}
                       </span>
                     </div>
-                    <Progress
-                      value={stockPercentage}
-                      className={cn(
-                        isLow ? 'bg-red-100 progress-indicator-red' : 'bg-amber-100 progress-indicator-amber'
-                      )}
-                    />
+                    <div className={`h-2 w-full rounded-full ${isLow ? 'bg-red-100' : 'bg-amber-100'}`}>
+                      <div 
+                        className={`h-full rounded-full ${isLow ? 'bg-red-500' : 'bg-amber-500'}`}
+                        style={{ width: `${Math.min(stockPercentage, 100)}%` }}
+                      />
+                    </div>
                   </div>
                 );
               })}
