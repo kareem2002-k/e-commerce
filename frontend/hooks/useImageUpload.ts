@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useAuth } from '@/context/AuthContext';
+import { getUrl } from '@/utils';
 
 interface UploadedImage {
   url: string;

@@ -3,7 +3,7 @@
 import { useState, useEffect, useCallback, useRef } from "react"
 import { Product } from "@/types"
 import { useAuth } from "@/context/AuthContext"
-
+import { getUrl } from "@/utils/index";
 export interface SearchFilters {
   searchTerm?: string
   category?: string
@@ -67,7 +67,8 @@ export function useProductSearch(initialFilters: SearchFilters = {}) {
 
     try {
       // Make API request with abort signal
-      const response = await fetch(`/api/products/search?${searchParamsString}`, {
+      const API_URL = getUrl();
+      const response = await fetch(`${API_URL}/products/search?${searchParamsString}`, {
         headers: {
           'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json'

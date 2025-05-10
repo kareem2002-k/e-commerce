@@ -1,25 +1,61 @@
 import Link from "next/link"
-import { Laptop, Smartphone, Headphones, Watch, Camera, Tv, Speaker, Gamepad2 } from "lucide-react"
+import { 
+  Laptop, Smartphone, Headphones, Watch, Camera, Tv, Speaker, 
+  Gamepad2, Tag, ShoppingCart, Package, Home, Store, Gift, Keyboard,
+  Mouse, Printer, Cpu, Monitor, HardDrive, Mic
+} from "lucide-react"
 import { cn } from "@/lib/utils"
 import SectionLoading from "@/components/voltedge/section-loading"
 
-// Icon mapping for categories
-const iconMap: Record<string, any> = {
-  "Laptops": Laptop,
-  "Smartphones": Smartphone,
-  "Audio": Headphones,
-  "Wearables": Watch,
-  "Cameras": Camera,
-  "TVs": Tv,
-  "Speakers": Speaker,
-  "Gaming": Gamepad2,
-  // Default to Laptop if not found
-  "default": Laptop,
+// Get icon component for the category
+const getCategoryIcon = (iconName: string | null | undefined) => {
+  if (!iconName) return Tag;
+  
+  // Map common category icons - add more as needed
+  switch (iconName) {
+    case "Laptop": return Laptop;
+    case "Smartphone": return Smartphone;
+    case "Headphones": return Headphones;
+    case "Watch": return Watch;
+    case "Camera": return Camera;
+    case "Tv": return Tv;
+    case "Speaker": return Speaker;
+    case "Gamepad": 
+    case "Gamepad2": return Gamepad2;
+    case "Package": return Package;
+    case "ShoppingCart": return ShoppingCart;
+    case "Home": return Home;
+    case "Store": return Store;
+    case "Gift": return Gift;
+    case "Keyboard": return Keyboard;
+    case "Mouse": return Mouse;
+    case "Printer": return Printer;
+    case "Cpu": return Cpu;
+    case "Monitor": return Monitor;
+    case "HardDrive": return HardDrive;
+    case "Mic": 
+    case "Microphone": return Mic;
+    default: return Tag;
+  }
+};
+
+// Default icon mapping for categories without an icon specified
+const defaultIconMap: Record<string, string> = {
+  "Laptops": "Laptop",
+  "Smartphones": "Smartphone",
+  "Audio": "Headphones",
+  "Wearables": "Watch",
+  "Cameras": "Camera",
+  "TVs": "Tv",
+  "Speakers": "Speaker",
+  "Gaming": "Gamepad2",
+  // Default fallback
+  "default": "Tag",
 };
 
 
 interface CategoryGridProps {
-  categories?: { id: string; name: string }[];
+  categories?: { id: string; name: string; icon?: string | null }[];
   loading?: boolean;
 }
 
@@ -36,12 +72,18 @@ export function CategoryGrid({ categories, loading }: CategoryGridProps = {}) {
 
   // Map provided categories
   const displayCategories = categories.map(cat => {
-    const icon = iconMap[cat.name] || iconMap.default;
+    // Use the stored icon if available, otherwise fallback to mapping or default
+    const iconName = cat.icon || defaultIconMap[cat.name] || defaultIconMap.default;
+    
+    // Get the actual icon component
+    const IconComponent = getCategoryIcon(iconName);
+    
     const isEven = Number(cat.id) % 2 === 0;
+    
     return {
       id: cat.id,
       name: cat.name,
-      icon: icon,
+      icon: IconComponent,
       href: `/home/search?category=${cat.name}`,
       color: isEven ? "bg-voltBlue-100 dark:bg-voltBlue-900/40" : "bg-voltBlue-50 dark:bg-voltBlue-900/30",
       iconColor: isEven ? "text-voltBlue-600" : "text-voltBlue-500",

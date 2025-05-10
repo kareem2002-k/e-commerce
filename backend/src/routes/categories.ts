@@ -51,13 +51,14 @@ router.get('/', async (req, res) => {
 // Create new category
 router.post('/', authenticate, requireAdmin, async (req, res) => {
   try {
-    const { name, description, parentId } = req.body;
+    const { name, description, parentId, icon } = req.body;
     
     const category = await prisma.category.create({
       data: {
         name,
         description,
-        parentId
+        parentId,
+        icon
       },
       include: {
         parent: true
@@ -74,14 +75,15 @@ router.post('/', authenticate, requireAdmin, async (req, res) => {
 router.put('/:id', authenticate, requireAdmin, async (req, res) => {
   try {
     const { id } = req.params;
-    const { name, description, parentId } = req.body;
+    const { name, description, parentId, icon } = req.body;
     
     const updatedCategory = await prisma.category.update({
       where: { id },
       data: {
         name,
         description,
-        parentId
+        parentId,
+        icon
       },
       include: {
         parent: true

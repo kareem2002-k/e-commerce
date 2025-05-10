@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
-import { ChevronLeft, Save, FolderPlus, Zap, AlertCircle, Tag } from "lucide-react";
+import { ChevronLeft, Save, FolderPlus, Zap, AlertCircle, Tag, ImageIcon } from "lucide-react";
 import { useAuth } from "@/context/AuthContext";
 import { ProtectedRoute } from "@/components/auth/ProtectedRoute";
 import { Button } from "@/components/ui/button";
@@ -11,6 +11,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent } from "@/components/ui/card";
+import { IconSelect } from "@/components/ui/icon-select";
 import {
   Select,
   SelectContent,
@@ -37,7 +38,8 @@ export default function AddCategoryPage() {
   const [category, setCategory] = useState({
     name: "",
     description: "",
-    parentId: ""
+    parentId: "",
+    icon: ""
   });
   
   const [errors, setErrors] = useState<Record<string, string>>({});
@@ -116,6 +118,20 @@ export default function AddCategoryPage() {
     const finalValue = name === "parentId" && value === "none" ? "" : value;
     
     setCategory(prev => ({ ...prev, [name]: finalValue }));
+  };
+  
+  // Handle icon change
+  const handleIconChange = (iconName: string) => {
+    // Clear errors when field is updated
+    if (errors.icon) {
+      setErrors(prev => {
+        const newErrors = { ...prev };
+        delete newErrors.icon;
+        return newErrors;
+      });
+    }
+    
+    setCategory(prev => ({ ...prev, icon: iconName }));
   };
   
   // Validate form
@@ -262,6 +278,20 @@ export default function AddCategoryPage() {
                   </div>
                   
                   <div>
+                    <Label htmlFor="icon">
+                      Category Icon <span className="text-gray-400">(optional)</span>
+                    </Label>
+                    <IconSelect 
+                      value={category.icon} 
+                      onChange={handleIconChange} 
+                      placeholder="Select an icon for this category"
+                    />
+                    <p className="mt-1 text-sm text-muted-foreground">
+                      Choose an icon that best represents this category
+                    </p>
+                  </div>
+                  
+                  <div>
                     <Label htmlFor="parentId" className={errors.parentId ? "text-red-500" : ""}>
                       Parent Category <span className="text-gray-400">(optional)</span>
                     </Label>
@@ -364,6 +394,7 @@ export default function AddCategoryPage() {
                       <li>Limit nesting to 2-3 levels for better navigation</li>
                       <li>Group similar products together for easier browsing</li>
                       <li>Consider how customers search for your products</li>
+                      <li>Choose appropriate icons that clearly represent each category</li>
                     </ul>
                   </div>
                 </div>

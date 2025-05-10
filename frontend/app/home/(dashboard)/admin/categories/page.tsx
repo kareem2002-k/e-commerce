@@ -7,7 +7,8 @@ import {
   Plus, Edit, Trash2, Search, 
   ChevronLeft, ChevronRight, FolderPlus, Zap,
   XCircle, RefreshCw, Tag, FolderTree,
-  ChevronDown
+  ChevronDown, Laptop, Smartphone, Headphones, Watch, Camera, Tv, Speaker, 
+  Gamepad2, Package, ShoppingCart, Home
 } from "lucide-react";
 import { useAuth } from "@/context/AuthContext";
 import { ProtectedRoute } from "@/components/auth/ProtectedRoute";
@@ -37,6 +38,29 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import React from "react";
 import { Category } from "@/types";
 import { getUrl } from "@/utils/index";
+
+// A simple icon mapper function
+const getCategoryIcon = (iconName: string | null | undefined) => {
+  if (!iconName) return <Tag className="h-4 w-4 text-blue-500" />;
+  
+  // Map common category icons - add more as needed
+  switch (iconName) {
+    case "Laptop": return <Laptop className="h-4 w-4 text-blue-500" />;
+    case "Smartphone": return <Smartphone className="h-4 w-4 text-blue-500" />;
+    case "Headphones": return <Headphones className="h-4 w-4 text-blue-500" />;
+    case "Watch": return <Watch className="h-4 w-4 text-blue-500" />;
+    case "Camera": return <Camera className="h-4 w-4 text-blue-500" />;
+    case "Tv": return <Tv className="h-4 w-4 text-blue-500" />;
+    case "Speaker": return <Speaker className="h-4 w-4 text-blue-500" />;
+    case "Gamepad": 
+    case "Gamepad2": return <Gamepad2 className="h-4 w-4 text-blue-500" />;
+    case "Package": return <Package className="h-4 w-4 text-blue-500" />;
+    case "ShoppingCart": return <ShoppingCart className="h-4 w-4 text-blue-500" />;
+    case "Home": return <Home className="h-4 w-4 text-blue-500" />;
+    default: return <Tag className="h-4 w-4 text-blue-500" />; 
+  }
+};
+
 export default function CategoriesPage() {
   const router = useRouter();
   const { user } = useAuth();
@@ -243,6 +267,9 @@ export default function CategoriesPage() {
               ) : (
                 <div className="w-8" />
               )}
+              <div className="mr-1.5">
+                {getCategoryIcon(category.icon)}
+              </div>
               <span className="font-medium">{category.name}</span>
             </div>
           </TableCell>
@@ -309,7 +336,12 @@ export default function CategoriesPage() {
         className="group"
       >
         <TableCell>
-          <span className="font-medium">{category.name}</span>
+          <div className="flex items-center">
+            <div className="mr-1.5">
+              {getCategoryIcon(category.icon)}
+            </div>
+            <span className="font-medium">{category.name}</span>
+          </div>
         </TableCell>
         <TableCell className="max-w-md truncate">
           {category.description || <span className="text-muted-foreground italic">No description</span>}

@@ -4056,6 +4056,7 @@ export namespace Prisma {
     id: string | null
     name: string | null
     description: string | null
+    icon: string | null
     parentId: string | null
   }
 
@@ -4063,6 +4064,7 @@ export namespace Prisma {
     id: string | null
     name: string | null
     description: string | null
+    icon: string | null
     parentId: string | null
   }
 
@@ -4070,6 +4072,7 @@ export namespace Prisma {
     id: number
     name: number
     description: number
+    icon: number
     parentId: number
     _all: number
   }
@@ -4079,6 +4082,7 @@ export namespace Prisma {
     id?: true
     name?: true
     description?: true
+    icon?: true
     parentId?: true
   }
 
@@ -4086,6 +4090,7 @@ export namespace Prisma {
     id?: true
     name?: true
     description?: true
+    icon?: true
     parentId?: true
   }
 
@@ -4093,6 +4098,7 @@ export namespace Prisma {
     id?: true
     name?: true
     description?: true
+    icon?: true
     parentId?: true
     _all?: true
   }
@@ -4173,6 +4179,7 @@ export namespace Prisma {
     id: string
     name: string
     description: string | null
+    icon: string | null
     parentId: string | null
     _count: CategoryCountAggregateOutputType | null
     _min: CategoryMinAggregateOutputType | null
@@ -4197,6 +4204,7 @@ export namespace Prisma {
     id?: boolean
     name?: boolean
     description?: boolean
+    icon?: boolean
     parentId?: boolean
     parent?: boolean | Category$parentArgs<ExtArgs>
     children?: boolean | Category$childrenArgs<ExtArgs>
@@ -4208,6 +4216,7 @@ export namespace Prisma {
     id?: boolean
     name?: boolean
     description?: boolean
+    icon?: boolean
     parentId?: boolean
     parent?: boolean | Category$parentArgs<ExtArgs>
   }, ExtArgs["result"]["category"]>
@@ -4216,6 +4225,7 @@ export namespace Prisma {
     id?: boolean
     name?: boolean
     description?: boolean
+    icon?: boolean
     parentId?: boolean
     parent?: boolean | Category$parentArgs<ExtArgs>
   }, ExtArgs["result"]["category"]>
@@ -4224,10 +4234,11 @@ export namespace Prisma {
     id?: boolean
     name?: boolean
     description?: boolean
+    icon?: boolean
     parentId?: boolean
   }
 
-  export type CategoryOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "description" | "parentId", ExtArgs["result"]["category"]>
+  export type CategoryOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "description" | "icon" | "parentId", ExtArgs["result"]["category"]>
   export type CategoryInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     parent?: boolean | Category$parentArgs<ExtArgs>
     children?: boolean | Category$childrenArgs<ExtArgs>
@@ -4252,6 +4263,7 @@ export namespace Prisma {
       id: string
       name: string
       description: string | null
+      icon: string | null
       parentId: string | null
     }, ExtArgs["result"]["category"]>
     composites: {}
@@ -4682,6 +4694,7 @@ export namespace Prisma {
     readonly id: FieldRef<"Category", 'String'>
     readonly name: FieldRef<"Category", 'String'>
     readonly description: FieldRef<"Category", 'String'>
+    readonly icon: FieldRef<"Category", 'String'>
     readonly parentId: FieldRef<"Category", 'String'>
   }
     
@@ -23868,6 +23881,7 @@ export namespace Prisma {
     id: 'id',
     name: 'name',
     description: 'description',
+    icon: 'icon',
     parentId: 'parentId'
   };
 
@@ -24389,6 +24403,7 @@ export namespace Prisma {
     id?: StringFilter<"Category"> | string
     name?: StringFilter<"Category"> | string
     description?: StringNullableFilter<"Category"> | string | null
+    icon?: StringNullableFilter<"Category"> | string | null
     parentId?: StringNullableFilter<"Category"> | string | null
     parent?: XOR<CategoryNullableScalarRelationFilter, CategoryWhereInput> | null
     children?: CategoryListRelationFilter
@@ -24399,6 +24414,7 @@ export namespace Prisma {
     id?: SortOrder
     name?: SortOrder
     description?: SortOrderInput | SortOrder
+    icon?: SortOrderInput | SortOrder
     parentId?: SortOrderInput | SortOrder
     parent?: CategoryOrderByWithRelationInput
     children?: CategoryOrderByRelationAggregateInput
@@ -24412,6 +24428,7 @@ export namespace Prisma {
     OR?: CategoryWhereInput[]
     NOT?: CategoryWhereInput | CategoryWhereInput[]
     description?: StringNullableFilter<"Category"> | string | null
+    icon?: StringNullableFilter<"Category"> | string | null
     parentId?: StringNullableFilter<"Category"> | string | null
     parent?: XOR<CategoryNullableScalarRelationFilter, CategoryWhereInput> | null
     children?: CategoryListRelationFilter
@@ -24422,6 +24439,7 @@ export namespace Prisma {
     id?: SortOrder
     name?: SortOrder
     description?: SortOrderInput | SortOrder
+    icon?: SortOrderInput | SortOrder
     parentId?: SortOrderInput | SortOrder
     _count?: CategoryCountOrderByAggregateInput
     _max?: CategoryMaxOrderByAggregateInput
@@ -24435,6 +24453,7 @@ export namespace Prisma {
     id?: StringWithAggregatesFilter<"Category"> | string
     name?: StringWithAggregatesFilter<"Category"> | string
     description?: StringNullableWithAggregatesFilter<"Category"> | string | null
+    icon?: StringNullableWithAggregatesFilter<"Category"> | string | null
     parentId?: StringNullableWithAggregatesFilter<"Category"> | string | null
   }
 
@@ -25871,6 +25890,7 @@ export namespace Prisma {
     id?: string
     name: string
     description?: string | null
+    icon?: string | null
     parent?: CategoryCreateNestedOneWithoutChildrenInput
     children?: CategoryCreateNestedManyWithoutParentInput
     products?: ProductCreateNestedManyWithoutCategoryInput
@@ -25880,6 +25900,7 @@ export namespace Prisma {
     id?: string
     name: string
     description?: string | null
+    icon?: string | null
     parentId?: string | null
     children?: CategoryUncheckedCreateNestedManyWithoutParentInput
     products?: ProductUncheckedCreateNestedManyWithoutCategoryInput
@@ -25889,6 +25910,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
+    icon?: NullableStringFieldUpdateOperationsInput | string | null
     parent?: CategoryUpdateOneWithoutChildrenNestedInput
     children?: CategoryUpdateManyWithoutParentNestedInput
     products?: ProductUpdateManyWithoutCategoryNestedInput
@@ -25898,6 +25920,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
+    icon?: NullableStringFieldUpdateOperationsInput | string | null
     parentId?: NullableStringFieldUpdateOperationsInput | string | null
     children?: CategoryUncheckedUpdateManyWithoutParentNestedInput
     products?: ProductUncheckedUpdateManyWithoutCategoryNestedInput
@@ -25907,6 +25930,7 @@ export namespace Prisma {
     id?: string
     name: string
     description?: string | null
+    icon?: string | null
     parentId?: string | null
   }
 
@@ -25914,12 +25938,14 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
+    icon?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type CategoryUncheckedUpdateManyInput = {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
+    icon?: NullableStringFieldUpdateOperationsInput | string | null
     parentId?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
@@ -27623,6 +27649,7 @@ export namespace Prisma {
     id?: SortOrder
     name?: SortOrder
     description?: SortOrder
+    icon?: SortOrder
     parentId?: SortOrder
   }
 
@@ -27630,6 +27657,7 @@ export namespace Prisma {
     id?: SortOrder
     name?: SortOrder
     description?: SortOrder
+    icon?: SortOrder
     parentId?: SortOrder
   }
 
@@ -27637,6 +27665,7 @@ export namespace Prisma {
     id?: SortOrder
     name?: SortOrder
     description?: SortOrder
+    icon?: SortOrder
     parentId?: SortOrder
   }
 
@@ -30506,6 +30535,7 @@ export namespace Prisma {
     id?: string
     name: string
     description?: string | null
+    icon?: string | null
     parent?: CategoryCreateNestedOneWithoutChildrenInput
     products?: ProductCreateNestedManyWithoutCategoryInput
   }
@@ -30514,6 +30544,7 @@ export namespace Prisma {
     id?: string
     name: string
     description?: string | null
+    icon?: string | null
     parentId?: string | null
     products?: ProductUncheckedCreateNestedManyWithoutCategoryInput
   }
@@ -30527,6 +30558,7 @@ export namespace Prisma {
     id?: string
     name: string
     description?: string | null
+    icon?: string | null
     children?: CategoryCreateNestedManyWithoutParentInput
     products?: ProductCreateNestedManyWithoutCategoryInput
   }
@@ -30535,6 +30567,7 @@ export namespace Prisma {
     id?: string
     name: string
     description?: string | null
+    icon?: string | null
     children?: CategoryUncheckedCreateNestedManyWithoutParentInput
     products?: ProductUncheckedCreateNestedManyWithoutCategoryInput
   }
@@ -30628,6 +30661,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
+    icon?: NullableStringFieldUpdateOperationsInput | string | null
     parent?: CategoryUpdateOneWithoutChildrenNestedInput
     products?: ProductUpdateManyWithoutCategoryNestedInput
   }
@@ -30636,6 +30670,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
+    icon?: NullableStringFieldUpdateOperationsInput | string | null
     parentId?: NullableStringFieldUpdateOperationsInput | string | null
     products?: ProductUncheckedUpdateManyWithoutCategoryNestedInput
   }
@@ -30663,6 +30698,7 @@ export namespace Prisma {
     id?: StringFilter<"Category"> | string
     name?: StringFilter<"Category"> | string
     description?: StringNullableFilter<"Category"> | string | null
+    icon?: StringNullableFilter<"Category"> | string | null
     parentId?: StringNullableFilter<"Category"> | string | null
   }
 
@@ -30713,6 +30749,7 @@ export namespace Prisma {
     id?: string
     name: string
     description?: string | null
+    icon?: string | null
     parent?: CategoryCreateNestedOneWithoutChildrenInput
     children?: CategoryCreateNestedManyWithoutParentInput
   }
@@ -30721,6 +30758,7 @@ export namespace Prisma {
     id?: string
     name: string
     description?: string | null
+    icon?: string | null
     parentId?: string | null
     children?: CategoryUncheckedCreateNestedManyWithoutParentInput
   }
@@ -30843,6 +30881,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
+    icon?: NullableStringFieldUpdateOperationsInput | string | null
     parent?: CategoryUpdateOneWithoutChildrenNestedInput
     children?: CategoryUpdateManyWithoutParentNestedInput
   }
@@ -30851,6 +30890,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
+    icon?: NullableStringFieldUpdateOperationsInput | string | null
     parentId?: NullableStringFieldUpdateOperationsInput | string | null
     children?: CategoryUncheckedUpdateManyWithoutParentNestedInput
   }
@@ -33078,6 +33118,7 @@ export namespace Prisma {
     id?: string
     name: string
     description?: string | null
+    icon?: string | null
   }
 
   export type ProductCreateManyCategoryInput = {
@@ -33107,6 +33148,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
+    icon?: NullableStringFieldUpdateOperationsInput | string | null
     children?: CategoryUpdateManyWithoutParentNestedInput
     products?: ProductUpdateManyWithoutCategoryNestedInput
   }
@@ -33115,6 +33157,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
+    icon?: NullableStringFieldUpdateOperationsInput | string | null
     children?: CategoryUncheckedUpdateManyWithoutParentNestedInput
     products?: ProductUncheckedUpdateManyWithoutCategoryNestedInput
   }
@@ -33123,6 +33166,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
+    icon?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type ProductUpdateWithoutCategoryInput = {

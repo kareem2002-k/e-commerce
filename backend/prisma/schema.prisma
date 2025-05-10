@@ -83,6 +83,7 @@ model Category {
   id          String     @id @default(uuid())
   name        String     @unique
   description String?
+  icon        String?    // Store the Lucide icon name (e.g., "Laptop", "Smartphone")
   parent      Category?  @relation("CategoryToCategory", fields: [parentId], references: [id])
   parentId    String?
   children    Category[] @relation("CategoryToCategory")

@@ -4,6 +4,7 @@ export type Category = {
   id: string;
   name: string;
   description: string | null;
+  icon: string | null;
   parentId: string | null;
   parent?: Category | null;
   children?: Category[];

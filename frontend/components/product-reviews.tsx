@@ -10,6 +10,7 @@ import { Star, ThumbsUp, MessageSquare, Loader2 } from "lucide-react"
 import { toast } from "sonner"
 import { cn } from "@/lib/utils"
 import { useAuth } from "@/context/AuthContext"
+import { getUrl } from "@/utils"
 
 interface Review {
   id: string
@@ -119,7 +120,7 @@ export function ProductReviews({ productId, rating, reviewCount }: ProductReview
     
     try {
       setSubmitting(true)
-      const API_URL = getUrl();
+      const API_URL = getUrl(); 
       const response = await fetch(`${API_URL}/reviews`, {
         method: 'POST',
         headers: {
