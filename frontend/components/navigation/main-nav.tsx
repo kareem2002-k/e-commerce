@@ -43,7 +43,7 @@ export function MainNav() {
                 <ListItem
                   key={category.id}
                   title={category.name}
-                  href={`/home/products/${category.id}`}
+                  href={`/home/search?category=${category.name}`}
                   icon={<Laptop  className="h-6 w-6 text-voltBlue-500" />}
                 >
                 
@@ -52,16 +52,7 @@ export function MainNav() {
             </ul>
           </NavigationMenuContent>
         </NavigationMenuItem>
-        <NavigationMenuItem>
-          <Link href="/home/deals" legacyBehavior passHref>
-            <NavigationMenuLink className={navigationMenuTriggerStyle()}>Deals</NavigationMenuLink>
-          </Link>
-        </NavigationMenuItem>
-        <NavigationMenuItem>
-          <Link href="/home/support" legacyBehavior passHref>
-            <NavigationMenuLink className={navigationMenuTriggerStyle()}>Support</NavigationMenuLink>
-          </Link>
-        </NavigationMenuItem>
+      
       </NavigationMenuList>
     </NavigationMenu>
   )
