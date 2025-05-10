@@ -119,8 +119,8 @@ export function ProductReviews({ productId, rating, reviewCount }: ProductReview
     
     try {
       setSubmitting(true)
-      
-      const response = await fetch('/api/reviews', {
+      const API_URL = getUrl();
+      const response = await fetch(`${API_URL}/reviews`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

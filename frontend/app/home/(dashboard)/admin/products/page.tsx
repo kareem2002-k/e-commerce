@@ -59,7 +59,7 @@ import Image from "next/image";
 import { useGet } from "@/hooks/useApiFetch";
 import DataLoader from "@/components/ui/data-loader";
 import { Category, Product } from "@/types";
-
+import { getUrl } from "@/utils/index";
 
 
 
@@ -87,11 +87,12 @@ export default function AdminProductsPage() {
   });
   
   // Fetch data using custom hooks
-  const [productsState, fetchProducts] = useGet<Product[]>('/api/products', {
+  const API_URL = getUrl();
+  const [productsState, fetchProducts] = useGet<Product[]>(`${API_URL}/products`, {
     showErrorToast: false,
   });
   
-  const [categoriesState, fetchCategories] = useGet<Category[]>('/api/categories', {
+  const [categoriesState, fetchCategories] = useGet<Category[]>(`${API_URL}/categories`, {
     showErrorToast: false,
   });
   

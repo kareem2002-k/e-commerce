@@ -36,6 +36,7 @@ import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import React from "react";
 import { Category } from "@/types";
+import { getUrl } from "@/utils/index";
 export default function CategoriesPage() {
   const router = useRouter();
   const { user } = useAuth();
@@ -62,7 +63,8 @@ export default function CategoriesPage() {
     const fetchCategories = async () => {
       try {
         // Fetch categories
-        const response = await fetch('/api/categories');
+        const API_URL = getUrl();
+        const response = await fetch(`${API_URL}/categories`);
         if (!response.ok) throw new Error('Failed to fetch categories');
         
         const data = await response.json();
@@ -96,7 +98,7 @@ export default function CategoriesPage() {
         });
         
         // Fetch product counts
-        const productsResponse = await fetch('/api/products');
+        const productsResponse = await fetch(`${API_URL}/products`);
         if (productsResponse.ok) {
           const products = await productsResponse.json();
           
@@ -154,7 +156,8 @@ export default function CategoriesPage() {
     if (!categoryToDelete) return;
     
     try {
-      const response = await fetch(`/api/categories/${categoryToDelete.id}`, {
+      const API_URL = getUrl();
+      const response = await fetch(`${API_URL}/categories/${categoryToDelete.id}`, {
         method: 'DELETE',
       });
       

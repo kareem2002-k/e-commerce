@@ -13,7 +13,7 @@ import SectionLoading from "@/components/voltedge/section-loading"
 import { useProductSearch, SearchFilters as Filters } from "@/hooks/useProductSearch"
 import { useAuth } from "@/context/AuthContext"
 import { Skeleton } from "@/components/ui/skeleton"
-
+import { getUrl } from "@/utils/index"
 // Default "All Categories" option
 const DEFAULT_CATEGORY = "All Categories"
 
@@ -97,7 +97,8 @@ export default function SearchPage() {
         setFilterError(null)
         
         // Fetch categories
-        const categoriesResponse = await fetch('/api/categories', {
+        const API_URL = getUrl();
+        const categoriesResponse = await fetch(`${API_URL}/categories`, {
           headers: {
             'Authorization': `Bearer ${token}`,
             'Content-Type': 'application/json'

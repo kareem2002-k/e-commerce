@@ -23,8 +23,8 @@ export function useImageUpload() {
 
       // Convert the file to base64
       const base64 = await fileToBase64(file);
-      
-      const response = await fetch('/api/uploads/image', {
+      const API_URL = getUrl();
+      const response = await fetch(`${API_URL}/uploads/image`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

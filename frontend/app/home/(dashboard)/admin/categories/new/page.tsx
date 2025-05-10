@@ -24,7 +24,7 @@ import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { useGet, usePost } from "@/hooks/useApiFetch";
 import DataLoader from "@/components/ui/data-loader";
 import { Category } from "@/types";
-
+import { getUrl } from "@/utils/index"; 
 
 
 export default function AddCategoryPage() {
@@ -43,12 +43,13 @@ export default function AddCategoryPage() {
   const [errors, setErrors] = useState<Record<string, string>>({});
   
   // Fetch categories using custom hook
-  const [categoriesState, fetchCategories] = useGet<Category[]>('/api/categories', {
+  const API_URL = getUrl();
+  const [categoriesState, fetchCategories] = useGet<Category[]>(`${API_URL}/categories`, {
     showErrorToast: false
   });
   
   // Create category API endpoint
-  const [createState, createCategory] = usePost<Category>('/api/categories', {
+  const [createState, createCategory] = usePost<Category>(`${API_URL}/categories`, {
     showSuccessToast: true,
     successMessage: "Category created successfully",
     showErrorToast: true,

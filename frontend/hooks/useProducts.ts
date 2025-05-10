@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { Product } from "@/types";
 import { useAuth } from "@/context/AuthContext";
-
+import { getUrl } from "@/utils/index";
 // Hook to fetch all products
 export function useProducts() {
   const [products, setProducts] = useState<Product[]>([]);
@@ -20,9 +20,9 @@ export function useProducts() {
         setLoading(false);
         return;
       }
-      
+      const API_URL = getUrl();
       setLoading(true);
-      const response = await fetch('/api/products', {
+      const response = await fetch(`${API_URL}/products`, {
         headers: {
           'Authorization': `Bearer ${token}`,
         },
@@ -64,7 +64,8 @@ export function useProduct(productId: string | undefined) {
       }
 
       setLoading(true);
-      const response = await fetch(`/api/products/${id}`, {
+      const API_URL = getUrl();
+      const response = await fetch(`${API_URL}/products/${id}`, {
         headers: {
           'Authorization': `Bearer ${token}`,
         },
@@ -137,7 +138,8 @@ export function useCategories(products?: Product[]) {
       setLoading(true);
       // First try to fetch from a dedicated categories endpoint if available
       try {
-        const response = await fetch('/api/categories', {
+        const API_URL = getUrl();
+        const response = await fetch(`${API_URL}/categories`, {
           headers: {
             'Authorization': `Bearer ${token}`,
           },
@@ -153,7 +155,8 @@ export function useCategories(products?: Product[]) {
       }
 
       // Fallback: fetch products and extract categories
-      const response = await fetch('/api/products', {
+      const API_URL = getUrl();
+      const response = await fetch(`${API_URL}/products`, {
         headers: {
           'Authorization': `Bearer ${token}`,
         },
@@ -205,7 +208,8 @@ export function useFeaturedProducts() {
       }
       
       setLoading(true);
-      const response = await fetch('/api/products', {
+      const API_URL = getUrl();
+      const response = await fetch(`${API_URL}/products`, {
         headers: {
           'Authorization': `Bearer ${token}`,
         },

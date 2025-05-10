@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useAuth } from '@/context/AuthContext';
 import { useToast } from '@/components/ui/use-toast';
 import { Order } from '@/types';
+import { getUrl } from '@/utils';
 
 
 
@@ -22,8 +23,8 @@ export function useOrders() {
     try {
       setLoading(true);
       setError(null);
-      
-      const response = await fetch('/api/orders/admin/all', {
+      const API_URL = getUrl();
+      const response = await fetch(`${API_URL}/orders/admin/all`, {
         headers: {
           'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json',

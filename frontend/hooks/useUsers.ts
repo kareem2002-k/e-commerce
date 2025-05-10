@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useAuth } from '@/context/AuthContext';
 import { useToast } from '@/components/ui/use-toast';
-
+import { getUrl } from '@/utils/index';
 export type User = {
   id: string;
   email: string;
@@ -28,8 +28,8 @@ export function useUsers() {
     try {
       setLoading(true);
       setError(null);
-      
-      const response = await fetch('/api/users', {
+      const API_URL = getUrl();
+      const response = await fetch(`${API_URL}/users`, {
         headers: {
           'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json',
