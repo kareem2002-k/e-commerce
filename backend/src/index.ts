@@ -16,6 +16,7 @@ import shippingRoutes from './routes/shipping';
 import cors from 'cors';
 import { setupDefaultContent } from './setupContent';
 import { seedShippingData } from './seedShipping';
+import adminRoutes from './routes/admin';
 
 // Load environment variables
 dotenv.config();
@@ -49,7 +50,7 @@ app.use('/api/uploads', uploadRoutes);
 app.use('/api/content', contentRoutes);
 app.use('/api/users', usersRouter);   
 app.use('/api/shipping', shippingRoutes);
-
+app.use('/api/admin', adminRoutes);
 
 // Start server
 app.listen(PORT, () => {
