@@ -150,7 +150,10 @@ export function usePost<T = any>(url: string, options: Omit<FetchOptions, 'metho
   return useApiFetch<T>(url, { ...options, method: 'POST' });
 }
 
-export function usePut<T = any>(url: string, options: Omit<FetchOptions, 'method'> = {}) {
+export function usePut<T>(
+  url: string,
+  options: FetchOptions = {}
+): [FetchState<T>, (params?: any, customOptions?: Partial<FetchOptions>) => Promise<T | null>] {
   return useApiFetch<T>(url, { ...options, method: 'PUT' });
 }
 

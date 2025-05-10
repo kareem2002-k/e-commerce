@@ -63,7 +63,7 @@ const getCategoryIcon = (iconName: string | null | undefined) => {
 
 export default function CategoriesPage() {
   const router = useRouter();
-  const { user } = useAuth();
+  const { user, token } = useAuth();
   const [categories, setCategories] = useState<Category[]>([]);
   const [flatCategories, setFlatCategories] = useState<Category[]>([]);
   const [loading, setLoading] = useState(true);
@@ -121,15 +121,25 @@ export default function CategoriesPage() {
           }
         });
         
-        // Fetch product counts
-        const productsResponse = await fetch(`${API_URL}/products`);
+        // Fetch products with authorization
+        const headers: Record<string, string> = {};
+        if (token) {
+          headers['Authorization'] = `Bearer ${token}`;
+        }
+        
+        const productsResponse = await fetch(`${API_URL}/products`, {
+          headers
+        });
+        
         if (productsResponse.ok) {
           const products = await productsResponse.json();
           
           // Count products in each category
           products.forEach((product: any) => {
-            if (product.categoryId) {
-              const category = categoriesMap.get(product.categoryId);
+            // Check if the product has a category and it has an id
+            if (product.category && product.category.id) {
+              const categoryId = product.category.id;
+              const category = categoriesMap.get(categoryId);
               if (category) {
                 category.productsCount = (category.productsCount || 0) + 1;
               }
@@ -150,7 +160,7 @@ export default function CategoriesPage() {
     if (user?.isAdmin) {
       fetchCategories();
     }
-  }, [user]);
+  }, [user, token]);
   
   // Toggle category expansion
   const toggleCategory = (categoryId: string) => {
@@ -402,7 +412,7 @@ export default function CategoriesPage() {
               <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
                 <Button 
                   variant="ghost" 
-                  onClick={() => router.push('/admin/products')}
+                  onClick={() => router.push('/home/admin/products')}
                   className="mr-4"
                 >
                   <ChevronLeft className="h-4 w-4 mr-2" />
