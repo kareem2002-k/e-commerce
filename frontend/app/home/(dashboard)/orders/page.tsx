@@ -239,7 +239,7 @@ export default function OrdersPage() {
       setRefundError(null)
 
       const response = await axios.post(
-        `${API_URL}/api/orders/${selectedOrderForRefund.id}/refund/request`,
+        `${API_URL}/orders/${selectedOrderForRefund.id}/refund/request`,
         {
           amount,
           reason: refundReason,
