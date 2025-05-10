@@ -11,6 +11,9 @@ const BUCKET_NAME = 'product-images';
  */
 export async function uploadImage(fileData: string, fileName: string): Promise<string> {
   try {
+    // Log connection info for debugging (remove in production)
+    console.log("Using Supabase URL:", (supabase as any).supabaseUrl);
+    
     // Ensure the bucket exists
     const { data: bucketData, error: bucketError } = await supabase.storage.getBucket(BUCKET_NAME);
     
@@ -48,15 +51,24 @@ export async function uploadImage(fileData: string, fileName: string): Promise<s
       });
       
     if (error) {
+      console.error("Supabase upload error:", error);
       throw error;
     }
     
-    // Get public URL
+    // Get public URL - ensure the URL domain is complete
     const { data: publicUrlData } = supabase.storage
       .from(BUCKET_NAME)
       .getPublicUrl(filePath);
-      
-    return publicUrlData.publicUrl;
+    
+    // Get the URL and ensure it has the correct domain
+    let url = publicUrlData.publicUrl;
+    
+    // Check if the URL contains the incorrect domain (missing .co)
+    if (url.includes('.supabase.c/')) {
+      url = url.replace('.supabase.c/', '.supabase.co/');
+    }
+    
+    return url;
   } catch (error) {
     console.error('Error uploading image to Supabase:', error);
     throw error;
