@@ -58,7 +58,7 @@ export default function SearchPage() {
     searchTerm: query,
     category: categoryParam,
     minPrice: minPriceParam ? Number(minPriceParam) : 0,
-    maxPrice: maxPriceParam ? Number(maxPriceParam) : 2000,
+    maxPrice: maxPriceParam ? Number(maxPriceParam) : 10000,
     sortBy: sortByParam,
     tag: tagParam,
   }
@@ -156,7 +156,7 @@ export default function SearchPage() {
       params.set("minPrice", newFilters.minPrice.toString())
     }
 
-    if (newFilters.maxPrice && newFilters.maxPrice < 2000) {
+    if (newFilters.maxPrice && newFilters.maxPrice < 10000) {
       params.set("maxPrice", newFilters.maxPrice.toString())
     }
 
@@ -271,7 +271,7 @@ export default function SearchPage() {
           <SearchFilters
             searchTerm={filters.searchTerm || ""}
             selectedCategory={filters.category || DEFAULT_CATEGORY}
-            priceRange={[filters.minPrice || 0, filters.maxPrice || 2000]}
+            priceRange={[filters.minPrice || 0, filters.maxPrice || 10000]}
             sortBy={filters.sortBy || "relevance"}
             categories={categories}
             onUpdateFilters={handleUpdateFilters}
@@ -292,7 +292,7 @@ export default function SearchPage() {
               <SearchFilters
                 searchTerm={filters.searchTerm || ""}
                 selectedCategory={filters.category || DEFAULT_CATEGORY}
-                priceRange={[filters.minPrice || 0, filters.maxPrice || 2000]}
+                priceRange={[filters.minPrice || 0, filters.maxPrice || 10000]}
                 sortBy={filters.sortBy || "relevance"}
                 categories={categories}
                 onUpdateFilters={handleUpdateFilters}
@@ -327,7 +327,7 @@ export default function SearchPage() {
             <div className="flex items-center gap-2">
               {(filters.category !== DEFAULT_CATEGORY ||
                 (filters.minPrice && filters.minPrice > 0) ||
-                (filters.maxPrice && filters.maxPrice < 2000) ||
+                (filters.maxPrice && filters.maxPrice < 10000) ||
                 filters.searchTerm) && (
                 <Button variant="outline" size="sm" onClick={handleClearFilters} className="hidden lg:flex">
                   <X className="mr-1 h-4 w-4" />
