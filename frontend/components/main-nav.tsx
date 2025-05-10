@@ -91,16 +91,7 @@ export function MainNav() {
             </ul>
           </NavigationMenuContent>
         </NavigationMenuItem>
-        <NavigationMenuItem>
-          <Link href="/home/search?tag=deals" legacyBehavior passHref>
-            <NavigationMenuLink className={navigationMenuTriggerStyle()}>Deals</NavigationMenuLink>
-          </Link>
-        </NavigationMenuItem>
-        <NavigationMenuItem>
-          <Link href="/home/support" legacyBehavior passHref>
-            <NavigationMenuLink className={navigationMenuTriggerStyle()}>Support</NavigationMenuLink>
-          </Link>
-        </NavigationMenuItem>
+       
       </NavigationMenuList>
     </NavigationMenu>
   )

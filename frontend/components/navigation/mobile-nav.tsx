@@ -62,18 +62,7 @@ export function MobileNav() {
             )}
           </div>
 
-          <SheetClose asChild>
-            <Link href="/home/deals" className="text-lg font-medium">
-              Deals
-            </Link>
-          </SheetClose>
-
-          <SheetClose asChild>
-            <Link href="/home/support" className="text-lg font-medium">
-              Support
-            </Link>
-          </SheetClose>
-
+         
           <SheetClose asChild>
             <Link href="/home/orders" className="text-lg font-medium">
               My Orders
