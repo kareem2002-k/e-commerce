@@ -12,8 +12,10 @@ import reviewRoutes from './routes/reviews';
 import uploadRoutes from './routes/uploads';
 import contentRoutes from './routes/content';
 import usersRouter from './routes/users';
+import shippingRoutes from './routes/shipping';
 import cors from 'cors';
 import { setupDefaultContent } from './setupContent';
+import { seedShippingData } from './seedShipping';
 
 // Load environment variables
 dotenv.config();
@@ -46,14 +48,22 @@ app.use('/api/reviews', reviewRoutes);
 app.use('/api/uploads', uploadRoutes);
 app.use('/api/content', contentRoutes);
 app.use('/api/users', usersRouter);   
+app.use('/api/shipping', shippingRoutes);
 
 
 // Start server
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
   
-  // Setup default content
-  setupDefaultContent().catch(err => {
-    console.error('Error during content setup:', err);
+  // Setup initial data
+  Promise.all([
+    setupDefaultContent().catch(err => {
+      console.error('Error during content setup:', err);
+    }),
+    seedShippingData().catch(err => {
+      console.error('Error during shipping data setup:', err);
+    })
+  ]).then(() => {
+    console.log('Initial data setup completed.');
   });
 });

@@ -74,6 +74,7 @@ export default function AdminCampaignsPage() {
   const [editingCampaign, setEditingCampaign] = useState<Campaign | null>(null);
   const [campaignAnalytics, setCampaignAnalytics] = useState<Campaign | null>(null);
   const [showAnalyticsDialog, setShowAnalyticsDialog] = useState(false);
+  const [formTab, setFormTab] = useState('basics');
   
   // Form state
   const [formData, setFormData] = useState({
@@ -84,9 +85,12 @@ export default function AdminCampaignsPage() {
     startDate: '',
     endDate: '',
     position: 'homepage_banner',
-    imageUrl: ''
+    imageUrl: '',
+    targetAudience: '',
+    goals: '',
+    notes: ''
   });
-  
+
   // Get API URL with fallback
   const API_URL = getUrl();
   
@@ -152,7 +156,10 @@ export default function AdminCampaignsPage() {
       startDate: today.toISOString().split('T')[0],
       endDate: nextMonth.toISOString().split('T')[0],
       position: 'homepage_banner',
-      imageUrl: ''
+      imageUrl: '',
+      targetAudience: '',
+      goals: '',
+      notes: ''
     });
     setEditingCampaign(null);
     setOpenCampaignDialog(true);
@@ -168,7 +175,10 @@ export default function AdminCampaignsPage() {
       startDate: new Date(campaign.startDate).toISOString().split('T')[0],
       endDate: new Date(campaign.endDate).toISOString().split('T')[0],
       position: campaign.position || 'homepage_banner',
-      imageUrl: campaign.imageUrl || ''
+      imageUrl: campaign.imageUrl || '',
+      targetAudience: campaign.targetAudience || '',
+      goals: campaign.goals || '',
+      notes: campaign.notes || ''
     });
     setEditingCampaign(campaign);
     setOpenCampaignDialog(true);
@@ -316,6 +326,24 @@ export default function AdminCampaignsPage() {
   const calculateConversionRate = (campaign: Campaign) => {
     if (campaign.clickCount === 0) return '0%';
     return `${Math.round((campaign.conversionCount / campaign.clickCount) * 100)}%`;
+  };
+  
+  // Calculate estimated revenue (assuming we know the coupon value and avg order)
+  const calculateEstimatedRevenue = (campaign: Campaign) => {
+    // This is an estimate based on conversions and average order value
+    const avgOrderValue = 75; // You would ideally get this from your orders data
+    return formatCurrency(campaign.conversionCount * avgOrderValue);
+  };
+  
+  // Calculate ROI - Return on Investment (assuming we know campaign cost)
+  const calculateROI = (campaign: Campaign) => {
+    // This assumes you're tracking campaign costs somewhere
+    const campaignCost = 100; // Placeholder - you would get this from your campaign data
+    const revenue = campaign.conversionCount * 75; // Estimated revenue
+    
+    if (campaignCost <= 0) return 'N/A';
+    const roi = ((revenue - campaignCost) / campaignCost) * 100;
+    return `${roi.toFixed(1)}%`;
   };
   
   // Filter campaigns based on active tab
@@ -523,9 +551,9 @@ export default function AdminCampaignsPage() {
         </CardContent>
       </Card>
       
-      {/* Campaign Form Dialog */}
+      {/* Campaign Form Dialog with Tabs */}
       <Dialog open={openCampaignDialog} onOpenChange={setOpenCampaignDialog}>
-        <DialogContent className="sm:max-w-[600px]">
+        <DialogContent className="sm:max-w-[700px] max-h-[90vh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle>{editingCampaign ? 'Edit Campaign' : 'Add New Campaign'}</DialogTitle>
             <DialogDescription>
@@ -535,126 +563,201 @@ export default function AdminCampaignsPage() {
             </DialogDescription>
           </DialogHeader>
           
-          <div className="grid gap-4 py-4">
-            <div className="space-y-2">
-              <Label htmlFor="name">Campaign Name</Label>
-              <Input
-                id="name"
-                name="name"
-                value={formData.name}
-                onChange={handleInputChange}
-                placeholder="Summer Sale Campaign"
-              />
-            </div>
+          <Tabs defaultValue="basics" value={formTab} onValueChange={setFormTab}>
+            <TabsList className="grid grid-cols-3 mb-4">
+              <TabsTrigger value="basics">Basic Info</TabsTrigger>
+              <TabsTrigger value="media">Media & Display</TabsTrigger>
+              <TabsTrigger value="advanced">Advanced</TabsTrigger>
+            </TabsList>
             
-            <div className="space-y-2">
-              <Label htmlFor="description">Description</Label>
-              <Textarea
-                id="description"
-                name="description"
-                value={formData.description}
-                onChange={handleInputChange}
-                placeholder="Special summer promotion with exclusive discounts"
-                rows={2}
-              />
-            </div>
-            
-            <div className="space-y-2">
-              <Label htmlFor="couponId">Select Coupon</Label>
-              <Select 
-                value={formData.couponId}
-                onValueChange={(value) => handleSelectChange('couponId', value)}
-              >
-                <SelectTrigger>
-                  <SelectValue placeholder="Select a coupon" />
-                </SelectTrigger>
-                <SelectContent>
-                  {coupons.map(coupon => (
-                    <SelectItem key={coupon.id} value={coupon.id}>
-                      {coupon.code} - {coupon.discountType === 'PERCENTAGE' 
-                        ? `${coupon.discountValue}%` 
-                        : formatCurrency(coupon.discountValue)}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
-            
-            <div className="space-y-2">
-              <Label htmlFor="image">Campaign Image</Label>
-              <ImageUploader
-                onImagesUploaded={handleImagesUploaded}
-                maxImages={1}
-                existingImages={formData.imageUrl ? [{ url: formData.imageUrl, altText: formData.name }] : []}
-                label="Upload Campaign Image"
-              />
-            </div>
-            
-            <div className="grid grid-cols-2 gap-4">
-              <div className="space-y-2">
-                <Label htmlFor="startDate">Start Date</Label>
-                <Input
-                  id="startDate"
-                  name="startDate"
-                  type="date"
-                  value={formData.startDate}
-                  onChange={handleInputChange}
-                />
+            <TabsContent value="basics">
+              <div className="grid gap-4 py-2">
+                <div className="space-y-2">
+                  <Label htmlFor="name">Campaign Name</Label>
+                  <Input
+                    id="name"
+                    name="name"
+                    value={formData.name}
+                    onChange={handleInputChange}
+                    placeholder="Summer Sale Campaign"
+                  />
+                </div>
+                
+                <div className="space-y-2">
+                  <Label htmlFor="description">Description</Label>
+                  <Textarea
+                    id="description"
+                    name="description"
+                    value={formData.description}
+                    onChange={handleInputChange}
+                    placeholder="Special summer promotion with exclusive discounts"
+                    rows={2}
+                  />
+                </div>
+                
+                <div className="space-y-2">
+                  <Label htmlFor="couponId">Select Coupon</Label>
+                  <Select 
+                    value={formData.couponId}
+                    onValueChange={(value) => handleSelectChange('couponId', value)}
+                  >
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select a coupon" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {coupons.map(coupon => (
+                        <SelectItem key={coupon.id} value={coupon.id}>
+                          {coupon.code} - {coupon.discountType === 'PERCENTAGE' 
+                            ? `${coupon.discountValue}%` 
+                            : formatCurrency(coupon.discountValue)}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+                
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="startDate">Start Date</Label>
+                    <Input
+                      id="startDate"
+                      name="startDate"
+                      type="date"
+                      value={formData.startDate}
+                      onChange={handleInputChange}
+                    />
+                  </div>
+                  
+                  <div className="space-y-2">
+                    <Label htmlFor="endDate">End Date</Label>
+                    <Input
+                      id="endDate"
+                      name="endDate"
+                      type="date"
+                      value={formData.endDate}
+                      onChange={handleInputChange}
+                    />
+                  </div>
+                </div>
+
+                <div className="flex items-center space-x-2 pt-2">
+                  <Switch 
+                    id="isActive" 
+                    checked={formData.isActive}
+                    onCheckedChange={handleSwitchChange}
+                  />
+                  <Label htmlFor="isActive">Set as active campaign</Label>
+                </div>
+                
+                <div className="pt-2">
+                  <Button onClick={() => setFormTab('media')} className="w-full">
+                    Next: Media & Display
+                  </Button>
+                </div>
               </div>
-              
-              <div className="space-y-2">
-                <Label htmlFor="endDate">End Date</Label>
-                <Input
-                  id="endDate"
-                  name="endDate"
-                  type="date"
-                  value={formData.endDate}
-                  onChange={handleInputChange}
-                />
+            </TabsContent>
+            
+            <TabsContent value="media">
+              <div className="grid gap-4 py-2">
+                <div className="space-y-2">
+                  <Label htmlFor="image">Campaign Image</Label>
+                  <ImageUploader
+                    onImagesUploaded={handleImagesUploaded}
+                    maxImages={1}
+                    existingImages={formData.imageUrl ? [{ url: formData.imageUrl, altText: formData.name }] : []}
+                    label="Upload Campaign Image"
+                  />
+                </div>
+                
+                <div className="space-y-2">
+                  <Label htmlFor="position">Banner Position</Label>
+                  <Select 
+                    value={formData.position}
+                    onValueChange={(value) => handleSelectChange('position', value)}
+                  >
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select position" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="homepage_banner">Homepage Banner</SelectItem>
+                      <SelectItem value="homepage_sidebar">Homepage Sidebar</SelectItem>
+                      <SelectItem value="products_top">Products Page Top</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+                
+                <div className="grid grid-cols-2 gap-2 pt-2">
+                  <Button variant="outline" onClick={() => setFormTab('basics')}>
+                    Back
+                  </Button>
+                  <Button onClick={() => setFormTab('advanced')}>
+                    Next: Advanced
+                  </Button>
+                </div>
               </div>
-            </div>
+            </TabsContent>
             
-            <div className="space-y-2">
-              <Label htmlFor="position">Banner Position</Label>
-              <Select 
-                value={formData.position}
-                onValueChange={(value) => handleSelectChange('position', value)}
-              >
-                <SelectTrigger>
-                  <SelectValue placeholder="Select position" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="homepage_banner">Homepage Banner</SelectItem>
-                  <SelectItem value="homepage_sidebar">Homepage Sidebar</SelectItem>
-                  <SelectItem value="products_top">Products Page Top</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-            
-            <div className="flex items-center space-x-2 pt-2">
-              <Switch 
-                id="isActive" 
-                checked={formData.isActive}
-                onCheckedChange={handleSwitchChange}
-              />
-              <Label htmlFor="isActive">Set as active campaign</Label>
-            </div>
-          </div>
+            <TabsContent value="advanced">
+              <div className="grid gap-4 py-2">
+                <div className="space-y-2">
+                  <Label htmlFor="targetAudience">Target Audience</Label>
+                  <Textarea
+                    id="targetAudience"
+                    name="targetAudience"
+                    value={formData.targetAudience}
+                    onChange={handleInputChange}
+                    placeholder="Describe the target audience for this campaign"
+                    rows={2}
+                  />
+                </div>
+                
+                <div className="space-y-2">
+                  <Label htmlFor="goals">Campaign Goals</Label>
+                  <Textarea
+                    id="goals"
+                    name="goals"
+                    value={formData.goals}
+                    onChange={handleInputChange}
+                    placeholder="What are the objectives of this campaign?"
+                    rows={2}
+                  />
+                </div>
+                
+                <div className="space-y-2">
+                  <Label htmlFor="notes">Additional Notes</Label>
+                  <Textarea
+                    id="notes"
+                    name="notes"
+                    value={formData.notes}
+                    onChange={handleInputChange}
+                    placeholder="Any additional campaign notes"
+                    rows={2}
+                  />
+                </div>
+                
+                <div className="pt-2">
+                  <Button variant="outline" onClick={() => setFormTab('media')} className="w-full">
+                    Back
+                  </Button>
+                </div>
+              </div>
+            </TabsContent>
+          </Tabs>
           
-          <DialogFooter>
+          <DialogFooter className="mt-4">
             <Button type="button" variant="outline" onClick={() => setOpenCampaignDialog(false)}>
               Cancel
             </Button>
             <Button type="button" onClick={handleSaveCampaign}>
-              Save
+              Save Campaign
             </Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>
       
-      {/* Analytics Dialog */}
+      {/* Enhanced Analytics Dialog */}
       <Dialog open={showAnalyticsDialog} onOpenChange={setShowAnalyticsDialog}>
-        <DialogContent className="sm:max-w-[600px]">
+        <DialogContent className="sm:max-w-[750px] max-h-[90vh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle>Campaign Analytics</DialogTitle>
             <DialogDescription>
@@ -662,87 +765,419 @@ export default function AdminCampaignsPage() {
             </DialogDescription>
           </DialogHeader>
           
-          <div className="py-4">
-            <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mb-6">
-              <Card>
-                <CardHeader className="pb-2">
-                  <CardTitle className="text-sm text-muted-foreground">Clicks</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="text-2xl font-bold">{campaignAnalytics?.clickCount || 0}</div>
-                </CardContent>
-              </Card>
-              
-              <Card>
-                <CardHeader className="pb-2">
-                  <CardTitle className="text-sm text-muted-foreground">Conversions</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="text-2xl font-bold">{campaignAnalytics?.conversionCount || 0}</div>
-                </CardContent>
-              </Card>
-              
-              <Card>
-                <CardHeader className="pb-2">
-                  <CardTitle className="text-sm text-muted-foreground">Conversion Rate</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="text-2xl font-bold">
-                    {campaignAnalytics ? calculateConversionRate(campaignAnalytics) : '0%'}
-                  </div>
-                </CardContent>
-              </Card>
-            </div>
+          <Tabs defaultValue="overview">
+            <TabsList className="grid w-full grid-cols-3 mb-4">
+              <TabsTrigger value="overview">Overview</TabsTrigger>
+              <TabsTrigger value="performance">Performance</TabsTrigger>
+              <TabsTrigger value="details">Details</TabsTrigger>
+            </TabsList>
             
-            <div className="space-y-4">
-              <div>
-                <h3 className="text-sm font-medium mb-2">Campaign Details</h3>
-                <div className="bg-muted p-4 rounded-md space-y-2">
-                  <div className="grid grid-cols-2 gap-2">
-                    <div className="text-sm text-muted-foreground">Start Date:</div>
-                    <div className="text-sm">{campaignAnalytics ? formatDate(campaignAnalytics.startDate) : ''}</div>
-                  </div>
-                  <div className="grid grid-cols-2 gap-2">
-                    <div className="text-sm text-muted-foreground">End Date:</div>
-                    <div className="text-sm">{campaignAnalytics ? formatDate(campaignAnalytics.endDate) : ''}</div>
-                  </div>
-                  <div className="grid grid-cols-2 gap-2">
-                    <div className="text-sm text-muted-foreground">Status:</div>
-                    <div className="text-sm">
-                      {campaignAnalytics && isCampaignActive(campaignAnalytics) 
-                        ? <span className="flex items-center"><CheckCircle2 className="h-4 w-4 text-green-500 mr-1" /> Active</span>
-                        : <span className="flex items-center"><XCircle className="h-4 w-4 text-red-500 mr-1" /> Inactive</span>
-                      }
-                    </div>
-                  </div>
-                  <div className="grid grid-cols-2 gap-2">
-                    <div className="text-sm text-muted-foreground">Coupon:</div>
-                    <div className="text-sm">
-                      {campaignAnalytics?.coupon 
-                        ? <Badge variant="outline" className="font-mono">{campaignAnalytics.coupon.code}</Badge>
-                        : 'N/A'
-                      }
-                    </div>
-                  </div>
+            <TabsContent value="overview">
+              <div className="py-2">
+                {/* KPI Cards */}
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-6">
+                  <Card>
+                    <CardHeader className="pb-2">
+                      <CardTitle className="text-sm text-muted-foreground">Clicks</CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                      <div className="text-2xl font-bold">{campaignAnalytics?.clickCount || 0}</div>
+                    </CardContent>
+                  </Card>
+                  
+                  <Card>
+                    <CardHeader className="pb-2">
+                      <CardTitle className="text-sm text-muted-foreground">Conversions</CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                      <div className="text-2xl font-bold">{campaignAnalytics?.conversionCount || 0}</div>
+                    </CardContent>
+                  </Card>
+                  
+                  <Card>
+                    <CardHeader className="pb-2">
+                      <CardTitle className="text-sm text-muted-foreground">Conversion Rate</CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                      <div className="text-2xl font-bold">
+                        {campaignAnalytics ? calculateConversionRate(campaignAnalytics) : '0%'}
+                      </div>
+                    </CardContent>
+                  </Card>
+                  
+                  <Card>
+                    <CardHeader className="pb-2">
+                      <CardTitle className="text-sm text-muted-foreground">Est. Revenue</CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                      <div className="text-2xl font-bold">
+                        {campaignAnalytics ? calculateEstimatedRevenue(campaignAnalytics) : '$0.00'}
+                      </div>
+                    </CardContent>
+                  </Card>
                 </div>
+                
+                {/* Campaign Progress */}
+                {campaignAnalytics && (
+                  <Card className="mb-6">
+                    <CardHeader>
+                      <CardTitle className="text-sm">Campaign Progress</CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                      <div className="space-y-4">
+                        <div className="relative pt-6">
+                          {/* Progress bar */}
+                          <div className="absolute top-0 left-0 w-full h-2 bg-muted rounded-full">
+                            <div 
+                              className="absolute top-0 left-0 h-full bg-blue-500 rounded-full"
+                              style={{ 
+                                width: `${Math.min(100, Math.max(0, 
+                                  ((new Date().getTime() - new Date(campaignAnalytics.startDate).getTime()) / 
+                                  (new Date(campaignAnalytics.endDate).getTime() - new Date(campaignAnalytics.startDate).getTime())) * 100
+                                ))}%` 
+                              }}
+                            ></div>
+                          </div>
+                          {/* Timeline dates */}
+                          <div className="flex justify-between text-xs mt-3">
+                            <div>
+                              <div className="font-semibold">Start</div>
+                              <div>{formatDate(campaignAnalytics.startDate)}</div>
+                            </div>
+                            <div className="text-center">
+                              <div className="font-semibold">Today</div>
+                              <div>{formatDate(new Date().toISOString())}</div>
+                            </div>
+                            <div className="text-right">
+                              <div className="font-semibold">End</div>
+                              <div>{formatDate(campaignAnalytics.endDate)}</div>
+                            </div>
+                          </div>
+                        </div>
+                        {/* Campaign stats */}
+                        <div className="grid grid-cols-2 gap-4 mt-4">
+                          <div className="bg-muted/30 p-3 rounded-md">
+                            <div className="text-sm text-muted-foreground mb-1">Duration</div>
+                            <div className="font-semibold">
+                              {Math.ceil((new Date(campaignAnalytics.endDate).getTime() - new Date(campaignAnalytics.startDate).getTime()) / (1000 * 60 * 60 * 24))} days
+                            </div>
+                          </div>
+                          <div className="bg-muted/30 p-3 rounded-md">
+                            <div className="text-sm text-muted-foreground mb-1">Status</div>
+                            <div className="font-semibold flex items-center">
+                              {isCampaignActive(campaignAnalytics) 
+                                ? <><CheckCircle2 className="h-4 w-4 text-green-500 mr-1" /> Active</>
+                                : <><XCircle className="h-4 w-4 text-red-500 mr-1" /> Inactive</> 
+                              }
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </CardContent>
+                  </Card>
+                )}
+                
+                {/* Coupon Performance */}
+                {campaignAnalytics?.coupon && (
+                  <Card>
+                    <CardHeader>
+                      <CardTitle className="text-sm">Coupon Performance</CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                      <div className="bg-muted/30 p-4 rounded-lg space-y-3">
+                        <div className="flex justify-between items-center">
+                          <div>
+                            <span className="block text-sm text-muted-foreground">Coupon Code</span>
+                            <span className="font-mono font-bold">{campaignAnalytics.coupon.code}</span>
+                          </div>
+                          <Badge>
+                            {campaignAnalytics.coupon.discountType === 'PERCENTAGE' 
+                              ? `${campaignAnalytics.coupon.discountValue}% OFF` 
+                              : `${formatCurrency(campaignAnalytics.coupon.discountValue)} OFF`
+                            }
+                          </Badge>
+                        </div>
+                        
+                        <div className="grid grid-cols-2 gap-4 pt-2 border-t border-border">
+                          <div>
+                            <span className="text-sm text-muted-foreground">Used</span>
+                            <div className="font-semibold">
+                              {campaignAnalytics.coupon.usedCount} times
+                            </div>
+                          </div>
+                          <div>
+                            <span className="text-sm text-muted-foreground">Limit</span>
+                            <div className="font-semibold">
+                              {campaignAnalytics.coupon.usageLimit 
+                                ? `${campaignAnalytics.coupon.usageLimit} max` 
+                                : 'Unlimited'
+                              }
+                            </div>
+                          </div>
+                        </div>
+                        
+                        {campaignAnalytics.coupon.usageLimit && (
+                          <div className="pt-2">
+                            <div className="text-sm text-muted-foreground mb-1">Usage</div>
+                            <div className="w-full bg-muted h-2 rounded-full overflow-hidden">
+                              <div 
+                                className="bg-green-500 h-full"
+                                style={{ 
+                                  width: `${Math.min(100, (campaignAnalytics.coupon.usedCount / campaignAnalytics.coupon.usageLimit) * 100)}%` 
+                                }}
+                              ></div>
+                            </div>
+                            <div className="flex justify-between text-xs mt-1">
+                              <span>{campaignAnalytics.coupon.usedCount} used</span>
+                              <span>{campaignAnalytics.coupon.usageLimit - campaignAnalytics.coupon.usedCount} remaining</span>
+                            </div>
+                          </div>
+                        )}
+                      </div>
+                    </CardContent>
+                  </Card>
+                )}
               </div>
-              
-              {campaignAnalytics?.imageUrl && (
-                <div>
-                  <h3 className="text-sm font-medium mb-2">Campaign Image</h3>
-                  <div className="rounded-md overflow-hidden h-[150px]">
-                    <img 
-                      src={campaignAnalytics.imageUrl} 
-                      alt={campaignAnalytics.name} 
-                      className="w-full h-full object-cover"
-                    />
-                  </div>
-                </div>
-              )}
-            </div>
-          </div>
+            </TabsContent>
+            
+            <TabsContent value="performance">
+              <div className="py-2">
+                <Card className="mb-6">
+                  <CardHeader>
+                    <CardTitle className="text-sm">Performance Metrics</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="space-y-6">
+                      {/* Click to Conversion Visualization */}
+                      <div>
+                        <h3 className="text-sm font-medium mb-3">Click to Conversion Funnel</h3>
+                        <div className="relative h-16">
+                          {/* Total clicks bar */}
+                          <div className="absolute top-0 left-0 h-8 bg-blue-100 dark:bg-blue-950/40 w-full rounded-md"></div>
+                          <div className="absolute top-0 left-0 h-8 flex items-center px-3 font-medium">
+                            {campaignAnalytics?.clickCount || 0} Clicks
+                          </div>
+                          
+                          {/* Conversion bar (smaller width based on percentage) */}
+                          <div className="absolute bottom-0 left-0 h-8 bg-green-100 dark:bg-green-950/40 rounded-md"
+                            style={{ 
+                              width: campaignAnalytics?.clickCount 
+                                ? `${Math.min(100, (campaignAnalytics.conversionCount / campaignAnalytics.clickCount) * 100)}%` 
+                                : '0%'
+                            }}
+                          ></div>
+                          <div className="absolute bottom-0 left-0 h-8 flex items-center px-3 font-medium">
+                            {campaignAnalytics?.conversionCount || 0} Conversions
+                          </div>
+                        </div>
+                      </div>
+                      
+                      {/* Key performance indicators */}
+                      <div className="grid grid-cols-2 gap-4">
+                        <div className="space-y-2">
+                          <div className="flex justify-between items-center">
+                            <span className="text-sm text-muted-foreground">Clicks to Conversion</span>
+                            <span className="font-medium">
+                              {campaignAnalytics && campaignAnalytics.conversionCount > 0 
+                                ? (campaignAnalytics.clickCount / campaignAnalytics.conversionCount).toFixed(1) 
+                                : 'N/A'}
+                            </span>
+                          </div>
+                          <div className="flex justify-between items-center">
+                            <span className="text-sm text-muted-foreground">Est. Cost per Click</span>
+                            <span className="font-medium">$0.50</span>
+                          </div>
+                        </div>
+                        
+                        <div className="space-y-2">
+                          <div className="flex justify-between items-center">
+                            <span className="text-sm text-muted-foreground">Est. Cost per Conversion</span>
+                            <span className="font-medium">
+                              {campaignAnalytics && campaignAnalytics.conversionCount > 0 
+                                ? formatCurrency(100 / campaignAnalytics.conversionCount) 
+                                : 'N/A'}
+                            </span>
+                          </div>
+                          <div className="flex justify-between items-center">
+                            <span className="text-sm text-muted-foreground">Est. ROI</span>
+                            <span className="font-medium">
+                              {campaignAnalytics ? calculateROI(campaignAnalytics) : 'N/A'}
+                            </span>
+                          </div>
+                        </div>
+                      </div>
+                      
+                      {/* Daily average performance */}
+                      {campaignAnalytics && (
+                        <div>
+                          <h3 className="text-sm font-medium mb-3">Daily Average</h3>
+                          <div className="grid grid-cols-3 gap-4">
+                            <div className="bg-muted/30 p-3 rounded-md text-center">
+                              <div className="text-xs text-muted-foreground mb-1">Clicks/Day</div>
+                              <div className="font-semibold">
+                                {calculateDailyAverage(campaignAnalytics.clickCount, campaignAnalytics.startDate, campaignAnalytics.endDate)}
+                              </div>
+                            </div>
+                            <div className="bg-muted/30 p-3 rounded-md text-center">
+                              <div className="text-xs text-muted-foreground mb-1">Conversions/Day</div>
+                              <div className="font-semibold">
+                                {calculateDailyAverage(campaignAnalytics.conversionCount, campaignAnalytics.startDate, campaignAnalytics.endDate)}
+                              </div>
+                            </div>
+                            <div className="bg-muted/30 p-3 rounded-md text-center">
+                              <div className="text-xs text-muted-foreground mb-1">Revenue/Day</div>
+                              <div className="font-semibold">
+                                {formatCurrency(calculateDailyAverage(Number(campaignAnalytics.conversionCount) * 75, campaignAnalytics.startDate, campaignAnalytics.endDate))}
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  </CardContent>
+                </Card>
+              </div>
+            </TabsContent>
+            
+            <TabsContent value="details">
+              <div className="py-2">
+                <Card className="mb-6">
+                  <CardHeader>
+                    <CardTitle className="text-sm">Campaign Information</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="bg-muted p-4 rounded-md space-y-2">
+                      <div className="grid grid-cols-2 gap-2">
+                        <div className="text-sm text-muted-foreground">Campaign Name:</div>
+                        <div className="text-sm font-medium">{campaignAnalytics?.name}</div>
+                      </div>
+                      
+                      <div className="grid grid-cols-2 gap-2">
+                        <div className="text-sm text-muted-foreground">Description:</div>
+                        <div className="text-sm">{campaignAnalytics?.description || 'No description'}</div>
+                      </div>
+                      
+                      <div className="grid grid-cols-2 gap-2">
+                        <div className="text-sm text-muted-foreground">Start Date:</div>
+                        <div className="text-sm">{campaignAnalytics ? formatDate(campaignAnalytics.startDate) : ''}</div>
+                      </div>
+                      
+                      <div className="grid grid-cols-2 gap-2">
+                        <div className="text-sm text-muted-foreground">End Date:</div>
+                        <div className="text-sm">{campaignAnalytics ? formatDate(campaignAnalytics.endDate) : ''}</div>
+                      </div>
+                      
+                      <div className="grid grid-cols-2 gap-2">
+                        <div className="text-sm text-muted-foreground">Status:</div>
+                        <div className="text-sm">
+                          {campaignAnalytics && isCampaignActive(campaignAnalytics) 
+                            ? <span className="flex items-center"><CheckCircle2 className="h-4 w-4 text-green-500 mr-1" /> Active</span>
+                            : <span className="flex items-center"><XCircle className="h-4 w-4 text-red-500 mr-1" /> Inactive</span>
+                          }
+                        </div>
+                      </div>
+                      
+                      <div className="grid grid-cols-2 gap-2">
+                        <div className="text-sm text-muted-foreground">Days Active:</div>
+                        <div className="text-sm">
+                          {campaignAnalytics && Math.max(0, Math.floor((
+                            Math.min(new Date().getTime(), new Date(campaignAnalytics.endDate).getTime()) - 
+                            Math.max(new Date(campaignAnalytics.startDate).getTime(), new Date().getTime() - 30 * 24 * 60 * 60 * 1000)
+                          ) / (1000 * 60 * 60 * 24)))} days
+                        </div>
+                      </div>
+                      
+                      <div className="grid grid-cols-2 gap-2">
+                        <div className="text-sm text-muted-foreground">Position:</div>
+                        <div className="text-sm capitalize">{campaignAnalytics?.position?.replace('_', ' ') || 'Not specified'}</div>
+                      </div>
+                      
+                      {campaignAnalytics?.targetAudience && (
+                        <div className="grid grid-cols-2 gap-2">
+                          <div className="text-sm text-muted-foreground">Target Audience:</div>
+                          <div className="text-sm">{campaignAnalytics.targetAudience}</div>
+                        </div>
+                      )}
+                      
+                      {campaignAnalytics?.goals && (
+                        <div className="grid grid-cols-2 gap-2">
+                          <div className="text-sm text-muted-foreground">Goals:</div>
+                          <div className="text-sm">{campaignAnalytics.goals}</div>
+                        </div>
+                      )}
+                      
+                      {campaignAnalytics?.notes && (
+                        <div className="grid grid-cols-2 gap-2">
+                          <div className="text-sm text-muted-foreground">Notes:</div>
+                          <div className="text-sm">{campaignAnalytics.notes}</div>
+                        </div>
+                      )}
+                      
+                      <div className="grid grid-cols-2 gap-2">
+                        <div className="text-sm text-muted-foreground">Created:</div>
+                        <div className="text-sm">{campaignAnalytics ? formatDate(campaignAnalytics.createdAt) : ''}</div>
+                      </div>
+                      
+                      <div className="grid grid-cols-2 gap-2">
+                        <div className="text-sm text-muted-foreground">Coupon:</div>
+                        <div className="text-sm">
+                          {campaignAnalytics?.coupon 
+                            ? (
+                              <div>
+                                <Badge variant="outline" className="font-mono">{campaignAnalytics.coupon.code}</Badge>
+                                <div className="mt-1">
+                                  {campaignAnalytics.coupon.discountType === 'PERCENTAGE' 
+                                    ? `${campaignAnalytics.coupon.discountValue}% off` 
+                                    : formatCurrency(campaignAnalytics.coupon.discountValue)}
+                                </div>
+                              </div>
+                            )
+                            : 'N/A'
+                          }
+                        </div>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+                
+                {campaignAnalytics?.imageUrl && (
+                  <Card>
+                    <CardHeader>
+                      <CardTitle className="text-sm">Campaign Banner</CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                      <div className="rounded-md overflow-hidden">
+                        <img 
+                          src={campaignAnalytics.imageUrl} 
+                          alt={campaignAnalytics.name} 
+                          className="w-full h-auto object-contain"
+                        />
+                      </div>
+                    </CardContent>
+                  </Card>
+                )}
+              </div>
+            </TabsContent>
+          </Tabs>
         </DialogContent>
       </Dialog>
     </div>
   );
+}
+
+// Helper function to calculate daily average metrics
+const calculateDailyAverage = (total: number, startDate: string, endDate: string) => {
+  const start = new Date(startDate);
+  const end = new Date(endDate);
+  const today = new Date();
+  
+  // If campaign hasn't started yet, return 0
+  if (start > today) return 0;
+  
+  // Calculate days elapsed so far (or total days if campaign is over)
+  const daysElapsed = Math.max(1, Math.ceil(
+    (Math.min(today.getTime(), end.getTime()) - start.getTime()) / (1000 * 60 * 60 * 24)
+  ));
+  
+  return (total / daysElapsed).toFixed(1);
 } 

@@ -89,6 +89,9 @@ model Product {
   cartItems         CartItem[]
   reviews           Review[]
   features          String[]
+  weight            Float?        @default(1.0)    // Weight in kg
+  weightUnit        String?       @default("kg")   // Unit of weight (kg or lbs)
+  dimensions        String?       // Format: "length x width x height" in cm
   freeShippingThreshold Float?    @default(50)
   warrantyPeriod    String?       @default("2-Year Warranty")
   warrantyDescription String?     @default("Extended coverage")
@@ -158,6 +161,8 @@ model Order {
   paymentMethod     String
   paymentStatus     PaymentStatus @default(PENDING)
   orderStatus       OrderStatus   @default(PENDING)
+  shippingMethod    ShippingMethod? @relation(fields: [shippingMethodId], references: [id])
+  shippingMethodId  String?
   shippingCost      Float         @default(0.0)
   taxAmount         Float         @default(0.0)
   coupons           Coupon[]      @relation("OrderCoupons")
@@ -225,6 +230,9 @@ model Campaign {
   startDate      DateTime
   endDate        DateTime
   position       String?   // e.g., "homepage_top", "homepage_bottom"
+  targetAudience String?
+  goals          String?
+  notes          String?
   createdAt      DateTime  @default(now())
   updatedAt      DateTime  @updatedAt
 
@@ -261,4 +269,52 @@ model DealsBanner {
   active          Boolean  @default(true)
   createdAt       DateTime @default(now())
   updatedAt       DateTime @updatedAt
+}
+
+// Shipping method and rates models
+model ShippingMethod {
+  id             String   @id @default(uuid())
+  name           String   // e.g., "Standard", "Express", "Next Day"
+  description    String?
+  estimatedDays  String   // e.g., "3-5 days", "1-2 days" 
+  isActive       Boolean  @default(true)
+  defaultCost    Float    // Default cost if no specific rate found
+  orders         Order[]
+  shippingRates  ShippingRate[]
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+}
+
+model ShippingRate {
+  id               String   @id @default(uuid())
+  shippingMethod   ShippingMethod @relation(fields: [shippingMethodId], references: [id], onDelete: Cascade)
+  shippingMethodId String
+  country          String   // For international rates, blank for domestic
+  state            String?  // Optional for state-specific rates
+  postalCodePrefix String?  // Optional for postal code specific rates
+  minOrderAmount   Float?   // Minimum order amount for this rate
+  maxOrderAmount   Float?   // Maximum order amount for this rate
+  minWeight        Float?   // Minimum weight in kg
+  maxWeight        Float?   // Maximum weight in kg
+  cost             Float    // Cost for this specific region and conditions
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+  
+  @@index([country, state, postalCodePrefix])
+  @@index([shippingMethodId])
+}
+
+// Tax rate model for location-based taxation
+model TaxRate {
+  id              String   @id @default(uuid())
+  country         String   // Country code
+  state           String?  // State/province, optional for state-specific rates
+  postalCodePrefix String? // For zip/postal code specific rates (e.g. first 3 digits)
+  rate            Float    // Tax rate as decimal (0.1 = 10%)
+  description     String?  // Optional description (e.g. "CA State Tax + County Tax")
+  isActive        Boolean  @default(true)
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  
+  @@index([country, state, postalCodePrefix])
 }

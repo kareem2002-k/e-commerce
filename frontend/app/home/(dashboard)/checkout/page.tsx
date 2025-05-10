@@ -9,7 +9,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Label } from '@/components/ui/label';
-import { ShoppingCart, CreditCard, MapPin, ChevronRight, Truck, Shield } from 'lucide-react';
+import { ShoppingCart, CreditCard, MapPin, ChevronRight, Truck, Shield, CalculatorIcon, RefreshCw } from 'lucide-react';
 import { motion } from 'framer-motion';
 import axios from 'axios';
 import { toast } from 'sonner';
@@ -39,6 +39,17 @@ interface Coupon {
   description: string;
 }
 
+interface ShippingMethod {
+  id: string;
+  name: string;
+  description: string;
+  estimatedDays: string;
+  cost: number;
+  isFreeShipping: boolean;
+  baseCost: number;
+  distanceFee: number;
+}
+
 export default function CheckoutPage() {
   const router = useRouter();
   const { cart, loading: cartLoading, itemCount, totalPrice, clearCart } = useCart();
@@ -52,6 +63,12 @@ export default function CheckoutPage() {
   const [placingOrder, setPlacingOrder] = useState(false);
   const [orderPlaced, setOrderPlaced] = useState(false);
   const [orderId, setOrderId] = useState('');
+  
+  // Shipping state
+  const [shippingMethods, setShippingMethods] = useState<ShippingMethod[]>([]);
+  const [selectedShippingMethodId, setSelectedShippingMethodId] = useState('');
+  const [loadingShippingOptions, setLoadingShippingOptions] = useState(false);
+  const [taxRate, setTaxRate] = useState(0.1); // Default 10%
   
   // Add coupon state
   const [couponCode, setCouponCode] = useState('');
@@ -70,8 +87,11 @@ export default function CheckoutPage() {
   
   const discountedSubtotal = Math.max(0, subtotal - discountAmount);
   
-  const shippingCost = 10.00; // Fixed shipping cost
-  const taxRate = 0.1; // 10% tax
+  // Get shipping cost from selected method
+  const selectedShippingMethod = shippingMethods.find(method => method.id === selectedShippingMethodId);
+  const shippingCost = selectedShippingMethod ? selectedShippingMethod.cost : 10.00;
+  
+  // Calculate tax using location-based tax rate
   const taxAmount = discountedSubtotal * taxRate;
   const totalAmount = discountedSubtotal + shippingCost + taxAmount;
   
@@ -106,6 +126,76 @@ export default function CheckoutPage() {
     
     fetchAddresses();
   }, [token]);
+  
+  // Fetch shipping methods when shipping address is selected
+  useEffect(() => {
+    const fetchShippingOptions = async () => {
+      if (!token || !selectedShippingAddressId || !cart || cart.cartItems.length === 0) return;
+      
+      try {
+        setLoadingShippingOptions(true);
+        
+        const response = await axios.post(`${API_URL}/shipping/calculate`, {
+          cartItems: cart.cartItems.map(item => ({
+            productId: item.productId,
+            quantity: item.quantity
+          })),
+          addressId: selectedShippingAddressId,
+          subtotal: discountedSubtotal
+        }, {
+          headers: { Authorization: `Bearer ${token}` }
+        });
+        
+        setShippingMethods(response.data.shippingOptions);
+        setTaxRate(response.data.taxRate);
+        
+        // Select the first shipping method by default
+        if (response.data.shippingOptions.length > 0 && !selectedShippingMethodId) {
+          setSelectedShippingMethodId(response.data.shippingOptions[0].id);
+        }
+      } catch (error) {
+        console.error('Error fetching shipping options:', error);
+        toast.error('Failed to calculate shipping options');
+      } finally {
+        setLoadingShippingOptions(false);
+      }
+    };
+    
+    fetchShippingOptions();
+  }, [token, selectedShippingAddressId, cart, discountedSubtotal]);
+  
+  // Calculate shipping and tax rates manually 
+  const refreshShippingAndTax = async () => {
+    if (!token || !selectedShippingAddressId || !cart || cart.cartItems.length === 0) {
+      toast.error('Please select a shipping address first');
+      return;
+    }
+    
+    try {
+      setLoadingShippingOptions(true);
+      
+      const response = await axios.post(`${API_URL}/shipping/calculate`, {
+        cartItems: cart.cartItems.map(item => ({
+          productId: item.productId,
+          quantity: item.quantity
+        })),
+        addressId: selectedShippingAddressId,
+        subtotal: discountedSubtotal
+      }, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      
+      setShippingMethods(response.data.shippingOptions);
+      setTaxRate(response.data.taxRate);
+      
+      toast.success('Shipping rates and taxes updated');
+    } catch (error) {
+      console.error('Error refreshing shipping options:', error);
+      toast.error('Failed to update shipping and tax rates');
+    } finally {
+      setLoadingShippingOptions(false);
+    }
+  };
   
   // Apply coupon code
   const handleApplyCoupon = async () => {
@@ -182,6 +272,11 @@ export default function CheckoutPage() {
       return;
     }
     
+    if (!selectedShippingMethodId) {
+      toast.error('Please select a shipping method');
+      return;
+    }
+    
     if (!cart || cart.cartItems.length === 0) {
       toast.error('Your cart is empty');
       return;
@@ -197,6 +292,7 @@ export default function CheckoutPage() {
           billingAddressId: selectedBillingAddressId,
           paymentMethod,
           couponCode: appliedCoupon?.code,
+          shippingMethodId: selectedShippingMethodId,
           cartItems: cart.cartItems.map(item => ({
             productId: item.productId,
             quantity: item.quantity
@@ -307,7 +403,12 @@ export default function CheckoutPage() {
               ) : addresses.length > 0 ? (
                 <Select 
                   value={selectedShippingAddressId}
-                  onValueChange={setSelectedShippingAddressId}
+                  onValueChange={(value) => {
+                    setSelectedShippingAddressId(value);
+                    // Reset shipping methods when address changes
+                    setShippingMethods([]);
+                    setSelectedShippingMethodId('');
+                  }}
                 >
                   <SelectTrigger className="w-full">
                     <SelectValue placeholder="Select an address" />
@@ -328,6 +429,82 @@ export default function CheckoutPage() {
                     onClick={() => router.push('/home/profile')}
                   >
                     Add New Address
+                  </Button>
+                </div>
+              )}
+            </CardContent>
+          </Card>
+          
+          {/* Shipping Method - New Section */}
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <Truck className="h-5 w-5 text-purple-600" />
+                Shipping Method
+              </CardTitle>
+              <CardDescription className="flex justify-between items-center">
+                <span>Choose how you want your order shipped</span>
+                <Button 
+                  variant="ghost" 
+                  size="sm" 
+                  onClick={refreshShippingAndTax}
+                  disabled={loadingShippingOptions || !selectedShippingAddressId}
+                  className="h-8"
+                >
+                  <RefreshCw className={`h-4 w-4 mr-1 ${loadingShippingOptions ? 'animate-spin' : ''}`} />
+                  Refresh Rates
+                </Button>
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              {!selectedShippingAddressId ? (
+                <div className="text-center py-4 text-muted-foreground">
+                  Please select a shipping address first
+                </div>
+              ) : loadingShippingOptions ? (
+                <div className="flex justify-center py-4">
+                  <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-purple-600"></div>
+                </div>
+              ) : shippingMethods.length > 0 ? (
+                <RadioGroup 
+                  value={selectedShippingMethodId} 
+                  onValueChange={setSelectedShippingMethodId}
+                  className="space-y-4"
+                >
+                  {shippingMethods.map(method => (
+                    <div key={method.id} className="flex items-center space-x-2 border rounded-md p-4">
+                      <RadioGroupItem value={method.id} id={`shipping-${method.id}`} />
+                      <Label htmlFor={`shipping-${method.id}`} className="flex-grow cursor-pointer">
+                        <div className="flex items-center justify-between">
+                          <div className="flex items-center gap-2">
+                            <Truck className="h-5 w-5 text-purple-600" />
+                            <span>{method.name}</span>
+                          </div>
+                          <div>
+                            <span className="font-medium">{formatCurrency(method.cost)}</span>
+                          </div>
+                        </div>
+                        <div className="flex justify-between mt-1">
+                          <p className="text-sm text-muted-foreground">{method.description}</p>
+                          <p className="text-sm text-muted-foreground">{method.estimatedDays}</p>
+                        </div>
+                        <div className="flex justify-between mt-1 text-xs text-muted-foreground">
+                          <span>Base Fee: {formatCurrency(method.baseCost)}</span>
+                          <span>Distance Fee: {formatCurrency(method.distanceFee)}</span>
+                        </div>
+                      </Label>
+                    </div>
+                  ))}
+                </RadioGroup>
+              ) : (
+                <div className="text-center py-4">
+                  <p className="text-muted-foreground mb-4">No shipping methods available for this address</p>
+                  <Button 
+                    variant="outline" 
+                    onClick={refreshShippingAndTax}
+                    disabled={loadingShippingOptions}
+                  >
+                    Retry
                   </Button>
                 </div>
               )}
@@ -570,10 +747,31 @@ export default function CheckoutPage() {
                 
                 <div className="flex justify-between text-sm">
                   <span className="text-muted-foreground">Shipping</span>
-                  <span>{formatCurrency(shippingCost)}</span>
+                  <span>
+                    {loadingShippingOptions ? (
+                      <div className="h-4 w-4 animate-spin rounded-full border-2 border-current border-t-transparent ml-auto" />
+                    ) : (
+                      formatCurrency(shippingCost)
+                    )}
+                  </span>
                 </div>
+                {selectedShippingMethod && !loadingShippingOptions && (
+                  <>
+                    <div className="flex justify-between text-xs text-muted-foreground pl-4">
+                      <span>Base Fee ({selectedShippingMethod.name})</span>
+                      <span>{formatCurrency(selectedShippingMethod.baseCost)}</span>
+                    </div>
+                    <div className="flex justify-between text-xs text-muted-foreground pl-4">
+                      <span>Distance Fee</span>
+                      <span>{formatCurrency(selectedShippingMethod.distanceFee)}</span>
+                    </div>
+                  </>
+                )}
                 <div className="flex justify-between text-sm">
-                  <span className="text-muted-foreground">Tax (10%)</span>
+                  <span className="text-muted-foreground flex items-center gap-1">
+                    Tax
+                    <span className="text-xs">({(taxRate * 100).toFixed(1)}%)</span>
+                  </span>
                   <span>{formatCurrency(taxAmount)}</span>
                 </div>
                 <div className="pt-4 border-t">
@@ -592,6 +790,7 @@ export default function CheckoutPage() {
                   placingOrder || 
                   !selectedShippingAddressId || 
                   !selectedBillingAddressId ||
+                  !selectedShippingMethodId ||
                   cartLoading ||
                   !cart ||
                   cart.cartItems.length === 0

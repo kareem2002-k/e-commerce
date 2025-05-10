@@ -56,6 +56,9 @@ export type Product = {
   isSale?: boolean; // Whether this product is on sale
   tags?: string[]; // Product tags
   features?: string[]; // Product features
+  weight?: number; // Product weight (in kg or lbs)
+  weightUnit?: string; // Weight unit (kg or lbs)
+  dimensions?: string; // Product dimensions (e.g. "10 x 20 x 30 cm")
   freeShippingThreshold?: number; // Free shipping threshold
   warrantyPeriod?: string; // Warranty period (e.g. "2-Year Warranty")
   warrantyDescription?: string; // Warranty description
@@ -76,6 +79,9 @@ export type Campaign = {
   startDate: string;
   endDate: string;
   position?: string;
+  targetAudience?: string;
+  goals?: string;
+  notes?: string;
   createdAt: string;
   updatedAt: string;
   coupon?: {

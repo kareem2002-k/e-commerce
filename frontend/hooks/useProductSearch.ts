@@ -1,7 +1,6 @@
 "use client"
 
 import { useState, useEffect, useCallback, useRef } from "react"
-import { useLoading } from "@/components/voltedge/loading-provider"
 import { Product } from "@/types"
 import { useAuth } from "@/context/AuthContext"
 
@@ -17,9 +16,8 @@ export interface SearchFilters {
 export function useProductSearch(initialFilters: SearchFilters = {}) {
   const [products, setProducts] = useState<Product[]>([])
   const [filters, setFilters] = useState<SearchFilters>(initialFilters)
-  const [loading, setLoading] = useState(true)
+  const [loading, setLoading] = useState(false) // Start with not loading
   const [error, setError] = useState<Error | null>(null)
-  const { startLoading, stopLoading } = useLoading()
   const { token } = useAuth()
   
   // Track if a request is already in progress
@@ -66,25 +64,22 @@ export function useProductSearch(initialFilters: SearchFilters = {}) {
     
     requestInProgress.current = true
     setLoading(true)
-    startLoading("Searching products...")
 
     try {
-      console.log('Making search request with params:', searchParamsString)
       // Make API request with abort signal
       const response = await fetch(`/api/products/search?${searchParamsString}`, {
         headers: {
           'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json'
         },
+        signal: currentRequest.current.signal
       });
       
-      console.log('Search response:', response)
       if (!response.ok) {
         throw new Error(`Error searching products: ${response.statusText}`);
       }
       
       const data = await response.json();
-      console.log('Search response:', data)
       
       // Ensure data is an array before setting it
       if (Array.isArray(data)) {
@@ -102,17 +97,36 @@ export function useProductSearch(initialFilters: SearchFilters = {}) {
       console.error("Error searching products:", err);
       setError(err instanceof Error ? err : new Error(String(err)));
     } finally {
-      setLoading(false);
-      stopLoading();
-      requestInProgress.current = false;
-      currentRequest.current = null;
+      // Use setTimeout to provide a slight delay before removing the loading state
+      // This helps prevent flickering for very fast responses
+      setTimeout(() => {
+        setLoading(false);
+        requestInProgress.current = false;
+        currentRequest.current = null;
+      }, 300);
     }
-  }, [filters, startLoading, stopLoading, token]);
+  }, [filters, token]);
+
+  // Update filters with debouncing
+  const updateFilters = useCallback((newFilters: SearchFilters) => {
+    // Clear any existing timeout
+    if (debounceTimeout.current) {
+      clearTimeout(debounceTimeout.current);
+    }
+
+    // Update filters state
+    setFilters(prevFilters => ({
+      ...prevFilters,
+      ...newFilters
+    }));
+    
+    // Don't trigger search immediately - let the useEffect handle it
+  }, []);
 
   // Use a ref to track if initial fetch has been done
   const initialFetchDone = useRef(false);
   
-  // Initial fetch and fetch when filters change
+  // Only fetch when filters change, with debounce
   useEffect(() => {
     // Only fetch if we have a token
     if (!token) return;
@@ -143,9 +157,8 @@ export function useProductSearch(initialFilters: SearchFilters = {}) {
 
     // Set new timeout for debouncing
     debounceTimeout.current = setTimeout(() => {
-      console.log('Triggering search with filters:', filters)
       fetchProducts();
-    }, 500); // 500ms debounce delay
+    }, 800); // Increased debounce to 800ms for better user experience
 
     // Cleanup timeout and abort any pending request on unmount or filter change
     return () => {
@@ -157,15 +170,6 @@ export function useProductSearch(initialFilters: SearchFilters = {}) {
       }
     };
   }, [fetchProducts, filters, token]);
-
-  // Update filters
-  const updateFilters = useCallback((newFilters: SearchFilters) => {
-    console.log('Updating filters:', newFilters)
-    setFilters(prevFilters => ({
-      ...prevFilters,
-      ...newFilters
-    }));
-  }, []);
 
   // Clear filters
   const clearFilters = useCallback(() => {

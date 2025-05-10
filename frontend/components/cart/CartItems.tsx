@@ -1,14 +1,41 @@
 "use client";
 
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { useCart } from '@/context/CartContext';
-import { Trash2, Plus, Minus } from 'lucide-react';
+import { Truck, Trash2, Plus, Minus, MapPin, CalculatorIcon } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import Image from 'next/image';
 import { motion, AnimatePresence } from 'framer-motion';
 import { formatCurrency } from '@/lib/utils';
 import Link from 'next/link';
+import axios from 'axios';
+import { useAuth } from '@/context/AuthContext';
+import { getUrl } from '@/utils';
+
+// Shipping estimate interface
+interface ShippingEstimate {
+  cost: number;
+  isFreeShipping: boolean;
+  baseCost: number;
+  distanceFee: number;
+  method: string;
+  estimatedDays: string;
+  taxRate: number;
+}
+
+// Add Address interface 
+interface Address {
+  id: string;
+  fullName: string;
+  line1: string;
+  line2?: string;
+  city: string;
+  state: string;
+  postalCode: string;
+  country: string;
+  phone: string;
+}
 
 export default function CartItems({ onClose }: { onClose?: () => void }) {
   const { 
@@ -21,6 +48,91 @@ export default function CartItems({ onClose }: { onClose?: () => void }) {
     totalPrice, 
     itemCount 
   } = useCart();
+  const { user, token } = useAuth();
+  
+  // Add state for user addresses
+  const [userAddresses, setUserAddresses] = useState<Address[]>([]);
+  const [defaultAddress, setDefaultAddress] = useState<Address | null>(null);
+  const [loadingAddresses, setLoadingAddresses] = useState(false);
+  
+  // Add state for shipping estimate
+  const [shippingEstimate, setShippingEstimate] = useState<ShippingEstimate | null>(null);
+  const [loadingShipping, setLoadingShipping] = useState(false);
+  
+  // Get API URL with fallback
+  const API_URL = getUrl();
+  
+  // Fetch user addresses if logged in
+  useEffect(() => {
+    const fetchUserAddresses = async () => {
+      if (!token) return;
+      
+      try {
+        setLoadingAddresses(true);
+        const response = await axios.get(`${API_URL}/addresses`, {
+          headers: { Authorization: `Bearer ${token}` }
+        });
+        
+        if (response.data && Array.isArray(response.data) && response.data.length > 0) {
+          setUserAddresses(response.data);
+          setDefaultAddress(response.data[0]);
+        }
+      } catch (error) {
+        console.error('Error fetching user addresses:', error);
+      } finally {
+        setLoadingAddresses(false);
+      }
+    };
+    
+    if (user && token) {
+      fetchUserAddresses();
+    }
+  }, [user, token, API_URL]);
+  
+  // Function to fetch shipping estimate
+  const fetchShippingEstimate = async () => {
+    if (!cart || cart.cartItems.length === 0) return;
+    
+    setLoadingShipping(true);
+    
+    try {
+      // Use user's default address if available, otherwise use default location
+      const locationData = defaultAddress ? {
+        country: defaultAddress.country,
+        state: defaultAddress.state,
+        postalCode: defaultAddress.postalCode
+      } : {
+        country: 'US',
+        state: 'CA',
+        postalCode: '90210'
+      };
+      
+      const response = await axios.post(`${API_URL}/shipping/estimate`, {
+        cartItems: cart.cartItems.map(item => ({
+          productId: item.productId,
+          quantity: item.quantity
+        })),
+        ...locationData,
+        subtotal: totalPrice
+      });
+      
+      setShippingEstimate(response.data);
+    } catch (error) {
+      console.error('Error fetching shipping estimate:', error);
+      // Don't show error to user - just don't display shipping
+    } finally {
+      setLoadingShipping(false);
+    }
+  };
+  
+  // Fetch shipping estimate when cart changes or default address changes
+  useEffect(() => {
+    if (cart && cart.cartItems.length > 0) {
+      fetchShippingEstimate();
+    } else {
+      setShippingEstimate(null);
+    }
+  }, [cart, totalPrice, defaultAddress]);
 
   // Only show loading indicator on initial cart fetch, not for individual item operations
   if (loading && !cart) {
@@ -165,16 +277,74 @@ export default function CartItems({ onClose }: { onClose?: () => void }) {
       </div>
       
       <div className="border-t pt-4 mt-auto">
+        {/* Display shipping location if available */}
+        {defaultAddress && (
+          <div className="flex items-center gap-1 text-xs text-muted-foreground mb-3">
+            <MapPin className="h-3 w-3" />
+            <span>Shipping to: {defaultAddress.city}, {defaultAddress.state}, {defaultAddress.country}</span>
+          </div>
+        )}
+        
         <div className="flex justify-between mb-2">
           <span className="text-muted-foreground">Subtotal</span>
           <span className="font-medium">{formatCurrency(totalPrice)}</span>
         </div>
+        
+        {/* Display shipping estimate */}
+        {shippingEstimate && (
+          <div className="space-y-1 mb-2">
+            <div className="flex justify-between">
+              <div className="flex items-center gap-1 text-muted-foreground">
+                <Truck className="h-3 w-3" />
+                <span>Shipping ({shippingEstimate.method})</span>
+              </div>
+              <span className="font-medium">{formatCurrency(shippingEstimate.cost)}</span>
+            </div>
+            <div className="flex justify-between text-xs text-muted-foreground pl-4">
+              <span>Base Fee</span>
+              <span>{formatCurrency(shippingEstimate.baseCost)}</span>
+            </div>
+            <div className="flex justify-between text-xs text-muted-foreground pl-4">
+              <span>Distance Fee</span>
+              <span>{formatCurrency(shippingEstimate.distanceFee)}</span>
+            </div>
+          </div>
+        )}
+        
+        {/* Display estimated tax */}
+        {shippingEstimate && (
+          <div className="flex justify-between mb-2">
+            <div className="flex items-center gap-1 text-muted-foreground">
+              <CalculatorIcon className="h-3 w-3" />
+              <span>Est. Tax ({(shippingEstimate.taxRate * 100).toFixed(1)}%)</span>
+            </div>
+            <span>{formatCurrency(totalPrice * shippingEstimate.taxRate)}</span>
+          </div>
+        )}
+        
         <div className="flex justify-between mb-4">
           <span className="text-muted-foreground">Items</span>
           <Badge variant="outline" className="rounded-full px-2 py-0">
             {itemCount}
           </Badge>
         </div>
+        
+        {/* Estimated Total */}
+        {shippingEstimate && (
+          <div className="flex justify-between font-medium pt-2 border-t mb-4">
+            <span>Estimated Total</span>
+            <span>{formatCurrency(totalPrice + shippingEstimate.cost + (totalPrice * shippingEstimate.taxRate))}</span>
+          </div>
+        )}
+        
+        {/* Note for non-logged in users */}
+        {!user && (
+          <div className="text-xs text-muted-foreground mb-3">
+            <Link href="/login" className="text-blue-600 hover:underline">
+              Log in
+            </Link> to see accurate shipping rates for your address.
+          </div>
+        )}
         
         <Link href="/home/checkout" onClick={onClose}>
           <Button className="w-full bg-gradient-to-r from-blue-600 to-fuchsia-600 hover:from-blue-700 hover:to-fuchsia-700">

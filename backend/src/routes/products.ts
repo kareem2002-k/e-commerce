@@ -204,6 +204,9 @@ router.post('/', authenticate, requireAdmin, async (req, res) => {
       featured, 
       discount,
       features,
+      weight,
+      weightUnit,
+      dimensions,
       freeShippingThreshold,
       warrantyPeriod,
       warrantyDescription,
@@ -224,6 +227,9 @@ router.post('/', authenticate, requireAdmin, async (req, res) => {
       discount: discount ? parseFloat(discount) : null,
       // Add the new fields directly
       features: Array.isArray(features) ? features : [],
+      weight: weight ? parseFloat(weight) : 1.0, // Default weight in kg
+      weightUnit: weightUnit || "kg", // Unit of weight (kg or lbs)
+      dimensions, // Format: "length x width x height" in cm
       freeShippingThreshold: freeShippingThreshold ? parseFloat(freeShippingThreshold) : 50,
       warrantyPeriod,
       warrantyDescription,
@@ -269,6 +275,9 @@ router.put('/:id', authenticate, requireAdmin, async (req, res) => {
       featured,
       discount,
       features,
+      weight,
+      weightUnit,
+      dimensions,
       freeShippingThreshold,
       warrantyPeriod,
       warrantyDescription,
@@ -294,6 +303,9 @@ router.put('/:id', authenticate, requireAdmin, async (req, res) => {
       discount: discount ? parseFloat(discount) : null,
       // Add the new fields directly
       features: Array.isArray(features) ? features : [],
+      weight: weight ? parseFloat(weight) : undefined,
+      weightUnit: weightUnit || undefined,
+      dimensions,
       freeShippingThreshold: freeShippingThreshold ? parseFloat(freeShippingThreshold) : undefined,
       warrantyPeriod,
       warrantyDescription,

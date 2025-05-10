@@ -149,6 +149,9 @@ exports.Prisma.ProductScalarFieldEnum = {
   discount: 'discount',
   categoryId: 'categoryId',
   features: 'features',
+  weight: 'weight',
+  weightUnit: 'weightUnit',
+  dimensions: 'dimensions',
   freeShippingThreshold: 'freeShippingThreshold',
   warrantyPeriod: 'warrantyPeriod',
   warrantyDescription: 'warrantyDescription',
@@ -201,6 +204,7 @@ exports.Prisma.OrderScalarFieldEnum = {
   paymentMethod: 'paymentMethod',
   paymentStatus: 'paymentStatus',
   orderStatus: 'orderStatus',
+  shippingMethodId: 'shippingMethodId',
   shippingCost: 'shippingCost',
   taxAmount: 'taxAmount',
   createdAt: 'createdAt',
@@ -251,6 +255,9 @@ exports.Prisma.CampaignScalarFieldEnum = {
   startDate: 'startDate',
   endDate: 'endDate',
   position: 'position',
+  targetAudience: 'targetAudience',
+  goals: 'goals',
+  notes: 'notes',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 };
@@ -281,6 +288,44 @@ exports.Prisma.DealsBannerScalarFieldEnum = {
   imageUrl: 'imageUrl',
   backgroundColor: 'backgroundColor',
   active: 'active',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.ShippingMethodScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  description: 'description',
+  estimatedDays: 'estimatedDays',
+  isActive: 'isActive',
+  defaultCost: 'defaultCost',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.ShippingRateScalarFieldEnum = {
+  id: 'id',
+  shippingMethodId: 'shippingMethodId',
+  country: 'country',
+  state: 'state',
+  postalCodePrefix: 'postalCodePrefix',
+  minOrderAmount: 'minOrderAmount',
+  maxOrderAmount: 'maxOrderAmount',
+  minWeight: 'minWeight',
+  maxWeight: 'maxWeight',
+  cost: 'cost',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.TaxRateScalarFieldEnum = {
+  id: 'id',
+  country: 'country',
+  state: 'state',
+  postalCodePrefix: 'postalCodePrefix',
+  rate: 'rate',
+  description: 'description',
+  isActive: 'isActive',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 };
@@ -340,7 +385,10 @@ exports.Prisma.ModelName = {
   Coupon: 'Coupon',
   Campaign: 'Campaign',
   HeroSection: 'HeroSection',
-  DealsBanner: 'DealsBanner'
+  DealsBanner: 'DealsBanner',
+  ShippingMethod: 'ShippingMethod',
+  ShippingRate: 'ShippingRate',
+  TaxRate: 'TaxRate'
 };
 
 /**

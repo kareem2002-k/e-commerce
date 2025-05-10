@@ -83,6 +83,21 @@ export type HeroSection = $Result.DefaultSelection<Prisma.$HeroSectionPayload>
  * 
  */
 export type DealsBanner = $Result.DefaultSelection<Prisma.$DealsBannerPayload>
+/**
+ * Model ShippingMethod
+ * 
+ */
+export type ShippingMethod = $Result.DefaultSelection<Prisma.$ShippingMethodPayload>
+/**
+ * Model ShippingRate
+ * 
+ */
+export type ShippingRate = $Result.DefaultSelection<Prisma.$ShippingRatePayload>
+/**
+ * Model TaxRate
+ * 
+ */
+export type TaxRate = $Result.DefaultSelection<Prisma.$TaxRatePayload>
 
 /**
  * Enums
@@ -408,6 +423,36 @@ export class PrismaClient<
     * ```
     */
   get dealsBanner(): Prisma.DealsBannerDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.shippingMethod`: Exposes CRUD operations for the **ShippingMethod** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more ShippingMethods
+    * const shippingMethods = await prisma.shippingMethod.findMany()
+    * ```
+    */
+  get shippingMethod(): Prisma.ShippingMethodDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.shippingRate`: Exposes CRUD operations for the **ShippingRate** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more ShippingRates
+    * const shippingRates = await prisma.shippingRate.findMany()
+    * ```
+    */
+  get shippingRate(): Prisma.ShippingRateDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.taxRate`: Exposes CRUD operations for the **TaxRate** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more TaxRates
+    * const taxRates = await prisma.taxRate.findMany()
+    * ```
+    */
+  get taxRate(): Prisma.TaxRateDelegate<ExtArgs, ClientOptions>;
 }
 
 export namespace Prisma {
@@ -861,7 +906,10 @@ export namespace Prisma {
     Coupon: 'Coupon',
     Campaign: 'Campaign',
     HeroSection: 'HeroSection',
-    DealsBanner: 'DealsBanner'
+    DealsBanner: 'DealsBanner',
+    ShippingMethod: 'ShippingMethod',
+    ShippingRate: 'ShippingRate',
+    TaxRate: 'TaxRate'
   };
 
   export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -880,7 +928,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "user" | "category" | "product" | "image" | "cart" | "cartItem" | "address" | "order" | "orderItem" | "review" | "coupon" | "campaign" | "heroSection" | "dealsBanner"
+      modelProps: "user" | "category" | "product" | "image" | "cart" | "cartItem" | "address" | "order" | "orderItem" | "review" | "coupon" | "campaign" | "heroSection" | "dealsBanner" | "shippingMethod" | "shippingRate" | "taxRate"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -1920,6 +1968,228 @@ export namespace Prisma {
           }
         }
       }
+      ShippingMethod: {
+        payload: Prisma.$ShippingMethodPayload<ExtArgs>
+        fields: Prisma.ShippingMethodFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.ShippingMethodFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ShippingMethodPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.ShippingMethodFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ShippingMethodPayload>
+          }
+          findFirst: {
+            args: Prisma.ShippingMethodFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ShippingMethodPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.ShippingMethodFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ShippingMethodPayload>
+          }
+          findMany: {
+            args: Prisma.ShippingMethodFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ShippingMethodPayload>[]
+          }
+          create: {
+            args: Prisma.ShippingMethodCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ShippingMethodPayload>
+          }
+          createMany: {
+            args: Prisma.ShippingMethodCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.ShippingMethodCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ShippingMethodPayload>[]
+          }
+          delete: {
+            args: Prisma.ShippingMethodDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ShippingMethodPayload>
+          }
+          update: {
+            args: Prisma.ShippingMethodUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ShippingMethodPayload>
+          }
+          deleteMany: {
+            args: Prisma.ShippingMethodDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.ShippingMethodUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.ShippingMethodUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ShippingMethodPayload>[]
+          }
+          upsert: {
+            args: Prisma.ShippingMethodUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ShippingMethodPayload>
+          }
+          aggregate: {
+            args: Prisma.ShippingMethodAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateShippingMethod>
+          }
+          groupBy: {
+            args: Prisma.ShippingMethodGroupByArgs<ExtArgs>
+            result: $Utils.Optional<ShippingMethodGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.ShippingMethodCountArgs<ExtArgs>
+            result: $Utils.Optional<ShippingMethodCountAggregateOutputType> | number
+          }
+        }
+      }
+      ShippingRate: {
+        payload: Prisma.$ShippingRatePayload<ExtArgs>
+        fields: Prisma.ShippingRateFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.ShippingRateFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ShippingRatePayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.ShippingRateFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ShippingRatePayload>
+          }
+          findFirst: {
+            args: Prisma.ShippingRateFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ShippingRatePayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.ShippingRateFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ShippingRatePayload>
+          }
+          findMany: {
+            args: Prisma.ShippingRateFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ShippingRatePayload>[]
+          }
+          create: {
+            args: Prisma.ShippingRateCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ShippingRatePayload>
+          }
+          createMany: {
+            args: Prisma.ShippingRateCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.ShippingRateCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ShippingRatePayload>[]
+          }
+          delete: {
+            args: Prisma.ShippingRateDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ShippingRatePayload>
+          }
+          update: {
+            args: Prisma.ShippingRateUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ShippingRatePayload>
+          }
+          deleteMany: {
+            args: Prisma.ShippingRateDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.ShippingRateUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.ShippingRateUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ShippingRatePayload>[]
+          }
+          upsert: {
+            args: Prisma.ShippingRateUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ShippingRatePayload>
+          }
+          aggregate: {
+            args: Prisma.ShippingRateAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateShippingRate>
+          }
+          groupBy: {
+            args: Prisma.ShippingRateGroupByArgs<ExtArgs>
+            result: $Utils.Optional<ShippingRateGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.ShippingRateCountArgs<ExtArgs>
+            result: $Utils.Optional<ShippingRateCountAggregateOutputType> | number
+          }
+        }
+      }
+      TaxRate: {
+        payload: Prisma.$TaxRatePayload<ExtArgs>
+        fields: Prisma.TaxRateFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.TaxRateFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TaxRatePayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.TaxRateFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TaxRatePayload>
+          }
+          findFirst: {
+            args: Prisma.TaxRateFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TaxRatePayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.TaxRateFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TaxRatePayload>
+          }
+          findMany: {
+            args: Prisma.TaxRateFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TaxRatePayload>[]
+          }
+          create: {
+            args: Prisma.TaxRateCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TaxRatePayload>
+          }
+          createMany: {
+            args: Prisma.TaxRateCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.TaxRateCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TaxRatePayload>[]
+          }
+          delete: {
+            args: Prisma.TaxRateDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TaxRatePayload>
+          }
+          update: {
+            args: Prisma.TaxRateUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TaxRatePayload>
+          }
+          deleteMany: {
+            args: Prisma.TaxRateDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.TaxRateUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.TaxRateUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TaxRatePayload>[]
+          }
+          upsert: {
+            args: Prisma.TaxRateUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TaxRatePayload>
+          }
+          aggregate: {
+            args: Prisma.TaxRateAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateTaxRate>
+          }
+          groupBy: {
+            args: Prisma.TaxRateGroupByArgs<ExtArgs>
+            result: $Utils.Optional<TaxRateGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.TaxRateCountArgs<ExtArgs>
+            result: $Utils.Optional<TaxRateCountAggregateOutputType> | number
+          }
+        }
+      }
     }
   } & {
     other: {
@@ -2018,6 +2288,9 @@ export namespace Prisma {
     campaign?: CampaignOmit
     heroSection?: HeroSectionOmit
     dealsBanner?: DealsBannerOmit
+    shippingMethod?: ShippingMethodOmit
+    shippingRate?: ShippingRateOmit
+    taxRate?: TaxRateOmit
   }
 
   /* Types for Logging */
@@ -2411,6 +2684,46 @@ export namespace Prisma {
    */
   export type CouponCountOutputTypeCountCampaignsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: CampaignWhereInput
+  }
+
+
+  /**
+   * Count Type ShippingMethodCountOutputType
+   */
+
+  export type ShippingMethodCountOutputType = {
+    orders: number
+    shippingRates: number
+  }
+
+  export type ShippingMethodCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    orders?: boolean | ShippingMethodCountOutputTypeCountOrdersArgs
+    shippingRates?: boolean | ShippingMethodCountOutputTypeCountShippingRatesArgs
+  }
+
+  // Custom InputTypes
+  /**
+   * ShippingMethodCountOutputType without action
+   */
+  export type ShippingMethodCountOutputTypeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ShippingMethodCountOutputType
+     */
+    select?: ShippingMethodCountOutputTypeSelect<ExtArgs> | null
+  }
+
+  /**
+   * ShippingMethodCountOutputType without action
+   */
+  export type ShippingMethodCountOutputTypeCountOrdersArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: OrderWhereInput
+  }
+
+  /**
+   * ShippingMethodCountOutputType without action
+   */
+  export type ShippingMethodCountOutputTypeCountShippingRatesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ShippingRateWhereInput
   }
 
 
@@ -4737,6 +5050,7 @@ export namespace Prisma {
     stock: number | null
     lowStockThreshold: number | null
     discount: number | null
+    weight: number | null
     freeShippingThreshold: number | null
   }
 
@@ -4745,6 +5059,7 @@ export namespace Prisma {
     stock: number | null
     lowStockThreshold: number | null
     discount: number | null
+    weight: number | null
     freeShippingThreshold: number | null
   }
 
@@ -4759,6 +5074,9 @@ export namespace Prisma {
     featured: boolean | null
     discount: number | null
     categoryId: string | null
+    weight: number | null
+    weightUnit: string | null
+    dimensions: string | null
     freeShippingThreshold: number | null
     warrantyPeriod: string | null
     warrantyDescription: string | null
@@ -4779,6 +5097,9 @@ export namespace Prisma {
     featured: boolean | null
     discount: number | null
     categoryId: string | null
+    weight: number | null
+    weightUnit: string | null
+    dimensions: string | null
     freeShippingThreshold: number | null
     warrantyPeriod: string | null
     warrantyDescription: string | null
@@ -4800,6 +5121,9 @@ export namespace Prisma {
     discount: number
     categoryId: number
     features: number
+    weight: number
+    weightUnit: number
+    dimensions: number
     freeShippingThreshold: number
     warrantyPeriod: number
     warrantyDescription: number
@@ -4816,6 +5140,7 @@ export namespace Prisma {
     stock?: true
     lowStockThreshold?: true
     discount?: true
+    weight?: true
     freeShippingThreshold?: true
   }
 
@@ -4824,6 +5149,7 @@ export namespace Prisma {
     stock?: true
     lowStockThreshold?: true
     discount?: true
+    weight?: true
     freeShippingThreshold?: true
   }
 
@@ -4838,6 +5164,9 @@ export namespace Prisma {
     featured?: true
     discount?: true
     categoryId?: true
+    weight?: true
+    weightUnit?: true
+    dimensions?: true
     freeShippingThreshold?: true
     warrantyPeriod?: true
     warrantyDescription?: true
@@ -4858,6 +5187,9 @@ export namespace Prisma {
     featured?: true
     discount?: true
     categoryId?: true
+    weight?: true
+    weightUnit?: true
+    dimensions?: true
     freeShippingThreshold?: true
     warrantyPeriod?: true
     warrantyDescription?: true
@@ -4879,6 +5211,9 @@ export namespace Prisma {
     discount?: true
     categoryId?: true
     features?: true
+    weight?: true
+    weightUnit?: true
+    dimensions?: true
     freeShippingThreshold?: true
     warrantyPeriod?: true
     warrantyDescription?: true
@@ -4987,6 +5322,9 @@ export namespace Prisma {
     discount: number | null
     categoryId: string | null
     features: string[]
+    weight: number | null
+    weightUnit: string | null
+    dimensions: string | null
     freeShippingThreshold: number | null
     warrantyPeriod: string | null
     warrantyDescription: string | null
@@ -5027,6 +5365,9 @@ export namespace Prisma {
     discount?: boolean
     categoryId?: boolean
     features?: boolean
+    weight?: boolean
+    weightUnit?: boolean
+    dimensions?: boolean
     freeShippingThreshold?: boolean
     warrantyPeriod?: boolean
     warrantyDescription?: boolean
@@ -5054,6 +5395,9 @@ export namespace Prisma {
     discount?: boolean
     categoryId?: boolean
     features?: boolean
+    weight?: boolean
+    weightUnit?: boolean
+    dimensions?: boolean
     freeShippingThreshold?: boolean
     warrantyPeriod?: boolean
     warrantyDescription?: boolean
@@ -5076,6 +5420,9 @@ export namespace Prisma {
     discount?: boolean
     categoryId?: boolean
     features?: boolean
+    weight?: boolean
+    weightUnit?: boolean
+    dimensions?: boolean
     freeShippingThreshold?: boolean
     warrantyPeriod?: boolean
     warrantyDescription?: boolean
@@ -5098,6 +5445,9 @@ export namespace Prisma {
     discount?: boolean
     categoryId?: boolean
     features?: boolean
+    weight?: boolean
+    weightUnit?: boolean
+    dimensions?: boolean
     freeShippingThreshold?: boolean
     warrantyPeriod?: boolean
     warrantyDescription?: boolean
@@ -5107,7 +5457,7 @@ export namespace Prisma {
     updatedAt?: boolean
   }
 
-  export type ProductOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "description" | "sku" | "price" | "stock" | "lowStockThreshold" | "featured" | "discount" | "categoryId" | "features" | "freeShippingThreshold" | "warrantyPeriod" | "warrantyDescription" | "returnPeriod" | "returnDescription" | "createdAt" | "updatedAt", ExtArgs["result"]["product"]>
+  export type ProductOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "description" | "sku" | "price" | "stock" | "lowStockThreshold" | "featured" | "discount" | "categoryId" | "features" | "weight" | "weightUnit" | "dimensions" | "freeShippingThreshold" | "warrantyPeriod" | "warrantyDescription" | "returnPeriod" | "returnDescription" | "createdAt" | "updatedAt", ExtArgs["result"]["product"]>
   export type ProductInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     category?: boolean | Product$categoryArgs<ExtArgs>
     images?: boolean | Product$imagesArgs<ExtArgs>
@@ -5144,6 +5494,9 @@ export namespace Prisma {
       discount: number | null
       categoryId: string | null
       features: string[]
+      weight: number | null
+      weightUnit: string | null
+      dimensions: string | null
       freeShippingThreshold: number | null
       warrantyPeriod: string | null
       warrantyDescription: string | null
@@ -5590,6 +5943,9 @@ export namespace Prisma {
     readonly discount: FieldRef<"Product", 'Float'>
     readonly categoryId: FieldRef<"Product", 'String'>
     readonly features: FieldRef<"Product", 'String[]'>
+    readonly weight: FieldRef<"Product", 'Float'>
+    readonly weightUnit: FieldRef<"Product", 'String'>
+    readonly dimensions: FieldRef<"Product", 'String'>
     readonly freeShippingThreshold: FieldRef<"Product", 'Float'>
     readonly warrantyPeriod: FieldRef<"Product", 'String'>
     readonly warrantyDescription: FieldRef<"Product", 'String'>
@@ -10566,6 +10922,7 @@ export namespace Prisma {
     paymentMethod: string | null
     paymentStatus: $Enums.PaymentStatus | null
     orderStatus: $Enums.OrderStatus | null
+    shippingMethodId: string | null
     shippingCost: number | null
     taxAmount: number | null
     createdAt: Date | null
@@ -10581,6 +10938,7 @@ export namespace Prisma {
     paymentMethod: string | null
     paymentStatus: $Enums.PaymentStatus | null
     orderStatus: $Enums.OrderStatus | null
+    shippingMethodId: string | null
     shippingCost: number | null
     taxAmount: number | null
     createdAt: Date | null
@@ -10596,6 +10954,7 @@ export namespace Prisma {
     paymentMethod: number
     paymentStatus: number
     orderStatus: number
+    shippingMethodId: number
     shippingCost: number
     taxAmount: number
     createdAt: number
@@ -10625,6 +10984,7 @@ export namespace Prisma {
     paymentMethod?: true
     paymentStatus?: true
     orderStatus?: true
+    shippingMethodId?: true
     shippingCost?: true
     taxAmount?: true
     createdAt?: true
@@ -10640,6 +11000,7 @@ export namespace Prisma {
     paymentMethod?: true
     paymentStatus?: true
     orderStatus?: true
+    shippingMethodId?: true
     shippingCost?: true
     taxAmount?: true
     createdAt?: true
@@ -10655,6 +11016,7 @@ export namespace Prisma {
     paymentMethod?: true
     paymentStatus?: true
     orderStatus?: true
+    shippingMethodId?: true
     shippingCost?: true
     taxAmount?: true
     createdAt?: true
@@ -10757,6 +11119,7 @@ export namespace Prisma {
     paymentMethod: string
     paymentStatus: $Enums.PaymentStatus
     orderStatus: $Enums.OrderStatus
+    shippingMethodId: string | null
     shippingCost: number
     taxAmount: number
     createdAt: Date
@@ -10791,6 +11154,7 @@ export namespace Prisma {
     paymentMethod?: boolean
     paymentStatus?: boolean
     orderStatus?: boolean
+    shippingMethodId?: boolean
     shippingCost?: boolean
     taxAmount?: boolean
     createdAt?: boolean
@@ -10799,6 +11163,7 @@ export namespace Prisma {
     orderItems?: boolean | Order$orderItemsArgs<ExtArgs>
     shippingAddress?: boolean | AddressDefaultArgs<ExtArgs>
     billingAddress?: boolean | AddressDefaultArgs<ExtArgs>
+    shippingMethod?: boolean | Order$shippingMethodArgs<ExtArgs>
     coupons?: boolean | Order$couponsArgs<ExtArgs>
     _count?: boolean | OrderCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["order"]>
@@ -10812,6 +11177,7 @@ export namespace Prisma {
     paymentMethod?: boolean
     paymentStatus?: boolean
     orderStatus?: boolean
+    shippingMethodId?: boolean
     shippingCost?: boolean
     taxAmount?: boolean
     createdAt?: boolean
@@ -10819,6 +11185,7 @@ export namespace Prisma {
     user?: boolean | UserDefaultArgs<ExtArgs>
     shippingAddress?: boolean | AddressDefaultArgs<ExtArgs>
     billingAddress?: boolean | AddressDefaultArgs<ExtArgs>
+    shippingMethod?: boolean | Order$shippingMethodArgs<ExtArgs>
   }, ExtArgs["result"]["order"]>
 
   export type OrderSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -10830,6 +11197,7 @@ export namespace Prisma {
     paymentMethod?: boolean
     paymentStatus?: boolean
     orderStatus?: boolean
+    shippingMethodId?: boolean
     shippingCost?: boolean
     taxAmount?: boolean
     createdAt?: boolean
@@ -10837,6 +11205,7 @@ export namespace Prisma {
     user?: boolean | UserDefaultArgs<ExtArgs>
     shippingAddress?: boolean | AddressDefaultArgs<ExtArgs>
     billingAddress?: boolean | AddressDefaultArgs<ExtArgs>
+    shippingMethod?: boolean | Order$shippingMethodArgs<ExtArgs>
   }, ExtArgs["result"]["order"]>
 
   export type OrderSelectScalar = {
@@ -10848,18 +11217,20 @@ export namespace Prisma {
     paymentMethod?: boolean
     paymentStatus?: boolean
     orderStatus?: boolean
+    shippingMethodId?: boolean
     shippingCost?: boolean
     taxAmount?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }
 
-  export type OrderOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "userId" | "totalAmount" | "shippingAddressId" | "billingAddressId" | "paymentMethod" | "paymentStatus" | "orderStatus" | "shippingCost" | "taxAmount" | "createdAt" | "updatedAt", ExtArgs["result"]["order"]>
+  export type OrderOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "userId" | "totalAmount" | "shippingAddressId" | "billingAddressId" | "paymentMethod" | "paymentStatus" | "orderStatus" | "shippingMethodId" | "shippingCost" | "taxAmount" | "createdAt" | "updatedAt", ExtArgs["result"]["order"]>
   export type OrderInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     user?: boolean | UserDefaultArgs<ExtArgs>
     orderItems?: boolean | Order$orderItemsArgs<ExtArgs>
     shippingAddress?: boolean | AddressDefaultArgs<ExtArgs>
     billingAddress?: boolean | AddressDefaultArgs<ExtArgs>
+    shippingMethod?: boolean | Order$shippingMethodArgs<ExtArgs>
     coupons?: boolean | Order$couponsArgs<ExtArgs>
     _count?: boolean | OrderCountOutputTypeDefaultArgs<ExtArgs>
   }
@@ -10867,11 +11238,13 @@ export namespace Prisma {
     user?: boolean | UserDefaultArgs<ExtArgs>
     shippingAddress?: boolean | AddressDefaultArgs<ExtArgs>
     billingAddress?: boolean | AddressDefaultArgs<ExtArgs>
+    shippingMethod?: boolean | Order$shippingMethodArgs<ExtArgs>
   }
   export type OrderIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     user?: boolean | UserDefaultArgs<ExtArgs>
     shippingAddress?: boolean | AddressDefaultArgs<ExtArgs>
     billingAddress?: boolean | AddressDefaultArgs<ExtArgs>
+    shippingMethod?: boolean | Order$shippingMethodArgs<ExtArgs>
   }
 
   export type $OrderPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -10881,6 +11254,7 @@ export namespace Prisma {
       orderItems: Prisma.$OrderItemPayload<ExtArgs>[]
       shippingAddress: Prisma.$AddressPayload<ExtArgs>
       billingAddress: Prisma.$AddressPayload<ExtArgs>
+      shippingMethod: Prisma.$ShippingMethodPayload<ExtArgs> | null
       coupons: Prisma.$CouponPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
@@ -10892,6 +11266,7 @@ export namespace Prisma {
       paymentMethod: string
       paymentStatus: $Enums.PaymentStatus
       orderStatus: $Enums.OrderStatus
+      shippingMethodId: string | null
       shippingCost: number
       taxAmount: number
       createdAt: Date
@@ -11294,6 +11669,7 @@ export namespace Prisma {
     orderItems<T extends Order$orderItemsArgs<ExtArgs> = {}>(args?: Subset<T, Order$orderItemsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$OrderItemPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     shippingAddress<T extends AddressDefaultArgs<ExtArgs> = {}>(args?: Subset<T, AddressDefaultArgs<ExtArgs>>): Prisma__AddressClient<$Result.GetResult<Prisma.$AddressPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     billingAddress<T extends AddressDefaultArgs<ExtArgs> = {}>(args?: Subset<T, AddressDefaultArgs<ExtArgs>>): Prisma__AddressClient<$Result.GetResult<Prisma.$AddressPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    shippingMethod<T extends Order$shippingMethodArgs<ExtArgs> = {}>(args?: Subset<T, Order$shippingMethodArgs<ExtArgs>>): Prisma__ShippingMethodClient<$Result.GetResult<Prisma.$ShippingMethodPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     coupons<T extends Order$couponsArgs<ExtArgs> = {}>(args?: Subset<T, Order$couponsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CouponPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
@@ -11332,6 +11708,7 @@ export namespace Prisma {
     readonly paymentMethod: FieldRef<"Order", 'String'>
     readonly paymentStatus: FieldRef<"Order", 'PaymentStatus'>
     readonly orderStatus: FieldRef<"Order", 'OrderStatus'>
+    readonly shippingMethodId: FieldRef<"Order", 'String'>
     readonly shippingCost: FieldRef<"Order", 'Float'>
     readonly taxAmount: FieldRef<"Order", 'Float'>
     readonly createdAt: FieldRef<"Order", 'DateTime'>
@@ -11753,6 +12130,25 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: OrderItemScalarFieldEnum | OrderItemScalarFieldEnum[]
+  }
+
+  /**
+   * Order.shippingMethod
+   */
+  export type Order$shippingMethodArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ShippingMethod
+     */
+    select?: ShippingMethodSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ShippingMethod
+     */
+    omit?: ShippingMethodOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ShippingMethodInclude<ExtArgs> | null
+    where?: ShippingMethodWhereInput
   }
 
   /**
@@ -15284,6 +15680,9 @@ export namespace Prisma {
     startDate: Date | null
     endDate: Date | null
     position: string | null
+    targetAudience: string | null
+    goals: string | null
+    notes: string | null
     createdAt: Date | null
     updatedAt: Date | null
   }
@@ -15300,6 +15699,9 @@ export namespace Prisma {
     startDate: Date | null
     endDate: Date | null
     position: string | null
+    targetAudience: string | null
+    goals: string | null
+    notes: string | null
     createdAt: Date | null
     updatedAt: Date | null
   }
@@ -15316,6 +15718,9 @@ export namespace Prisma {
     startDate: number
     endDate: number
     position: number
+    targetAudience: number
+    goals: number
+    notes: number
     createdAt: number
     updatedAt: number
     _all: number
@@ -15344,6 +15749,9 @@ export namespace Prisma {
     startDate?: true
     endDate?: true
     position?: true
+    targetAudience?: true
+    goals?: true
+    notes?: true
     createdAt?: true
     updatedAt?: true
   }
@@ -15360,6 +15768,9 @@ export namespace Prisma {
     startDate?: true
     endDate?: true
     position?: true
+    targetAudience?: true
+    goals?: true
+    notes?: true
     createdAt?: true
     updatedAt?: true
   }
@@ -15376,6 +15787,9 @@ export namespace Prisma {
     startDate?: true
     endDate?: true
     position?: true
+    targetAudience?: true
+    goals?: true
+    notes?: true
     createdAt?: true
     updatedAt?: true
     _all?: true
@@ -15479,6 +15893,9 @@ export namespace Prisma {
     startDate: Date
     endDate: Date
     position: string | null
+    targetAudience: string | null
+    goals: string | null
+    notes: string | null
     createdAt: Date
     updatedAt: Date
     _count: CampaignCountAggregateOutputType | null
@@ -15514,6 +15931,9 @@ export namespace Prisma {
     startDate?: boolean
     endDate?: boolean
     position?: boolean
+    targetAudience?: boolean
+    goals?: boolean
+    notes?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     coupon?: boolean | CouponDefaultArgs<ExtArgs>
@@ -15531,6 +15951,9 @@ export namespace Prisma {
     startDate?: boolean
     endDate?: boolean
     position?: boolean
+    targetAudience?: boolean
+    goals?: boolean
+    notes?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     coupon?: boolean | CouponDefaultArgs<ExtArgs>
@@ -15548,6 +15971,9 @@ export namespace Prisma {
     startDate?: boolean
     endDate?: boolean
     position?: boolean
+    targetAudience?: boolean
+    goals?: boolean
+    notes?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     coupon?: boolean | CouponDefaultArgs<ExtArgs>
@@ -15565,11 +15991,14 @@ export namespace Prisma {
     startDate?: boolean
     endDate?: boolean
     position?: boolean
+    targetAudience?: boolean
+    goals?: boolean
+    notes?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }
 
-  export type CampaignOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "description" | "imageUrl" | "couponId" | "isActive" | "clickCount" | "conversionCount" | "startDate" | "endDate" | "position" | "createdAt" | "updatedAt", ExtArgs["result"]["campaign"]>
+  export type CampaignOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "description" | "imageUrl" | "couponId" | "isActive" | "clickCount" | "conversionCount" | "startDate" | "endDate" | "position" | "targetAudience" | "goals" | "notes" | "createdAt" | "updatedAt", ExtArgs["result"]["campaign"]>
   export type CampaignInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     coupon?: boolean | CouponDefaultArgs<ExtArgs>
   }
@@ -15597,6 +16026,9 @@ export namespace Prisma {
       startDate: Date
       endDate: Date
       position: string | null
+      targetAudience: string | null
+      goals: string | null
+      notes: string | null
       createdAt: Date
       updatedAt: Date
     }, ExtArgs["result"]["campaign"]>
@@ -16034,6 +16466,9 @@ export namespace Prisma {
     readonly startDate: FieldRef<"Campaign", 'DateTime'>
     readonly endDate: FieldRef<"Campaign", 'DateTime'>
     readonly position: FieldRef<"Campaign", 'String'>
+    readonly targetAudience: FieldRef<"Campaign", 'String'>
+    readonly goals: FieldRef<"Campaign", 'String'>
+    readonly notes: FieldRef<"Campaign", 'String'>
     readonly createdAt: FieldRef<"Campaign", 'DateTime'>
     readonly updatedAt: FieldRef<"Campaign", 'DateTime'>
   }
@@ -18623,6 +19058,3457 @@ export namespace Prisma {
 
 
   /**
+   * Model ShippingMethod
+   */
+
+  export type AggregateShippingMethod = {
+    _count: ShippingMethodCountAggregateOutputType | null
+    _avg: ShippingMethodAvgAggregateOutputType | null
+    _sum: ShippingMethodSumAggregateOutputType | null
+    _min: ShippingMethodMinAggregateOutputType | null
+    _max: ShippingMethodMaxAggregateOutputType | null
+  }
+
+  export type ShippingMethodAvgAggregateOutputType = {
+    defaultCost: number | null
+  }
+
+  export type ShippingMethodSumAggregateOutputType = {
+    defaultCost: number | null
+  }
+
+  export type ShippingMethodMinAggregateOutputType = {
+    id: string | null
+    name: string | null
+    description: string | null
+    estimatedDays: string | null
+    isActive: boolean | null
+    defaultCost: number | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type ShippingMethodMaxAggregateOutputType = {
+    id: string | null
+    name: string | null
+    description: string | null
+    estimatedDays: string | null
+    isActive: boolean | null
+    defaultCost: number | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type ShippingMethodCountAggregateOutputType = {
+    id: number
+    name: number
+    description: number
+    estimatedDays: number
+    isActive: number
+    defaultCost: number
+    createdAt: number
+    updatedAt: number
+    _all: number
+  }
+
+
+  export type ShippingMethodAvgAggregateInputType = {
+    defaultCost?: true
+  }
+
+  export type ShippingMethodSumAggregateInputType = {
+    defaultCost?: true
+  }
+
+  export type ShippingMethodMinAggregateInputType = {
+    id?: true
+    name?: true
+    description?: true
+    estimatedDays?: true
+    isActive?: true
+    defaultCost?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type ShippingMethodMaxAggregateInputType = {
+    id?: true
+    name?: true
+    description?: true
+    estimatedDays?: true
+    isActive?: true
+    defaultCost?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type ShippingMethodCountAggregateInputType = {
+    id?: true
+    name?: true
+    description?: true
+    estimatedDays?: true
+    isActive?: true
+    defaultCost?: true
+    createdAt?: true
+    updatedAt?: true
+    _all?: true
+  }
+
+  export type ShippingMethodAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which ShippingMethod to aggregate.
+     */
+    where?: ShippingMethodWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ShippingMethods to fetch.
+     */
+    orderBy?: ShippingMethodOrderByWithRelationInput | ShippingMethodOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: ShippingMethodWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ShippingMethods from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ShippingMethods.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned ShippingMethods
+    **/
+    _count?: true | ShippingMethodCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: ShippingMethodAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: ShippingMethodSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: ShippingMethodMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: ShippingMethodMaxAggregateInputType
+  }
+
+  export type GetShippingMethodAggregateType<T extends ShippingMethodAggregateArgs> = {
+        [P in keyof T & keyof AggregateShippingMethod]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateShippingMethod[P]>
+      : GetScalarType<T[P], AggregateShippingMethod[P]>
+  }
+
+
+
+
+  export type ShippingMethodGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ShippingMethodWhereInput
+    orderBy?: ShippingMethodOrderByWithAggregationInput | ShippingMethodOrderByWithAggregationInput[]
+    by: ShippingMethodScalarFieldEnum[] | ShippingMethodScalarFieldEnum
+    having?: ShippingMethodScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: ShippingMethodCountAggregateInputType | true
+    _avg?: ShippingMethodAvgAggregateInputType
+    _sum?: ShippingMethodSumAggregateInputType
+    _min?: ShippingMethodMinAggregateInputType
+    _max?: ShippingMethodMaxAggregateInputType
+  }
+
+  export type ShippingMethodGroupByOutputType = {
+    id: string
+    name: string
+    description: string | null
+    estimatedDays: string
+    isActive: boolean
+    defaultCost: number
+    createdAt: Date
+    updatedAt: Date
+    _count: ShippingMethodCountAggregateOutputType | null
+    _avg: ShippingMethodAvgAggregateOutputType | null
+    _sum: ShippingMethodSumAggregateOutputType | null
+    _min: ShippingMethodMinAggregateOutputType | null
+    _max: ShippingMethodMaxAggregateOutputType | null
+  }
+
+  type GetShippingMethodGroupByPayload<T extends ShippingMethodGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<ShippingMethodGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof ShippingMethodGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], ShippingMethodGroupByOutputType[P]>
+            : GetScalarType<T[P], ShippingMethodGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type ShippingMethodSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    name?: boolean
+    description?: boolean
+    estimatedDays?: boolean
+    isActive?: boolean
+    defaultCost?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    orders?: boolean | ShippingMethod$ordersArgs<ExtArgs>
+    shippingRates?: boolean | ShippingMethod$shippingRatesArgs<ExtArgs>
+    _count?: boolean | ShippingMethodCountOutputTypeDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["shippingMethod"]>
+
+  export type ShippingMethodSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    name?: boolean
+    description?: boolean
+    estimatedDays?: boolean
+    isActive?: boolean
+    defaultCost?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }, ExtArgs["result"]["shippingMethod"]>
+
+  export type ShippingMethodSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    name?: boolean
+    description?: boolean
+    estimatedDays?: boolean
+    isActive?: boolean
+    defaultCost?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }, ExtArgs["result"]["shippingMethod"]>
+
+  export type ShippingMethodSelectScalar = {
+    id?: boolean
+    name?: boolean
+    description?: boolean
+    estimatedDays?: boolean
+    isActive?: boolean
+    defaultCost?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }
+
+  export type ShippingMethodOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "description" | "estimatedDays" | "isActive" | "defaultCost" | "createdAt" | "updatedAt", ExtArgs["result"]["shippingMethod"]>
+  export type ShippingMethodInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    orders?: boolean | ShippingMethod$ordersArgs<ExtArgs>
+    shippingRates?: boolean | ShippingMethod$shippingRatesArgs<ExtArgs>
+    _count?: boolean | ShippingMethodCountOutputTypeDefaultArgs<ExtArgs>
+  }
+  export type ShippingMethodIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
+  export type ShippingMethodIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
+
+  export type $ShippingMethodPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "ShippingMethod"
+    objects: {
+      orders: Prisma.$OrderPayload<ExtArgs>[]
+      shippingRates: Prisma.$ShippingRatePayload<ExtArgs>[]
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      name: string
+      description: string | null
+      estimatedDays: string
+      isActive: boolean
+      defaultCost: number
+      createdAt: Date
+      updatedAt: Date
+    }, ExtArgs["result"]["shippingMethod"]>
+    composites: {}
+  }
+
+  type ShippingMethodGetPayload<S extends boolean | null | undefined | ShippingMethodDefaultArgs> = $Result.GetResult<Prisma.$ShippingMethodPayload, S>
+
+  type ShippingMethodCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<ShippingMethodFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: ShippingMethodCountAggregateInputType | true
+    }
+
+  export interface ShippingMethodDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['ShippingMethod'], meta: { name: 'ShippingMethod' } }
+    /**
+     * Find zero or one ShippingMethod that matches the filter.
+     * @param {ShippingMethodFindUniqueArgs} args - Arguments to find a ShippingMethod
+     * @example
+     * // Get one ShippingMethod
+     * const shippingMethod = await prisma.shippingMethod.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends ShippingMethodFindUniqueArgs>(args: SelectSubset<T, ShippingMethodFindUniqueArgs<ExtArgs>>): Prisma__ShippingMethodClient<$Result.GetResult<Prisma.$ShippingMethodPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one ShippingMethod that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {ShippingMethodFindUniqueOrThrowArgs} args - Arguments to find a ShippingMethod
+     * @example
+     * // Get one ShippingMethod
+     * const shippingMethod = await prisma.shippingMethod.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends ShippingMethodFindUniqueOrThrowArgs>(args: SelectSubset<T, ShippingMethodFindUniqueOrThrowArgs<ExtArgs>>): Prisma__ShippingMethodClient<$Result.GetResult<Prisma.$ShippingMethodPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first ShippingMethod that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ShippingMethodFindFirstArgs} args - Arguments to find a ShippingMethod
+     * @example
+     * // Get one ShippingMethod
+     * const shippingMethod = await prisma.shippingMethod.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends ShippingMethodFindFirstArgs>(args?: SelectSubset<T, ShippingMethodFindFirstArgs<ExtArgs>>): Prisma__ShippingMethodClient<$Result.GetResult<Prisma.$ShippingMethodPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first ShippingMethod that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ShippingMethodFindFirstOrThrowArgs} args - Arguments to find a ShippingMethod
+     * @example
+     * // Get one ShippingMethod
+     * const shippingMethod = await prisma.shippingMethod.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends ShippingMethodFindFirstOrThrowArgs>(args?: SelectSubset<T, ShippingMethodFindFirstOrThrowArgs<ExtArgs>>): Prisma__ShippingMethodClient<$Result.GetResult<Prisma.$ShippingMethodPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more ShippingMethods that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ShippingMethodFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all ShippingMethods
+     * const shippingMethods = await prisma.shippingMethod.findMany()
+     * 
+     * // Get first 10 ShippingMethods
+     * const shippingMethods = await prisma.shippingMethod.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const shippingMethodWithIdOnly = await prisma.shippingMethod.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends ShippingMethodFindManyArgs>(args?: SelectSubset<T, ShippingMethodFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ShippingMethodPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a ShippingMethod.
+     * @param {ShippingMethodCreateArgs} args - Arguments to create a ShippingMethod.
+     * @example
+     * // Create one ShippingMethod
+     * const ShippingMethod = await prisma.shippingMethod.create({
+     *   data: {
+     *     // ... data to create a ShippingMethod
+     *   }
+     * })
+     * 
+     */
+    create<T extends ShippingMethodCreateArgs>(args: SelectSubset<T, ShippingMethodCreateArgs<ExtArgs>>): Prisma__ShippingMethodClient<$Result.GetResult<Prisma.$ShippingMethodPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many ShippingMethods.
+     * @param {ShippingMethodCreateManyArgs} args - Arguments to create many ShippingMethods.
+     * @example
+     * // Create many ShippingMethods
+     * const shippingMethod = await prisma.shippingMethod.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends ShippingMethodCreateManyArgs>(args?: SelectSubset<T, ShippingMethodCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many ShippingMethods and returns the data saved in the database.
+     * @param {ShippingMethodCreateManyAndReturnArgs} args - Arguments to create many ShippingMethods.
+     * @example
+     * // Create many ShippingMethods
+     * const shippingMethod = await prisma.shippingMethod.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many ShippingMethods and only return the `id`
+     * const shippingMethodWithIdOnly = await prisma.shippingMethod.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends ShippingMethodCreateManyAndReturnArgs>(args?: SelectSubset<T, ShippingMethodCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ShippingMethodPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a ShippingMethod.
+     * @param {ShippingMethodDeleteArgs} args - Arguments to delete one ShippingMethod.
+     * @example
+     * // Delete one ShippingMethod
+     * const ShippingMethod = await prisma.shippingMethod.delete({
+     *   where: {
+     *     // ... filter to delete one ShippingMethod
+     *   }
+     * })
+     * 
+     */
+    delete<T extends ShippingMethodDeleteArgs>(args: SelectSubset<T, ShippingMethodDeleteArgs<ExtArgs>>): Prisma__ShippingMethodClient<$Result.GetResult<Prisma.$ShippingMethodPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one ShippingMethod.
+     * @param {ShippingMethodUpdateArgs} args - Arguments to update one ShippingMethod.
+     * @example
+     * // Update one ShippingMethod
+     * const shippingMethod = await prisma.shippingMethod.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends ShippingMethodUpdateArgs>(args: SelectSubset<T, ShippingMethodUpdateArgs<ExtArgs>>): Prisma__ShippingMethodClient<$Result.GetResult<Prisma.$ShippingMethodPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more ShippingMethods.
+     * @param {ShippingMethodDeleteManyArgs} args - Arguments to filter ShippingMethods to delete.
+     * @example
+     * // Delete a few ShippingMethods
+     * const { count } = await prisma.shippingMethod.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends ShippingMethodDeleteManyArgs>(args?: SelectSubset<T, ShippingMethodDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more ShippingMethods.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ShippingMethodUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many ShippingMethods
+     * const shippingMethod = await prisma.shippingMethod.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends ShippingMethodUpdateManyArgs>(args: SelectSubset<T, ShippingMethodUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more ShippingMethods and returns the data updated in the database.
+     * @param {ShippingMethodUpdateManyAndReturnArgs} args - Arguments to update many ShippingMethods.
+     * @example
+     * // Update many ShippingMethods
+     * const shippingMethod = await prisma.shippingMethod.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more ShippingMethods and only return the `id`
+     * const shippingMethodWithIdOnly = await prisma.shippingMethod.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends ShippingMethodUpdateManyAndReturnArgs>(args: SelectSubset<T, ShippingMethodUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ShippingMethodPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one ShippingMethod.
+     * @param {ShippingMethodUpsertArgs} args - Arguments to update or create a ShippingMethod.
+     * @example
+     * // Update or create a ShippingMethod
+     * const shippingMethod = await prisma.shippingMethod.upsert({
+     *   create: {
+     *     // ... data to create a ShippingMethod
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the ShippingMethod we want to update
+     *   }
+     * })
+     */
+    upsert<T extends ShippingMethodUpsertArgs>(args: SelectSubset<T, ShippingMethodUpsertArgs<ExtArgs>>): Prisma__ShippingMethodClient<$Result.GetResult<Prisma.$ShippingMethodPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of ShippingMethods.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ShippingMethodCountArgs} args - Arguments to filter ShippingMethods to count.
+     * @example
+     * // Count the number of ShippingMethods
+     * const count = await prisma.shippingMethod.count({
+     *   where: {
+     *     // ... the filter for the ShippingMethods we want to count
+     *   }
+     * })
+    **/
+    count<T extends ShippingMethodCountArgs>(
+      args?: Subset<T, ShippingMethodCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], ShippingMethodCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a ShippingMethod.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ShippingMethodAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends ShippingMethodAggregateArgs>(args: Subset<T, ShippingMethodAggregateArgs>): Prisma.PrismaPromise<GetShippingMethodAggregateType<T>>
+
+    /**
+     * Group by ShippingMethod.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ShippingMethodGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends ShippingMethodGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: ShippingMethodGroupByArgs['orderBy'] }
+        : { orderBy?: ShippingMethodGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, ShippingMethodGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetShippingMethodGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the ShippingMethod model
+   */
+  readonly fields: ShippingMethodFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for ShippingMethod.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__ShippingMethodClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    orders<T extends ShippingMethod$ordersArgs<ExtArgs> = {}>(args?: Subset<T, ShippingMethod$ordersArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$OrderPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    shippingRates<T extends ShippingMethod$shippingRatesArgs<ExtArgs> = {}>(args?: Subset<T, ShippingMethod$shippingRatesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ShippingRatePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the ShippingMethod model
+   */
+  interface ShippingMethodFieldRefs {
+    readonly id: FieldRef<"ShippingMethod", 'String'>
+    readonly name: FieldRef<"ShippingMethod", 'String'>
+    readonly description: FieldRef<"ShippingMethod", 'String'>
+    readonly estimatedDays: FieldRef<"ShippingMethod", 'String'>
+    readonly isActive: FieldRef<"ShippingMethod", 'Boolean'>
+    readonly defaultCost: FieldRef<"ShippingMethod", 'Float'>
+    readonly createdAt: FieldRef<"ShippingMethod", 'DateTime'>
+    readonly updatedAt: FieldRef<"ShippingMethod", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * ShippingMethod findUnique
+   */
+  export type ShippingMethodFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ShippingMethod
+     */
+    select?: ShippingMethodSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ShippingMethod
+     */
+    omit?: ShippingMethodOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ShippingMethodInclude<ExtArgs> | null
+    /**
+     * Filter, which ShippingMethod to fetch.
+     */
+    where: ShippingMethodWhereUniqueInput
+  }
+
+  /**
+   * ShippingMethod findUniqueOrThrow
+   */
+  export type ShippingMethodFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ShippingMethod
+     */
+    select?: ShippingMethodSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ShippingMethod
+     */
+    omit?: ShippingMethodOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ShippingMethodInclude<ExtArgs> | null
+    /**
+     * Filter, which ShippingMethod to fetch.
+     */
+    where: ShippingMethodWhereUniqueInput
+  }
+
+  /**
+   * ShippingMethod findFirst
+   */
+  export type ShippingMethodFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ShippingMethod
+     */
+    select?: ShippingMethodSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ShippingMethod
+     */
+    omit?: ShippingMethodOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ShippingMethodInclude<ExtArgs> | null
+    /**
+     * Filter, which ShippingMethod to fetch.
+     */
+    where?: ShippingMethodWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ShippingMethods to fetch.
+     */
+    orderBy?: ShippingMethodOrderByWithRelationInput | ShippingMethodOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for ShippingMethods.
+     */
+    cursor?: ShippingMethodWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ShippingMethods from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ShippingMethods.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of ShippingMethods.
+     */
+    distinct?: ShippingMethodScalarFieldEnum | ShippingMethodScalarFieldEnum[]
+  }
+
+  /**
+   * ShippingMethod findFirstOrThrow
+   */
+  export type ShippingMethodFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ShippingMethod
+     */
+    select?: ShippingMethodSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ShippingMethod
+     */
+    omit?: ShippingMethodOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ShippingMethodInclude<ExtArgs> | null
+    /**
+     * Filter, which ShippingMethod to fetch.
+     */
+    where?: ShippingMethodWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ShippingMethods to fetch.
+     */
+    orderBy?: ShippingMethodOrderByWithRelationInput | ShippingMethodOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for ShippingMethods.
+     */
+    cursor?: ShippingMethodWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ShippingMethods from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ShippingMethods.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of ShippingMethods.
+     */
+    distinct?: ShippingMethodScalarFieldEnum | ShippingMethodScalarFieldEnum[]
+  }
+
+  /**
+   * ShippingMethod findMany
+   */
+  export type ShippingMethodFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ShippingMethod
+     */
+    select?: ShippingMethodSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ShippingMethod
+     */
+    omit?: ShippingMethodOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ShippingMethodInclude<ExtArgs> | null
+    /**
+     * Filter, which ShippingMethods to fetch.
+     */
+    where?: ShippingMethodWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ShippingMethods to fetch.
+     */
+    orderBy?: ShippingMethodOrderByWithRelationInput | ShippingMethodOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing ShippingMethods.
+     */
+    cursor?: ShippingMethodWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ShippingMethods from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ShippingMethods.
+     */
+    skip?: number
+    distinct?: ShippingMethodScalarFieldEnum | ShippingMethodScalarFieldEnum[]
+  }
+
+  /**
+   * ShippingMethod create
+   */
+  export type ShippingMethodCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ShippingMethod
+     */
+    select?: ShippingMethodSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ShippingMethod
+     */
+    omit?: ShippingMethodOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ShippingMethodInclude<ExtArgs> | null
+    /**
+     * The data needed to create a ShippingMethod.
+     */
+    data: XOR<ShippingMethodCreateInput, ShippingMethodUncheckedCreateInput>
+  }
+
+  /**
+   * ShippingMethod createMany
+   */
+  export type ShippingMethodCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many ShippingMethods.
+     */
+    data: ShippingMethodCreateManyInput | ShippingMethodCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * ShippingMethod createManyAndReturn
+   */
+  export type ShippingMethodCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ShippingMethod
+     */
+    select?: ShippingMethodSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the ShippingMethod
+     */
+    omit?: ShippingMethodOmit<ExtArgs> | null
+    /**
+     * The data used to create many ShippingMethods.
+     */
+    data: ShippingMethodCreateManyInput | ShippingMethodCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * ShippingMethod update
+   */
+  export type ShippingMethodUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ShippingMethod
+     */
+    select?: ShippingMethodSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ShippingMethod
+     */
+    omit?: ShippingMethodOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ShippingMethodInclude<ExtArgs> | null
+    /**
+     * The data needed to update a ShippingMethod.
+     */
+    data: XOR<ShippingMethodUpdateInput, ShippingMethodUncheckedUpdateInput>
+    /**
+     * Choose, which ShippingMethod to update.
+     */
+    where: ShippingMethodWhereUniqueInput
+  }
+
+  /**
+   * ShippingMethod updateMany
+   */
+  export type ShippingMethodUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update ShippingMethods.
+     */
+    data: XOR<ShippingMethodUpdateManyMutationInput, ShippingMethodUncheckedUpdateManyInput>
+    /**
+     * Filter which ShippingMethods to update
+     */
+    where?: ShippingMethodWhereInput
+    /**
+     * Limit how many ShippingMethods to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * ShippingMethod updateManyAndReturn
+   */
+  export type ShippingMethodUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ShippingMethod
+     */
+    select?: ShippingMethodSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the ShippingMethod
+     */
+    omit?: ShippingMethodOmit<ExtArgs> | null
+    /**
+     * The data used to update ShippingMethods.
+     */
+    data: XOR<ShippingMethodUpdateManyMutationInput, ShippingMethodUncheckedUpdateManyInput>
+    /**
+     * Filter which ShippingMethods to update
+     */
+    where?: ShippingMethodWhereInput
+    /**
+     * Limit how many ShippingMethods to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * ShippingMethod upsert
+   */
+  export type ShippingMethodUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ShippingMethod
+     */
+    select?: ShippingMethodSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ShippingMethod
+     */
+    omit?: ShippingMethodOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ShippingMethodInclude<ExtArgs> | null
+    /**
+     * The filter to search for the ShippingMethod to update in case it exists.
+     */
+    where: ShippingMethodWhereUniqueInput
+    /**
+     * In case the ShippingMethod found by the `where` argument doesn't exist, create a new ShippingMethod with this data.
+     */
+    create: XOR<ShippingMethodCreateInput, ShippingMethodUncheckedCreateInput>
+    /**
+     * In case the ShippingMethod was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<ShippingMethodUpdateInput, ShippingMethodUncheckedUpdateInput>
+  }
+
+  /**
+   * ShippingMethod delete
+   */
+  export type ShippingMethodDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ShippingMethod
+     */
+    select?: ShippingMethodSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ShippingMethod
+     */
+    omit?: ShippingMethodOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ShippingMethodInclude<ExtArgs> | null
+    /**
+     * Filter which ShippingMethod to delete.
+     */
+    where: ShippingMethodWhereUniqueInput
+  }
+
+  /**
+   * ShippingMethod deleteMany
+   */
+  export type ShippingMethodDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which ShippingMethods to delete
+     */
+    where?: ShippingMethodWhereInput
+    /**
+     * Limit how many ShippingMethods to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * ShippingMethod.orders
+   */
+  export type ShippingMethod$ordersArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Order
+     */
+    select?: OrderSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Order
+     */
+    omit?: OrderOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: OrderInclude<ExtArgs> | null
+    where?: OrderWhereInput
+    orderBy?: OrderOrderByWithRelationInput | OrderOrderByWithRelationInput[]
+    cursor?: OrderWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: OrderScalarFieldEnum | OrderScalarFieldEnum[]
+  }
+
+  /**
+   * ShippingMethod.shippingRates
+   */
+  export type ShippingMethod$shippingRatesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ShippingRate
+     */
+    select?: ShippingRateSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ShippingRate
+     */
+    omit?: ShippingRateOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ShippingRateInclude<ExtArgs> | null
+    where?: ShippingRateWhereInput
+    orderBy?: ShippingRateOrderByWithRelationInput | ShippingRateOrderByWithRelationInput[]
+    cursor?: ShippingRateWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: ShippingRateScalarFieldEnum | ShippingRateScalarFieldEnum[]
+  }
+
+  /**
+   * ShippingMethod without action
+   */
+  export type ShippingMethodDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ShippingMethod
+     */
+    select?: ShippingMethodSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ShippingMethod
+     */
+    omit?: ShippingMethodOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ShippingMethodInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model ShippingRate
+   */
+
+  export type AggregateShippingRate = {
+    _count: ShippingRateCountAggregateOutputType | null
+    _avg: ShippingRateAvgAggregateOutputType | null
+    _sum: ShippingRateSumAggregateOutputType | null
+    _min: ShippingRateMinAggregateOutputType | null
+    _max: ShippingRateMaxAggregateOutputType | null
+  }
+
+  export type ShippingRateAvgAggregateOutputType = {
+    minOrderAmount: number | null
+    maxOrderAmount: number | null
+    minWeight: number | null
+    maxWeight: number | null
+    cost: number | null
+  }
+
+  export type ShippingRateSumAggregateOutputType = {
+    minOrderAmount: number | null
+    maxOrderAmount: number | null
+    minWeight: number | null
+    maxWeight: number | null
+    cost: number | null
+  }
+
+  export type ShippingRateMinAggregateOutputType = {
+    id: string | null
+    shippingMethodId: string | null
+    country: string | null
+    state: string | null
+    postalCodePrefix: string | null
+    minOrderAmount: number | null
+    maxOrderAmount: number | null
+    minWeight: number | null
+    maxWeight: number | null
+    cost: number | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type ShippingRateMaxAggregateOutputType = {
+    id: string | null
+    shippingMethodId: string | null
+    country: string | null
+    state: string | null
+    postalCodePrefix: string | null
+    minOrderAmount: number | null
+    maxOrderAmount: number | null
+    minWeight: number | null
+    maxWeight: number | null
+    cost: number | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type ShippingRateCountAggregateOutputType = {
+    id: number
+    shippingMethodId: number
+    country: number
+    state: number
+    postalCodePrefix: number
+    minOrderAmount: number
+    maxOrderAmount: number
+    minWeight: number
+    maxWeight: number
+    cost: number
+    createdAt: number
+    updatedAt: number
+    _all: number
+  }
+
+
+  export type ShippingRateAvgAggregateInputType = {
+    minOrderAmount?: true
+    maxOrderAmount?: true
+    minWeight?: true
+    maxWeight?: true
+    cost?: true
+  }
+
+  export type ShippingRateSumAggregateInputType = {
+    minOrderAmount?: true
+    maxOrderAmount?: true
+    minWeight?: true
+    maxWeight?: true
+    cost?: true
+  }
+
+  export type ShippingRateMinAggregateInputType = {
+    id?: true
+    shippingMethodId?: true
+    country?: true
+    state?: true
+    postalCodePrefix?: true
+    minOrderAmount?: true
+    maxOrderAmount?: true
+    minWeight?: true
+    maxWeight?: true
+    cost?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type ShippingRateMaxAggregateInputType = {
+    id?: true
+    shippingMethodId?: true
+    country?: true
+    state?: true
+    postalCodePrefix?: true
+    minOrderAmount?: true
+    maxOrderAmount?: true
+    minWeight?: true
+    maxWeight?: true
+    cost?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type ShippingRateCountAggregateInputType = {
+    id?: true
+    shippingMethodId?: true
+    country?: true
+    state?: true
+    postalCodePrefix?: true
+    minOrderAmount?: true
+    maxOrderAmount?: true
+    minWeight?: true
+    maxWeight?: true
+    cost?: true
+    createdAt?: true
+    updatedAt?: true
+    _all?: true
+  }
+
+  export type ShippingRateAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which ShippingRate to aggregate.
+     */
+    where?: ShippingRateWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ShippingRates to fetch.
+     */
+    orderBy?: ShippingRateOrderByWithRelationInput | ShippingRateOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: ShippingRateWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ShippingRates from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ShippingRates.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned ShippingRates
+    **/
+    _count?: true | ShippingRateCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: ShippingRateAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: ShippingRateSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: ShippingRateMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: ShippingRateMaxAggregateInputType
+  }
+
+  export type GetShippingRateAggregateType<T extends ShippingRateAggregateArgs> = {
+        [P in keyof T & keyof AggregateShippingRate]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateShippingRate[P]>
+      : GetScalarType<T[P], AggregateShippingRate[P]>
+  }
+
+
+
+
+  export type ShippingRateGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ShippingRateWhereInput
+    orderBy?: ShippingRateOrderByWithAggregationInput | ShippingRateOrderByWithAggregationInput[]
+    by: ShippingRateScalarFieldEnum[] | ShippingRateScalarFieldEnum
+    having?: ShippingRateScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: ShippingRateCountAggregateInputType | true
+    _avg?: ShippingRateAvgAggregateInputType
+    _sum?: ShippingRateSumAggregateInputType
+    _min?: ShippingRateMinAggregateInputType
+    _max?: ShippingRateMaxAggregateInputType
+  }
+
+  export type ShippingRateGroupByOutputType = {
+    id: string
+    shippingMethodId: string
+    country: string
+    state: string | null
+    postalCodePrefix: string | null
+    minOrderAmount: number | null
+    maxOrderAmount: number | null
+    minWeight: number | null
+    maxWeight: number | null
+    cost: number
+    createdAt: Date
+    updatedAt: Date
+    _count: ShippingRateCountAggregateOutputType | null
+    _avg: ShippingRateAvgAggregateOutputType | null
+    _sum: ShippingRateSumAggregateOutputType | null
+    _min: ShippingRateMinAggregateOutputType | null
+    _max: ShippingRateMaxAggregateOutputType | null
+  }
+
+  type GetShippingRateGroupByPayload<T extends ShippingRateGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<ShippingRateGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof ShippingRateGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], ShippingRateGroupByOutputType[P]>
+            : GetScalarType<T[P], ShippingRateGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type ShippingRateSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    shippingMethodId?: boolean
+    country?: boolean
+    state?: boolean
+    postalCodePrefix?: boolean
+    minOrderAmount?: boolean
+    maxOrderAmount?: boolean
+    minWeight?: boolean
+    maxWeight?: boolean
+    cost?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    shippingMethod?: boolean | ShippingMethodDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["shippingRate"]>
+
+  export type ShippingRateSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    shippingMethodId?: boolean
+    country?: boolean
+    state?: boolean
+    postalCodePrefix?: boolean
+    minOrderAmount?: boolean
+    maxOrderAmount?: boolean
+    minWeight?: boolean
+    maxWeight?: boolean
+    cost?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    shippingMethod?: boolean | ShippingMethodDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["shippingRate"]>
+
+  export type ShippingRateSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    shippingMethodId?: boolean
+    country?: boolean
+    state?: boolean
+    postalCodePrefix?: boolean
+    minOrderAmount?: boolean
+    maxOrderAmount?: boolean
+    minWeight?: boolean
+    maxWeight?: boolean
+    cost?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    shippingMethod?: boolean | ShippingMethodDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["shippingRate"]>
+
+  export type ShippingRateSelectScalar = {
+    id?: boolean
+    shippingMethodId?: boolean
+    country?: boolean
+    state?: boolean
+    postalCodePrefix?: boolean
+    minOrderAmount?: boolean
+    maxOrderAmount?: boolean
+    minWeight?: boolean
+    maxWeight?: boolean
+    cost?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }
+
+  export type ShippingRateOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "shippingMethodId" | "country" | "state" | "postalCodePrefix" | "minOrderAmount" | "maxOrderAmount" | "minWeight" | "maxWeight" | "cost" | "createdAt" | "updatedAt", ExtArgs["result"]["shippingRate"]>
+  export type ShippingRateInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    shippingMethod?: boolean | ShippingMethodDefaultArgs<ExtArgs>
+  }
+  export type ShippingRateIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    shippingMethod?: boolean | ShippingMethodDefaultArgs<ExtArgs>
+  }
+  export type ShippingRateIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    shippingMethod?: boolean | ShippingMethodDefaultArgs<ExtArgs>
+  }
+
+  export type $ShippingRatePayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "ShippingRate"
+    objects: {
+      shippingMethod: Prisma.$ShippingMethodPayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      shippingMethodId: string
+      country: string
+      state: string | null
+      postalCodePrefix: string | null
+      minOrderAmount: number | null
+      maxOrderAmount: number | null
+      minWeight: number | null
+      maxWeight: number | null
+      cost: number
+      createdAt: Date
+      updatedAt: Date
+    }, ExtArgs["result"]["shippingRate"]>
+    composites: {}
+  }
+
+  type ShippingRateGetPayload<S extends boolean | null | undefined | ShippingRateDefaultArgs> = $Result.GetResult<Prisma.$ShippingRatePayload, S>
+
+  type ShippingRateCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<ShippingRateFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: ShippingRateCountAggregateInputType | true
+    }
+
+  export interface ShippingRateDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['ShippingRate'], meta: { name: 'ShippingRate' } }
+    /**
+     * Find zero or one ShippingRate that matches the filter.
+     * @param {ShippingRateFindUniqueArgs} args - Arguments to find a ShippingRate
+     * @example
+     * // Get one ShippingRate
+     * const shippingRate = await prisma.shippingRate.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends ShippingRateFindUniqueArgs>(args: SelectSubset<T, ShippingRateFindUniqueArgs<ExtArgs>>): Prisma__ShippingRateClient<$Result.GetResult<Prisma.$ShippingRatePayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one ShippingRate that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {ShippingRateFindUniqueOrThrowArgs} args - Arguments to find a ShippingRate
+     * @example
+     * // Get one ShippingRate
+     * const shippingRate = await prisma.shippingRate.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends ShippingRateFindUniqueOrThrowArgs>(args: SelectSubset<T, ShippingRateFindUniqueOrThrowArgs<ExtArgs>>): Prisma__ShippingRateClient<$Result.GetResult<Prisma.$ShippingRatePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first ShippingRate that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ShippingRateFindFirstArgs} args - Arguments to find a ShippingRate
+     * @example
+     * // Get one ShippingRate
+     * const shippingRate = await prisma.shippingRate.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends ShippingRateFindFirstArgs>(args?: SelectSubset<T, ShippingRateFindFirstArgs<ExtArgs>>): Prisma__ShippingRateClient<$Result.GetResult<Prisma.$ShippingRatePayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first ShippingRate that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ShippingRateFindFirstOrThrowArgs} args - Arguments to find a ShippingRate
+     * @example
+     * // Get one ShippingRate
+     * const shippingRate = await prisma.shippingRate.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends ShippingRateFindFirstOrThrowArgs>(args?: SelectSubset<T, ShippingRateFindFirstOrThrowArgs<ExtArgs>>): Prisma__ShippingRateClient<$Result.GetResult<Prisma.$ShippingRatePayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more ShippingRates that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ShippingRateFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all ShippingRates
+     * const shippingRates = await prisma.shippingRate.findMany()
+     * 
+     * // Get first 10 ShippingRates
+     * const shippingRates = await prisma.shippingRate.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const shippingRateWithIdOnly = await prisma.shippingRate.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends ShippingRateFindManyArgs>(args?: SelectSubset<T, ShippingRateFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ShippingRatePayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a ShippingRate.
+     * @param {ShippingRateCreateArgs} args - Arguments to create a ShippingRate.
+     * @example
+     * // Create one ShippingRate
+     * const ShippingRate = await prisma.shippingRate.create({
+     *   data: {
+     *     // ... data to create a ShippingRate
+     *   }
+     * })
+     * 
+     */
+    create<T extends ShippingRateCreateArgs>(args: SelectSubset<T, ShippingRateCreateArgs<ExtArgs>>): Prisma__ShippingRateClient<$Result.GetResult<Prisma.$ShippingRatePayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many ShippingRates.
+     * @param {ShippingRateCreateManyArgs} args - Arguments to create many ShippingRates.
+     * @example
+     * // Create many ShippingRates
+     * const shippingRate = await prisma.shippingRate.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends ShippingRateCreateManyArgs>(args?: SelectSubset<T, ShippingRateCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many ShippingRates and returns the data saved in the database.
+     * @param {ShippingRateCreateManyAndReturnArgs} args - Arguments to create many ShippingRates.
+     * @example
+     * // Create many ShippingRates
+     * const shippingRate = await prisma.shippingRate.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many ShippingRates and only return the `id`
+     * const shippingRateWithIdOnly = await prisma.shippingRate.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends ShippingRateCreateManyAndReturnArgs>(args?: SelectSubset<T, ShippingRateCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ShippingRatePayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a ShippingRate.
+     * @param {ShippingRateDeleteArgs} args - Arguments to delete one ShippingRate.
+     * @example
+     * // Delete one ShippingRate
+     * const ShippingRate = await prisma.shippingRate.delete({
+     *   where: {
+     *     // ... filter to delete one ShippingRate
+     *   }
+     * })
+     * 
+     */
+    delete<T extends ShippingRateDeleteArgs>(args: SelectSubset<T, ShippingRateDeleteArgs<ExtArgs>>): Prisma__ShippingRateClient<$Result.GetResult<Prisma.$ShippingRatePayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one ShippingRate.
+     * @param {ShippingRateUpdateArgs} args - Arguments to update one ShippingRate.
+     * @example
+     * // Update one ShippingRate
+     * const shippingRate = await prisma.shippingRate.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends ShippingRateUpdateArgs>(args: SelectSubset<T, ShippingRateUpdateArgs<ExtArgs>>): Prisma__ShippingRateClient<$Result.GetResult<Prisma.$ShippingRatePayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more ShippingRates.
+     * @param {ShippingRateDeleteManyArgs} args - Arguments to filter ShippingRates to delete.
+     * @example
+     * // Delete a few ShippingRates
+     * const { count } = await prisma.shippingRate.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends ShippingRateDeleteManyArgs>(args?: SelectSubset<T, ShippingRateDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more ShippingRates.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ShippingRateUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many ShippingRates
+     * const shippingRate = await prisma.shippingRate.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends ShippingRateUpdateManyArgs>(args: SelectSubset<T, ShippingRateUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more ShippingRates and returns the data updated in the database.
+     * @param {ShippingRateUpdateManyAndReturnArgs} args - Arguments to update many ShippingRates.
+     * @example
+     * // Update many ShippingRates
+     * const shippingRate = await prisma.shippingRate.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more ShippingRates and only return the `id`
+     * const shippingRateWithIdOnly = await prisma.shippingRate.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends ShippingRateUpdateManyAndReturnArgs>(args: SelectSubset<T, ShippingRateUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ShippingRatePayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one ShippingRate.
+     * @param {ShippingRateUpsertArgs} args - Arguments to update or create a ShippingRate.
+     * @example
+     * // Update or create a ShippingRate
+     * const shippingRate = await prisma.shippingRate.upsert({
+     *   create: {
+     *     // ... data to create a ShippingRate
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the ShippingRate we want to update
+     *   }
+     * })
+     */
+    upsert<T extends ShippingRateUpsertArgs>(args: SelectSubset<T, ShippingRateUpsertArgs<ExtArgs>>): Prisma__ShippingRateClient<$Result.GetResult<Prisma.$ShippingRatePayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of ShippingRates.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ShippingRateCountArgs} args - Arguments to filter ShippingRates to count.
+     * @example
+     * // Count the number of ShippingRates
+     * const count = await prisma.shippingRate.count({
+     *   where: {
+     *     // ... the filter for the ShippingRates we want to count
+     *   }
+     * })
+    **/
+    count<T extends ShippingRateCountArgs>(
+      args?: Subset<T, ShippingRateCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], ShippingRateCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a ShippingRate.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ShippingRateAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends ShippingRateAggregateArgs>(args: Subset<T, ShippingRateAggregateArgs>): Prisma.PrismaPromise<GetShippingRateAggregateType<T>>
+
+    /**
+     * Group by ShippingRate.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ShippingRateGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends ShippingRateGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: ShippingRateGroupByArgs['orderBy'] }
+        : { orderBy?: ShippingRateGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, ShippingRateGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetShippingRateGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the ShippingRate model
+   */
+  readonly fields: ShippingRateFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for ShippingRate.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__ShippingRateClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    shippingMethod<T extends ShippingMethodDefaultArgs<ExtArgs> = {}>(args?: Subset<T, ShippingMethodDefaultArgs<ExtArgs>>): Prisma__ShippingMethodClient<$Result.GetResult<Prisma.$ShippingMethodPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the ShippingRate model
+   */
+  interface ShippingRateFieldRefs {
+    readonly id: FieldRef<"ShippingRate", 'String'>
+    readonly shippingMethodId: FieldRef<"ShippingRate", 'String'>
+    readonly country: FieldRef<"ShippingRate", 'String'>
+    readonly state: FieldRef<"ShippingRate", 'String'>
+    readonly postalCodePrefix: FieldRef<"ShippingRate", 'String'>
+    readonly minOrderAmount: FieldRef<"ShippingRate", 'Float'>
+    readonly maxOrderAmount: FieldRef<"ShippingRate", 'Float'>
+    readonly minWeight: FieldRef<"ShippingRate", 'Float'>
+    readonly maxWeight: FieldRef<"ShippingRate", 'Float'>
+    readonly cost: FieldRef<"ShippingRate", 'Float'>
+    readonly createdAt: FieldRef<"ShippingRate", 'DateTime'>
+    readonly updatedAt: FieldRef<"ShippingRate", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * ShippingRate findUnique
+   */
+  export type ShippingRateFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ShippingRate
+     */
+    select?: ShippingRateSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ShippingRate
+     */
+    omit?: ShippingRateOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ShippingRateInclude<ExtArgs> | null
+    /**
+     * Filter, which ShippingRate to fetch.
+     */
+    where: ShippingRateWhereUniqueInput
+  }
+
+  /**
+   * ShippingRate findUniqueOrThrow
+   */
+  export type ShippingRateFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ShippingRate
+     */
+    select?: ShippingRateSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ShippingRate
+     */
+    omit?: ShippingRateOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ShippingRateInclude<ExtArgs> | null
+    /**
+     * Filter, which ShippingRate to fetch.
+     */
+    where: ShippingRateWhereUniqueInput
+  }
+
+  /**
+   * ShippingRate findFirst
+   */
+  export type ShippingRateFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ShippingRate
+     */
+    select?: ShippingRateSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ShippingRate
+     */
+    omit?: ShippingRateOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ShippingRateInclude<ExtArgs> | null
+    /**
+     * Filter, which ShippingRate to fetch.
+     */
+    where?: ShippingRateWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ShippingRates to fetch.
+     */
+    orderBy?: ShippingRateOrderByWithRelationInput | ShippingRateOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for ShippingRates.
+     */
+    cursor?: ShippingRateWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ShippingRates from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ShippingRates.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of ShippingRates.
+     */
+    distinct?: ShippingRateScalarFieldEnum | ShippingRateScalarFieldEnum[]
+  }
+
+  /**
+   * ShippingRate findFirstOrThrow
+   */
+  export type ShippingRateFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ShippingRate
+     */
+    select?: ShippingRateSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ShippingRate
+     */
+    omit?: ShippingRateOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ShippingRateInclude<ExtArgs> | null
+    /**
+     * Filter, which ShippingRate to fetch.
+     */
+    where?: ShippingRateWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ShippingRates to fetch.
+     */
+    orderBy?: ShippingRateOrderByWithRelationInput | ShippingRateOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for ShippingRates.
+     */
+    cursor?: ShippingRateWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ShippingRates from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ShippingRates.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of ShippingRates.
+     */
+    distinct?: ShippingRateScalarFieldEnum | ShippingRateScalarFieldEnum[]
+  }
+
+  /**
+   * ShippingRate findMany
+   */
+  export type ShippingRateFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ShippingRate
+     */
+    select?: ShippingRateSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ShippingRate
+     */
+    omit?: ShippingRateOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ShippingRateInclude<ExtArgs> | null
+    /**
+     * Filter, which ShippingRates to fetch.
+     */
+    where?: ShippingRateWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ShippingRates to fetch.
+     */
+    orderBy?: ShippingRateOrderByWithRelationInput | ShippingRateOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing ShippingRates.
+     */
+    cursor?: ShippingRateWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ShippingRates from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ShippingRates.
+     */
+    skip?: number
+    distinct?: ShippingRateScalarFieldEnum | ShippingRateScalarFieldEnum[]
+  }
+
+  /**
+   * ShippingRate create
+   */
+  export type ShippingRateCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ShippingRate
+     */
+    select?: ShippingRateSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ShippingRate
+     */
+    omit?: ShippingRateOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ShippingRateInclude<ExtArgs> | null
+    /**
+     * The data needed to create a ShippingRate.
+     */
+    data: XOR<ShippingRateCreateInput, ShippingRateUncheckedCreateInput>
+  }
+
+  /**
+   * ShippingRate createMany
+   */
+  export type ShippingRateCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many ShippingRates.
+     */
+    data: ShippingRateCreateManyInput | ShippingRateCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * ShippingRate createManyAndReturn
+   */
+  export type ShippingRateCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ShippingRate
+     */
+    select?: ShippingRateSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the ShippingRate
+     */
+    omit?: ShippingRateOmit<ExtArgs> | null
+    /**
+     * The data used to create many ShippingRates.
+     */
+    data: ShippingRateCreateManyInput | ShippingRateCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ShippingRateIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * ShippingRate update
+   */
+  export type ShippingRateUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ShippingRate
+     */
+    select?: ShippingRateSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ShippingRate
+     */
+    omit?: ShippingRateOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ShippingRateInclude<ExtArgs> | null
+    /**
+     * The data needed to update a ShippingRate.
+     */
+    data: XOR<ShippingRateUpdateInput, ShippingRateUncheckedUpdateInput>
+    /**
+     * Choose, which ShippingRate to update.
+     */
+    where: ShippingRateWhereUniqueInput
+  }
+
+  /**
+   * ShippingRate updateMany
+   */
+  export type ShippingRateUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update ShippingRates.
+     */
+    data: XOR<ShippingRateUpdateManyMutationInput, ShippingRateUncheckedUpdateManyInput>
+    /**
+     * Filter which ShippingRates to update
+     */
+    where?: ShippingRateWhereInput
+    /**
+     * Limit how many ShippingRates to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * ShippingRate updateManyAndReturn
+   */
+  export type ShippingRateUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ShippingRate
+     */
+    select?: ShippingRateSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the ShippingRate
+     */
+    omit?: ShippingRateOmit<ExtArgs> | null
+    /**
+     * The data used to update ShippingRates.
+     */
+    data: XOR<ShippingRateUpdateManyMutationInput, ShippingRateUncheckedUpdateManyInput>
+    /**
+     * Filter which ShippingRates to update
+     */
+    where?: ShippingRateWhereInput
+    /**
+     * Limit how many ShippingRates to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ShippingRateIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * ShippingRate upsert
+   */
+  export type ShippingRateUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ShippingRate
+     */
+    select?: ShippingRateSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ShippingRate
+     */
+    omit?: ShippingRateOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ShippingRateInclude<ExtArgs> | null
+    /**
+     * The filter to search for the ShippingRate to update in case it exists.
+     */
+    where: ShippingRateWhereUniqueInput
+    /**
+     * In case the ShippingRate found by the `where` argument doesn't exist, create a new ShippingRate with this data.
+     */
+    create: XOR<ShippingRateCreateInput, ShippingRateUncheckedCreateInput>
+    /**
+     * In case the ShippingRate was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<ShippingRateUpdateInput, ShippingRateUncheckedUpdateInput>
+  }
+
+  /**
+   * ShippingRate delete
+   */
+  export type ShippingRateDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ShippingRate
+     */
+    select?: ShippingRateSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ShippingRate
+     */
+    omit?: ShippingRateOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ShippingRateInclude<ExtArgs> | null
+    /**
+     * Filter which ShippingRate to delete.
+     */
+    where: ShippingRateWhereUniqueInput
+  }
+
+  /**
+   * ShippingRate deleteMany
+   */
+  export type ShippingRateDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which ShippingRates to delete
+     */
+    where?: ShippingRateWhereInput
+    /**
+     * Limit how many ShippingRates to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * ShippingRate without action
+   */
+  export type ShippingRateDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ShippingRate
+     */
+    select?: ShippingRateSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ShippingRate
+     */
+    omit?: ShippingRateOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ShippingRateInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model TaxRate
+   */
+
+  export type AggregateTaxRate = {
+    _count: TaxRateCountAggregateOutputType | null
+    _avg: TaxRateAvgAggregateOutputType | null
+    _sum: TaxRateSumAggregateOutputType | null
+    _min: TaxRateMinAggregateOutputType | null
+    _max: TaxRateMaxAggregateOutputType | null
+  }
+
+  export type TaxRateAvgAggregateOutputType = {
+    rate: number | null
+  }
+
+  export type TaxRateSumAggregateOutputType = {
+    rate: number | null
+  }
+
+  export type TaxRateMinAggregateOutputType = {
+    id: string | null
+    country: string | null
+    state: string | null
+    postalCodePrefix: string | null
+    rate: number | null
+    description: string | null
+    isActive: boolean | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type TaxRateMaxAggregateOutputType = {
+    id: string | null
+    country: string | null
+    state: string | null
+    postalCodePrefix: string | null
+    rate: number | null
+    description: string | null
+    isActive: boolean | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type TaxRateCountAggregateOutputType = {
+    id: number
+    country: number
+    state: number
+    postalCodePrefix: number
+    rate: number
+    description: number
+    isActive: number
+    createdAt: number
+    updatedAt: number
+    _all: number
+  }
+
+
+  export type TaxRateAvgAggregateInputType = {
+    rate?: true
+  }
+
+  export type TaxRateSumAggregateInputType = {
+    rate?: true
+  }
+
+  export type TaxRateMinAggregateInputType = {
+    id?: true
+    country?: true
+    state?: true
+    postalCodePrefix?: true
+    rate?: true
+    description?: true
+    isActive?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type TaxRateMaxAggregateInputType = {
+    id?: true
+    country?: true
+    state?: true
+    postalCodePrefix?: true
+    rate?: true
+    description?: true
+    isActive?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type TaxRateCountAggregateInputType = {
+    id?: true
+    country?: true
+    state?: true
+    postalCodePrefix?: true
+    rate?: true
+    description?: true
+    isActive?: true
+    createdAt?: true
+    updatedAt?: true
+    _all?: true
+  }
+
+  export type TaxRateAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which TaxRate to aggregate.
+     */
+    where?: TaxRateWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of TaxRates to fetch.
+     */
+    orderBy?: TaxRateOrderByWithRelationInput | TaxRateOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: TaxRateWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` TaxRates from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` TaxRates.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned TaxRates
+    **/
+    _count?: true | TaxRateCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: TaxRateAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: TaxRateSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: TaxRateMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: TaxRateMaxAggregateInputType
+  }
+
+  export type GetTaxRateAggregateType<T extends TaxRateAggregateArgs> = {
+        [P in keyof T & keyof AggregateTaxRate]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateTaxRate[P]>
+      : GetScalarType<T[P], AggregateTaxRate[P]>
+  }
+
+
+
+
+  export type TaxRateGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: TaxRateWhereInput
+    orderBy?: TaxRateOrderByWithAggregationInput | TaxRateOrderByWithAggregationInput[]
+    by: TaxRateScalarFieldEnum[] | TaxRateScalarFieldEnum
+    having?: TaxRateScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: TaxRateCountAggregateInputType | true
+    _avg?: TaxRateAvgAggregateInputType
+    _sum?: TaxRateSumAggregateInputType
+    _min?: TaxRateMinAggregateInputType
+    _max?: TaxRateMaxAggregateInputType
+  }
+
+  export type TaxRateGroupByOutputType = {
+    id: string
+    country: string
+    state: string | null
+    postalCodePrefix: string | null
+    rate: number
+    description: string | null
+    isActive: boolean
+    createdAt: Date
+    updatedAt: Date
+    _count: TaxRateCountAggregateOutputType | null
+    _avg: TaxRateAvgAggregateOutputType | null
+    _sum: TaxRateSumAggregateOutputType | null
+    _min: TaxRateMinAggregateOutputType | null
+    _max: TaxRateMaxAggregateOutputType | null
+  }
+
+  type GetTaxRateGroupByPayload<T extends TaxRateGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<TaxRateGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof TaxRateGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], TaxRateGroupByOutputType[P]>
+            : GetScalarType<T[P], TaxRateGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type TaxRateSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    country?: boolean
+    state?: boolean
+    postalCodePrefix?: boolean
+    rate?: boolean
+    description?: boolean
+    isActive?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }, ExtArgs["result"]["taxRate"]>
+
+  export type TaxRateSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    country?: boolean
+    state?: boolean
+    postalCodePrefix?: boolean
+    rate?: boolean
+    description?: boolean
+    isActive?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }, ExtArgs["result"]["taxRate"]>
+
+  export type TaxRateSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    country?: boolean
+    state?: boolean
+    postalCodePrefix?: boolean
+    rate?: boolean
+    description?: boolean
+    isActive?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }, ExtArgs["result"]["taxRate"]>
+
+  export type TaxRateSelectScalar = {
+    id?: boolean
+    country?: boolean
+    state?: boolean
+    postalCodePrefix?: boolean
+    rate?: boolean
+    description?: boolean
+    isActive?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }
+
+  export type TaxRateOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "country" | "state" | "postalCodePrefix" | "rate" | "description" | "isActive" | "createdAt" | "updatedAt", ExtArgs["result"]["taxRate"]>
+
+  export type $TaxRatePayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "TaxRate"
+    objects: {}
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      country: string
+      state: string | null
+      postalCodePrefix: string | null
+      rate: number
+      description: string | null
+      isActive: boolean
+      createdAt: Date
+      updatedAt: Date
+    }, ExtArgs["result"]["taxRate"]>
+    composites: {}
+  }
+
+  type TaxRateGetPayload<S extends boolean | null | undefined | TaxRateDefaultArgs> = $Result.GetResult<Prisma.$TaxRatePayload, S>
+
+  type TaxRateCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<TaxRateFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: TaxRateCountAggregateInputType | true
+    }
+
+  export interface TaxRateDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['TaxRate'], meta: { name: 'TaxRate' } }
+    /**
+     * Find zero or one TaxRate that matches the filter.
+     * @param {TaxRateFindUniqueArgs} args - Arguments to find a TaxRate
+     * @example
+     * // Get one TaxRate
+     * const taxRate = await prisma.taxRate.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends TaxRateFindUniqueArgs>(args: SelectSubset<T, TaxRateFindUniqueArgs<ExtArgs>>): Prisma__TaxRateClient<$Result.GetResult<Prisma.$TaxRatePayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one TaxRate that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {TaxRateFindUniqueOrThrowArgs} args - Arguments to find a TaxRate
+     * @example
+     * // Get one TaxRate
+     * const taxRate = await prisma.taxRate.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends TaxRateFindUniqueOrThrowArgs>(args: SelectSubset<T, TaxRateFindUniqueOrThrowArgs<ExtArgs>>): Prisma__TaxRateClient<$Result.GetResult<Prisma.$TaxRatePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first TaxRate that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {TaxRateFindFirstArgs} args - Arguments to find a TaxRate
+     * @example
+     * // Get one TaxRate
+     * const taxRate = await prisma.taxRate.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends TaxRateFindFirstArgs>(args?: SelectSubset<T, TaxRateFindFirstArgs<ExtArgs>>): Prisma__TaxRateClient<$Result.GetResult<Prisma.$TaxRatePayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first TaxRate that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {TaxRateFindFirstOrThrowArgs} args - Arguments to find a TaxRate
+     * @example
+     * // Get one TaxRate
+     * const taxRate = await prisma.taxRate.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends TaxRateFindFirstOrThrowArgs>(args?: SelectSubset<T, TaxRateFindFirstOrThrowArgs<ExtArgs>>): Prisma__TaxRateClient<$Result.GetResult<Prisma.$TaxRatePayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more TaxRates that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {TaxRateFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all TaxRates
+     * const taxRates = await prisma.taxRate.findMany()
+     * 
+     * // Get first 10 TaxRates
+     * const taxRates = await prisma.taxRate.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const taxRateWithIdOnly = await prisma.taxRate.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends TaxRateFindManyArgs>(args?: SelectSubset<T, TaxRateFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TaxRatePayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a TaxRate.
+     * @param {TaxRateCreateArgs} args - Arguments to create a TaxRate.
+     * @example
+     * // Create one TaxRate
+     * const TaxRate = await prisma.taxRate.create({
+     *   data: {
+     *     // ... data to create a TaxRate
+     *   }
+     * })
+     * 
+     */
+    create<T extends TaxRateCreateArgs>(args: SelectSubset<T, TaxRateCreateArgs<ExtArgs>>): Prisma__TaxRateClient<$Result.GetResult<Prisma.$TaxRatePayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many TaxRates.
+     * @param {TaxRateCreateManyArgs} args - Arguments to create many TaxRates.
+     * @example
+     * // Create many TaxRates
+     * const taxRate = await prisma.taxRate.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends TaxRateCreateManyArgs>(args?: SelectSubset<T, TaxRateCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many TaxRates and returns the data saved in the database.
+     * @param {TaxRateCreateManyAndReturnArgs} args - Arguments to create many TaxRates.
+     * @example
+     * // Create many TaxRates
+     * const taxRate = await prisma.taxRate.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many TaxRates and only return the `id`
+     * const taxRateWithIdOnly = await prisma.taxRate.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends TaxRateCreateManyAndReturnArgs>(args?: SelectSubset<T, TaxRateCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TaxRatePayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a TaxRate.
+     * @param {TaxRateDeleteArgs} args - Arguments to delete one TaxRate.
+     * @example
+     * // Delete one TaxRate
+     * const TaxRate = await prisma.taxRate.delete({
+     *   where: {
+     *     // ... filter to delete one TaxRate
+     *   }
+     * })
+     * 
+     */
+    delete<T extends TaxRateDeleteArgs>(args: SelectSubset<T, TaxRateDeleteArgs<ExtArgs>>): Prisma__TaxRateClient<$Result.GetResult<Prisma.$TaxRatePayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one TaxRate.
+     * @param {TaxRateUpdateArgs} args - Arguments to update one TaxRate.
+     * @example
+     * // Update one TaxRate
+     * const taxRate = await prisma.taxRate.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends TaxRateUpdateArgs>(args: SelectSubset<T, TaxRateUpdateArgs<ExtArgs>>): Prisma__TaxRateClient<$Result.GetResult<Prisma.$TaxRatePayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more TaxRates.
+     * @param {TaxRateDeleteManyArgs} args - Arguments to filter TaxRates to delete.
+     * @example
+     * // Delete a few TaxRates
+     * const { count } = await prisma.taxRate.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends TaxRateDeleteManyArgs>(args?: SelectSubset<T, TaxRateDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more TaxRates.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {TaxRateUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many TaxRates
+     * const taxRate = await prisma.taxRate.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends TaxRateUpdateManyArgs>(args: SelectSubset<T, TaxRateUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more TaxRates and returns the data updated in the database.
+     * @param {TaxRateUpdateManyAndReturnArgs} args - Arguments to update many TaxRates.
+     * @example
+     * // Update many TaxRates
+     * const taxRate = await prisma.taxRate.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more TaxRates and only return the `id`
+     * const taxRateWithIdOnly = await prisma.taxRate.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends TaxRateUpdateManyAndReturnArgs>(args: SelectSubset<T, TaxRateUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TaxRatePayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one TaxRate.
+     * @param {TaxRateUpsertArgs} args - Arguments to update or create a TaxRate.
+     * @example
+     * // Update or create a TaxRate
+     * const taxRate = await prisma.taxRate.upsert({
+     *   create: {
+     *     // ... data to create a TaxRate
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the TaxRate we want to update
+     *   }
+     * })
+     */
+    upsert<T extends TaxRateUpsertArgs>(args: SelectSubset<T, TaxRateUpsertArgs<ExtArgs>>): Prisma__TaxRateClient<$Result.GetResult<Prisma.$TaxRatePayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of TaxRates.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {TaxRateCountArgs} args - Arguments to filter TaxRates to count.
+     * @example
+     * // Count the number of TaxRates
+     * const count = await prisma.taxRate.count({
+     *   where: {
+     *     // ... the filter for the TaxRates we want to count
+     *   }
+     * })
+    **/
+    count<T extends TaxRateCountArgs>(
+      args?: Subset<T, TaxRateCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], TaxRateCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a TaxRate.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {TaxRateAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends TaxRateAggregateArgs>(args: Subset<T, TaxRateAggregateArgs>): Prisma.PrismaPromise<GetTaxRateAggregateType<T>>
+
+    /**
+     * Group by TaxRate.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {TaxRateGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends TaxRateGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: TaxRateGroupByArgs['orderBy'] }
+        : { orderBy?: TaxRateGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, TaxRateGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetTaxRateGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the TaxRate model
+   */
+  readonly fields: TaxRateFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for TaxRate.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__TaxRateClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the TaxRate model
+   */
+  interface TaxRateFieldRefs {
+    readonly id: FieldRef<"TaxRate", 'String'>
+    readonly country: FieldRef<"TaxRate", 'String'>
+    readonly state: FieldRef<"TaxRate", 'String'>
+    readonly postalCodePrefix: FieldRef<"TaxRate", 'String'>
+    readonly rate: FieldRef<"TaxRate", 'Float'>
+    readonly description: FieldRef<"TaxRate", 'String'>
+    readonly isActive: FieldRef<"TaxRate", 'Boolean'>
+    readonly createdAt: FieldRef<"TaxRate", 'DateTime'>
+    readonly updatedAt: FieldRef<"TaxRate", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * TaxRate findUnique
+   */
+  export type TaxRateFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TaxRate
+     */
+    select?: TaxRateSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TaxRate
+     */
+    omit?: TaxRateOmit<ExtArgs> | null
+    /**
+     * Filter, which TaxRate to fetch.
+     */
+    where: TaxRateWhereUniqueInput
+  }
+
+  /**
+   * TaxRate findUniqueOrThrow
+   */
+  export type TaxRateFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TaxRate
+     */
+    select?: TaxRateSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TaxRate
+     */
+    omit?: TaxRateOmit<ExtArgs> | null
+    /**
+     * Filter, which TaxRate to fetch.
+     */
+    where: TaxRateWhereUniqueInput
+  }
+
+  /**
+   * TaxRate findFirst
+   */
+  export type TaxRateFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TaxRate
+     */
+    select?: TaxRateSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TaxRate
+     */
+    omit?: TaxRateOmit<ExtArgs> | null
+    /**
+     * Filter, which TaxRate to fetch.
+     */
+    where?: TaxRateWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of TaxRates to fetch.
+     */
+    orderBy?: TaxRateOrderByWithRelationInput | TaxRateOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for TaxRates.
+     */
+    cursor?: TaxRateWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` TaxRates from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` TaxRates.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of TaxRates.
+     */
+    distinct?: TaxRateScalarFieldEnum | TaxRateScalarFieldEnum[]
+  }
+
+  /**
+   * TaxRate findFirstOrThrow
+   */
+  export type TaxRateFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TaxRate
+     */
+    select?: TaxRateSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TaxRate
+     */
+    omit?: TaxRateOmit<ExtArgs> | null
+    /**
+     * Filter, which TaxRate to fetch.
+     */
+    where?: TaxRateWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of TaxRates to fetch.
+     */
+    orderBy?: TaxRateOrderByWithRelationInput | TaxRateOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for TaxRates.
+     */
+    cursor?: TaxRateWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` TaxRates from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` TaxRates.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of TaxRates.
+     */
+    distinct?: TaxRateScalarFieldEnum | TaxRateScalarFieldEnum[]
+  }
+
+  /**
+   * TaxRate findMany
+   */
+  export type TaxRateFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TaxRate
+     */
+    select?: TaxRateSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TaxRate
+     */
+    omit?: TaxRateOmit<ExtArgs> | null
+    /**
+     * Filter, which TaxRates to fetch.
+     */
+    where?: TaxRateWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of TaxRates to fetch.
+     */
+    orderBy?: TaxRateOrderByWithRelationInput | TaxRateOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing TaxRates.
+     */
+    cursor?: TaxRateWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` TaxRates from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` TaxRates.
+     */
+    skip?: number
+    distinct?: TaxRateScalarFieldEnum | TaxRateScalarFieldEnum[]
+  }
+
+  /**
+   * TaxRate create
+   */
+  export type TaxRateCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TaxRate
+     */
+    select?: TaxRateSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TaxRate
+     */
+    omit?: TaxRateOmit<ExtArgs> | null
+    /**
+     * The data needed to create a TaxRate.
+     */
+    data: XOR<TaxRateCreateInput, TaxRateUncheckedCreateInput>
+  }
+
+  /**
+   * TaxRate createMany
+   */
+  export type TaxRateCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many TaxRates.
+     */
+    data: TaxRateCreateManyInput | TaxRateCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * TaxRate createManyAndReturn
+   */
+  export type TaxRateCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TaxRate
+     */
+    select?: TaxRateSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the TaxRate
+     */
+    omit?: TaxRateOmit<ExtArgs> | null
+    /**
+     * The data used to create many TaxRates.
+     */
+    data: TaxRateCreateManyInput | TaxRateCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * TaxRate update
+   */
+  export type TaxRateUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TaxRate
+     */
+    select?: TaxRateSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TaxRate
+     */
+    omit?: TaxRateOmit<ExtArgs> | null
+    /**
+     * The data needed to update a TaxRate.
+     */
+    data: XOR<TaxRateUpdateInput, TaxRateUncheckedUpdateInput>
+    /**
+     * Choose, which TaxRate to update.
+     */
+    where: TaxRateWhereUniqueInput
+  }
+
+  /**
+   * TaxRate updateMany
+   */
+  export type TaxRateUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update TaxRates.
+     */
+    data: XOR<TaxRateUpdateManyMutationInput, TaxRateUncheckedUpdateManyInput>
+    /**
+     * Filter which TaxRates to update
+     */
+    where?: TaxRateWhereInput
+    /**
+     * Limit how many TaxRates to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * TaxRate updateManyAndReturn
+   */
+  export type TaxRateUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TaxRate
+     */
+    select?: TaxRateSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the TaxRate
+     */
+    omit?: TaxRateOmit<ExtArgs> | null
+    /**
+     * The data used to update TaxRates.
+     */
+    data: XOR<TaxRateUpdateManyMutationInput, TaxRateUncheckedUpdateManyInput>
+    /**
+     * Filter which TaxRates to update
+     */
+    where?: TaxRateWhereInput
+    /**
+     * Limit how many TaxRates to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * TaxRate upsert
+   */
+  export type TaxRateUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TaxRate
+     */
+    select?: TaxRateSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TaxRate
+     */
+    omit?: TaxRateOmit<ExtArgs> | null
+    /**
+     * The filter to search for the TaxRate to update in case it exists.
+     */
+    where: TaxRateWhereUniqueInput
+    /**
+     * In case the TaxRate found by the `where` argument doesn't exist, create a new TaxRate with this data.
+     */
+    create: XOR<TaxRateCreateInput, TaxRateUncheckedCreateInput>
+    /**
+     * In case the TaxRate was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<TaxRateUpdateInput, TaxRateUncheckedUpdateInput>
+  }
+
+  /**
+   * TaxRate delete
+   */
+  export type TaxRateDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TaxRate
+     */
+    select?: TaxRateSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TaxRate
+     */
+    omit?: TaxRateOmit<ExtArgs> | null
+    /**
+     * Filter which TaxRate to delete.
+     */
+    where: TaxRateWhereUniqueInput
+  }
+
+  /**
+   * TaxRate deleteMany
+   */
+  export type TaxRateDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which TaxRates to delete
+     */
+    where?: TaxRateWhereInput
+    /**
+     * Limit how many TaxRates to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * TaxRate without action
+   */
+  export type TaxRateDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TaxRate
+     */
+    select?: TaxRateSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TaxRate
+     */
+    omit?: TaxRateOmit<ExtArgs> | null
+  }
+
+
+  /**
    * Enums
    */
 
@@ -18671,6 +22557,9 @@ export namespace Prisma {
     discount: 'discount',
     categoryId: 'categoryId',
     features: 'features',
+    weight: 'weight',
+    weightUnit: 'weightUnit',
+    dimensions: 'dimensions',
     freeShippingThreshold: 'freeShippingThreshold',
     warrantyPeriod: 'warrantyPeriod',
     warrantyDescription: 'warrantyDescription',
@@ -18738,6 +22627,7 @@ export namespace Prisma {
     paymentMethod: 'paymentMethod',
     paymentStatus: 'paymentStatus',
     orderStatus: 'orderStatus',
+    shippingMethodId: 'shippingMethodId',
     shippingCost: 'shippingCost',
     taxAmount: 'taxAmount',
     createdAt: 'createdAt',
@@ -18800,6 +22690,9 @@ export namespace Prisma {
     startDate: 'startDate',
     endDate: 'endDate',
     position: 'position',
+    targetAudience: 'targetAudience',
+    goals: 'goals',
+    notes: 'notes',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt'
   };
@@ -18841,6 +22734,53 @@ export namespace Prisma {
   };
 
   export type DealsBannerScalarFieldEnum = (typeof DealsBannerScalarFieldEnum)[keyof typeof DealsBannerScalarFieldEnum]
+
+
+  export const ShippingMethodScalarFieldEnum: {
+    id: 'id',
+    name: 'name',
+    description: 'description',
+    estimatedDays: 'estimatedDays',
+    isActive: 'isActive',
+    defaultCost: 'defaultCost',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+  };
+
+  export type ShippingMethodScalarFieldEnum = (typeof ShippingMethodScalarFieldEnum)[keyof typeof ShippingMethodScalarFieldEnum]
+
+
+  export const ShippingRateScalarFieldEnum: {
+    id: 'id',
+    shippingMethodId: 'shippingMethodId',
+    country: 'country',
+    state: 'state',
+    postalCodePrefix: 'postalCodePrefix',
+    minOrderAmount: 'minOrderAmount',
+    maxOrderAmount: 'maxOrderAmount',
+    minWeight: 'minWeight',
+    maxWeight: 'maxWeight',
+    cost: 'cost',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+  };
+
+  export type ShippingRateScalarFieldEnum = (typeof ShippingRateScalarFieldEnum)[keyof typeof ShippingRateScalarFieldEnum]
+
+
+  export const TaxRateScalarFieldEnum: {
+    id: 'id',
+    country: 'country',
+    state: 'state',
+    postalCodePrefix: 'postalCodePrefix',
+    rate: 'rate',
+    description: 'description',
+    isActive: 'isActive',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+  };
+
+  export type TaxRateScalarFieldEnum = (typeof TaxRateScalarFieldEnum)[keyof typeof TaxRateScalarFieldEnum]
 
 
   export const SortOrder: {
@@ -19139,6 +23079,9 @@ export namespace Prisma {
     discount?: FloatNullableFilter<"Product"> | number | null
     categoryId?: StringNullableFilter<"Product"> | string | null
     features?: StringNullableListFilter<"Product">
+    weight?: FloatNullableFilter<"Product"> | number | null
+    weightUnit?: StringNullableFilter<"Product"> | string | null
+    dimensions?: StringNullableFilter<"Product"> | string | null
     freeShippingThreshold?: FloatNullableFilter<"Product"> | number | null
     warrantyPeriod?: StringNullableFilter<"Product"> | string | null
     warrantyDescription?: StringNullableFilter<"Product"> | string | null
@@ -19165,6 +23108,9 @@ export namespace Prisma {
     discount?: SortOrderInput | SortOrder
     categoryId?: SortOrderInput | SortOrder
     features?: SortOrder
+    weight?: SortOrderInput | SortOrder
+    weightUnit?: SortOrderInput | SortOrder
+    dimensions?: SortOrderInput | SortOrder
     freeShippingThreshold?: SortOrderInput | SortOrder
     warrantyPeriod?: SortOrderInput | SortOrder
     warrantyDescription?: SortOrderInput | SortOrder
@@ -19194,6 +23140,9 @@ export namespace Prisma {
     discount?: FloatNullableFilter<"Product"> | number | null
     categoryId?: StringNullableFilter<"Product"> | string | null
     features?: StringNullableListFilter<"Product">
+    weight?: FloatNullableFilter<"Product"> | number | null
+    weightUnit?: StringNullableFilter<"Product"> | string | null
+    dimensions?: StringNullableFilter<"Product"> | string | null
     freeShippingThreshold?: FloatNullableFilter<"Product"> | number | null
     warrantyPeriod?: StringNullableFilter<"Product"> | string | null
     warrantyDescription?: StringNullableFilter<"Product"> | string | null
@@ -19220,6 +23169,9 @@ export namespace Prisma {
     discount?: SortOrderInput | SortOrder
     categoryId?: SortOrderInput | SortOrder
     features?: SortOrder
+    weight?: SortOrderInput | SortOrder
+    weightUnit?: SortOrderInput | SortOrder
+    dimensions?: SortOrderInput | SortOrder
     freeShippingThreshold?: SortOrderInput | SortOrder
     warrantyPeriod?: SortOrderInput | SortOrder
     warrantyDescription?: SortOrderInput | SortOrder
@@ -19249,6 +23201,9 @@ export namespace Prisma {
     discount?: FloatNullableWithAggregatesFilter<"Product"> | number | null
     categoryId?: StringNullableWithAggregatesFilter<"Product"> | string | null
     features?: StringNullableListFilter<"Product">
+    weight?: FloatNullableWithAggregatesFilter<"Product"> | number | null
+    weightUnit?: StringNullableWithAggregatesFilter<"Product"> | string | null
+    dimensions?: StringNullableWithAggregatesFilter<"Product"> | string | null
     freeShippingThreshold?: FloatNullableWithAggregatesFilter<"Product"> | number | null
     warrantyPeriod?: StringNullableWithAggregatesFilter<"Product"> | string | null
     warrantyDescription?: StringNullableWithAggregatesFilter<"Product"> | string | null
@@ -19514,6 +23469,7 @@ export namespace Prisma {
     paymentMethod?: StringFilter<"Order"> | string
     paymentStatus?: EnumPaymentStatusFilter<"Order"> | $Enums.PaymentStatus
     orderStatus?: EnumOrderStatusFilter<"Order"> | $Enums.OrderStatus
+    shippingMethodId?: StringNullableFilter<"Order"> | string | null
     shippingCost?: FloatFilter<"Order"> | number
     taxAmount?: FloatFilter<"Order"> | number
     createdAt?: DateTimeFilter<"Order"> | Date | string
@@ -19522,6 +23478,7 @@ export namespace Prisma {
     orderItems?: OrderItemListRelationFilter
     shippingAddress?: XOR<AddressScalarRelationFilter, AddressWhereInput>
     billingAddress?: XOR<AddressScalarRelationFilter, AddressWhereInput>
+    shippingMethod?: XOR<ShippingMethodNullableScalarRelationFilter, ShippingMethodWhereInput> | null
     coupons?: CouponListRelationFilter
   }
 
@@ -19534,6 +23491,7 @@ export namespace Prisma {
     paymentMethod?: SortOrder
     paymentStatus?: SortOrder
     orderStatus?: SortOrder
+    shippingMethodId?: SortOrderInput | SortOrder
     shippingCost?: SortOrder
     taxAmount?: SortOrder
     createdAt?: SortOrder
@@ -19542,6 +23500,7 @@ export namespace Prisma {
     orderItems?: OrderItemOrderByRelationAggregateInput
     shippingAddress?: AddressOrderByWithRelationInput
     billingAddress?: AddressOrderByWithRelationInput
+    shippingMethod?: ShippingMethodOrderByWithRelationInput
     coupons?: CouponOrderByRelationAggregateInput
   }
 
@@ -19557,6 +23516,7 @@ export namespace Prisma {
     paymentMethod?: StringFilter<"Order"> | string
     paymentStatus?: EnumPaymentStatusFilter<"Order"> | $Enums.PaymentStatus
     orderStatus?: EnumOrderStatusFilter<"Order"> | $Enums.OrderStatus
+    shippingMethodId?: StringNullableFilter<"Order"> | string | null
     shippingCost?: FloatFilter<"Order"> | number
     taxAmount?: FloatFilter<"Order"> | number
     createdAt?: DateTimeFilter<"Order"> | Date | string
@@ -19565,6 +23525,7 @@ export namespace Prisma {
     orderItems?: OrderItemListRelationFilter
     shippingAddress?: XOR<AddressScalarRelationFilter, AddressWhereInput>
     billingAddress?: XOR<AddressScalarRelationFilter, AddressWhereInput>
+    shippingMethod?: XOR<ShippingMethodNullableScalarRelationFilter, ShippingMethodWhereInput> | null
     coupons?: CouponListRelationFilter
   }, "id">
 
@@ -19577,6 +23538,7 @@ export namespace Prisma {
     paymentMethod?: SortOrder
     paymentStatus?: SortOrder
     orderStatus?: SortOrder
+    shippingMethodId?: SortOrderInput | SortOrder
     shippingCost?: SortOrder
     taxAmount?: SortOrder
     createdAt?: SortOrder
@@ -19600,6 +23562,7 @@ export namespace Prisma {
     paymentMethod?: StringWithAggregatesFilter<"Order"> | string
     paymentStatus?: EnumPaymentStatusWithAggregatesFilter<"Order"> | $Enums.PaymentStatus
     orderStatus?: EnumOrderStatusWithAggregatesFilter<"Order"> | $Enums.OrderStatus
+    shippingMethodId?: StringNullableWithAggregatesFilter<"Order"> | string | null
     shippingCost?: FloatWithAggregatesFilter<"Order"> | number
     taxAmount?: FloatWithAggregatesFilter<"Order"> | number
     createdAt?: DateTimeWithAggregatesFilter<"Order"> | Date | string
@@ -19842,6 +23805,9 @@ export namespace Prisma {
     startDate?: DateTimeFilter<"Campaign"> | Date | string
     endDate?: DateTimeFilter<"Campaign"> | Date | string
     position?: StringNullableFilter<"Campaign"> | string | null
+    targetAudience?: StringNullableFilter<"Campaign"> | string | null
+    goals?: StringNullableFilter<"Campaign"> | string | null
+    notes?: StringNullableFilter<"Campaign"> | string | null
     createdAt?: DateTimeFilter<"Campaign"> | Date | string
     updatedAt?: DateTimeFilter<"Campaign"> | Date | string
     coupon?: XOR<CouponScalarRelationFilter, CouponWhereInput>
@@ -19859,6 +23825,9 @@ export namespace Prisma {
     startDate?: SortOrder
     endDate?: SortOrder
     position?: SortOrderInput | SortOrder
+    targetAudience?: SortOrderInput | SortOrder
+    goals?: SortOrderInput | SortOrder
+    notes?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     coupon?: CouponOrderByWithRelationInput
@@ -19879,6 +23848,9 @@ export namespace Prisma {
     startDate?: DateTimeFilter<"Campaign"> | Date | string
     endDate?: DateTimeFilter<"Campaign"> | Date | string
     position?: StringNullableFilter<"Campaign"> | string | null
+    targetAudience?: StringNullableFilter<"Campaign"> | string | null
+    goals?: StringNullableFilter<"Campaign"> | string | null
+    notes?: StringNullableFilter<"Campaign"> | string | null
     createdAt?: DateTimeFilter<"Campaign"> | Date | string
     updatedAt?: DateTimeFilter<"Campaign"> | Date | string
     coupon?: XOR<CouponScalarRelationFilter, CouponWhereInput>
@@ -19896,6 +23868,9 @@ export namespace Prisma {
     startDate?: SortOrder
     endDate?: SortOrder
     position?: SortOrderInput | SortOrder
+    targetAudience?: SortOrderInput | SortOrder
+    goals?: SortOrderInput | SortOrder
+    notes?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     _count?: CampaignCountOrderByAggregateInput
@@ -19920,6 +23895,9 @@ export namespace Prisma {
     startDate?: DateTimeWithAggregatesFilter<"Campaign"> | Date | string
     endDate?: DateTimeWithAggregatesFilter<"Campaign"> | Date | string
     position?: StringNullableWithAggregatesFilter<"Campaign"> | string | null
+    targetAudience?: StringNullableWithAggregatesFilter<"Campaign"> | string | null
+    goals?: StringNullableWithAggregatesFilter<"Campaign"> | string | null
+    notes?: StringNullableWithAggregatesFilter<"Campaign"> | string | null
     createdAt?: DateTimeWithAggregatesFilter<"Campaign"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"Campaign"> | Date | string
   }
@@ -20098,6 +24076,247 @@ export namespace Prisma {
     updatedAt?: DateTimeWithAggregatesFilter<"DealsBanner"> | Date | string
   }
 
+  export type ShippingMethodWhereInput = {
+    AND?: ShippingMethodWhereInput | ShippingMethodWhereInput[]
+    OR?: ShippingMethodWhereInput[]
+    NOT?: ShippingMethodWhereInput | ShippingMethodWhereInput[]
+    id?: StringFilter<"ShippingMethod"> | string
+    name?: StringFilter<"ShippingMethod"> | string
+    description?: StringNullableFilter<"ShippingMethod"> | string | null
+    estimatedDays?: StringFilter<"ShippingMethod"> | string
+    isActive?: BoolFilter<"ShippingMethod"> | boolean
+    defaultCost?: FloatFilter<"ShippingMethod"> | number
+    createdAt?: DateTimeFilter<"ShippingMethod"> | Date | string
+    updatedAt?: DateTimeFilter<"ShippingMethod"> | Date | string
+    orders?: OrderListRelationFilter
+    shippingRates?: ShippingRateListRelationFilter
+  }
+
+  export type ShippingMethodOrderByWithRelationInput = {
+    id?: SortOrder
+    name?: SortOrder
+    description?: SortOrderInput | SortOrder
+    estimatedDays?: SortOrder
+    isActive?: SortOrder
+    defaultCost?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    orders?: OrderOrderByRelationAggregateInput
+    shippingRates?: ShippingRateOrderByRelationAggregateInput
+  }
+
+  export type ShippingMethodWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    AND?: ShippingMethodWhereInput | ShippingMethodWhereInput[]
+    OR?: ShippingMethodWhereInput[]
+    NOT?: ShippingMethodWhereInput | ShippingMethodWhereInput[]
+    name?: StringFilter<"ShippingMethod"> | string
+    description?: StringNullableFilter<"ShippingMethod"> | string | null
+    estimatedDays?: StringFilter<"ShippingMethod"> | string
+    isActive?: BoolFilter<"ShippingMethod"> | boolean
+    defaultCost?: FloatFilter<"ShippingMethod"> | number
+    createdAt?: DateTimeFilter<"ShippingMethod"> | Date | string
+    updatedAt?: DateTimeFilter<"ShippingMethod"> | Date | string
+    orders?: OrderListRelationFilter
+    shippingRates?: ShippingRateListRelationFilter
+  }, "id">
+
+  export type ShippingMethodOrderByWithAggregationInput = {
+    id?: SortOrder
+    name?: SortOrder
+    description?: SortOrderInput | SortOrder
+    estimatedDays?: SortOrder
+    isActive?: SortOrder
+    defaultCost?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    _count?: ShippingMethodCountOrderByAggregateInput
+    _avg?: ShippingMethodAvgOrderByAggregateInput
+    _max?: ShippingMethodMaxOrderByAggregateInput
+    _min?: ShippingMethodMinOrderByAggregateInput
+    _sum?: ShippingMethodSumOrderByAggregateInput
+  }
+
+  export type ShippingMethodScalarWhereWithAggregatesInput = {
+    AND?: ShippingMethodScalarWhereWithAggregatesInput | ShippingMethodScalarWhereWithAggregatesInput[]
+    OR?: ShippingMethodScalarWhereWithAggregatesInput[]
+    NOT?: ShippingMethodScalarWhereWithAggregatesInput | ShippingMethodScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"ShippingMethod"> | string
+    name?: StringWithAggregatesFilter<"ShippingMethod"> | string
+    description?: StringNullableWithAggregatesFilter<"ShippingMethod"> | string | null
+    estimatedDays?: StringWithAggregatesFilter<"ShippingMethod"> | string
+    isActive?: BoolWithAggregatesFilter<"ShippingMethod"> | boolean
+    defaultCost?: FloatWithAggregatesFilter<"ShippingMethod"> | number
+    createdAt?: DateTimeWithAggregatesFilter<"ShippingMethod"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"ShippingMethod"> | Date | string
+  }
+
+  export type ShippingRateWhereInput = {
+    AND?: ShippingRateWhereInput | ShippingRateWhereInput[]
+    OR?: ShippingRateWhereInput[]
+    NOT?: ShippingRateWhereInput | ShippingRateWhereInput[]
+    id?: StringFilter<"ShippingRate"> | string
+    shippingMethodId?: StringFilter<"ShippingRate"> | string
+    country?: StringFilter<"ShippingRate"> | string
+    state?: StringNullableFilter<"ShippingRate"> | string | null
+    postalCodePrefix?: StringNullableFilter<"ShippingRate"> | string | null
+    minOrderAmount?: FloatNullableFilter<"ShippingRate"> | number | null
+    maxOrderAmount?: FloatNullableFilter<"ShippingRate"> | number | null
+    minWeight?: FloatNullableFilter<"ShippingRate"> | number | null
+    maxWeight?: FloatNullableFilter<"ShippingRate"> | number | null
+    cost?: FloatFilter<"ShippingRate"> | number
+    createdAt?: DateTimeFilter<"ShippingRate"> | Date | string
+    updatedAt?: DateTimeFilter<"ShippingRate"> | Date | string
+    shippingMethod?: XOR<ShippingMethodScalarRelationFilter, ShippingMethodWhereInput>
+  }
+
+  export type ShippingRateOrderByWithRelationInput = {
+    id?: SortOrder
+    shippingMethodId?: SortOrder
+    country?: SortOrder
+    state?: SortOrderInput | SortOrder
+    postalCodePrefix?: SortOrderInput | SortOrder
+    minOrderAmount?: SortOrderInput | SortOrder
+    maxOrderAmount?: SortOrderInput | SortOrder
+    minWeight?: SortOrderInput | SortOrder
+    maxWeight?: SortOrderInput | SortOrder
+    cost?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    shippingMethod?: ShippingMethodOrderByWithRelationInput
+  }
+
+  export type ShippingRateWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    AND?: ShippingRateWhereInput | ShippingRateWhereInput[]
+    OR?: ShippingRateWhereInput[]
+    NOT?: ShippingRateWhereInput | ShippingRateWhereInput[]
+    shippingMethodId?: StringFilter<"ShippingRate"> | string
+    country?: StringFilter<"ShippingRate"> | string
+    state?: StringNullableFilter<"ShippingRate"> | string | null
+    postalCodePrefix?: StringNullableFilter<"ShippingRate"> | string | null
+    minOrderAmount?: FloatNullableFilter<"ShippingRate"> | number | null
+    maxOrderAmount?: FloatNullableFilter<"ShippingRate"> | number | null
+    minWeight?: FloatNullableFilter<"ShippingRate"> | number | null
+    maxWeight?: FloatNullableFilter<"ShippingRate"> | number | null
+    cost?: FloatFilter<"ShippingRate"> | number
+    createdAt?: DateTimeFilter<"ShippingRate"> | Date | string
+    updatedAt?: DateTimeFilter<"ShippingRate"> | Date | string
+    shippingMethod?: XOR<ShippingMethodScalarRelationFilter, ShippingMethodWhereInput>
+  }, "id">
+
+  export type ShippingRateOrderByWithAggregationInput = {
+    id?: SortOrder
+    shippingMethodId?: SortOrder
+    country?: SortOrder
+    state?: SortOrderInput | SortOrder
+    postalCodePrefix?: SortOrderInput | SortOrder
+    minOrderAmount?: SortOrderInput | SortOrder
+    maxOrderAmount?: SortOrderInput | SortOrder
+    minWeight?: SortOrderInput | SortOrder
+    maxWeight?: SortOrderInput | SortOrder
+    cost?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    _count?: ShippingRateCountOrderByAggregateInput
+    _avg?: ShippingRateAvgOrderByAggregateInput
+    _max?: ShippingRateMaxOrderByAggregateInput
+    _min?: ShippingRateMinOrderByAggregateInput
+    _sum?: ShippingRateSumOrderByAggregateInput
+  }
+
+  export type ShippingRateScalarWhereWithAggregatesInput = {
+    AND?: ShippingRateScalarWhereWithAggregatesInput | ShippingRateScalarWhereWithAggregatesInput[]
+    OR?: ShippingRateScalarWhereWithAggregatesInput[]
+    NOT?: ShippingRateScalarWhereWithAggregatesInput | ShippingRateScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"ShippingRate"> | string
+    shippingMethodId?: StringWithAggregatesFilter<"ShippingRate"> | string
+    country?: StringWithAggregatesFilter<"ShippingRate"> | string
+    state?: StringNullableWithAggregatesFilter<"ShippingRate"> | string | null
+    postalCodePrefix?: StringNullableWithAggregatesFilter<"ShippingRate"> | string | null
+    minOrderAmount?: FloatNullableWithAggregatesFilter<"ShippingRate"> | number | null
+    maxOrderAmount?: FloatNullableWithAggregatesFilter<"ShippingRate"> | number | null
+    minWeight?: FloatNullableWithAggregatesFilter<"ShippingRate"> | number | null
+    maxWeight?: FloatNullableWithAggregatesFilter<"ShippingRate"> | number | null
+    cost?: FloatWithAggregatesFilter<"ShippingRate"> | number
+    createdAt?: DateTimeWithAggregatesFilter<"ShippingRate"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"ShippingRate"> | Date | string
+  }
+
+  export type TaxRateWhereInput = {
+    AND?: TaxRateWhereInput | TaxRateWhereInput[]
+    OR?: TaxRateWhereInput[]
+    NOT?: TaxRateWhereInput | TaxRateWhereInput[]
+    id?: StringFilter<"TaxRate"> | string
+    country?: StringFilter<"TaxRate"> | string
+    state?: StringNullableFilter<"TaxRate"> | string | null
+    postalCodePrefix?: StringNullableFilter<"TaxRate"> | string | null
+    rate?: FloatFilter<"TaxRate"> | number
+    description?: StringNullableFilter<"TaxRate"> | string | null
+    isActive?: BoolFilter<"TaxRate"> | boolean
+    createdAt?: DateTimeFilter<"TaxRate"> | Date | string
+    updatedAt?: DateTimeFilter<"TaxRate"> | Date | string
+  }
+
+  export type TaxRateOrderByWithRelationInput = {
+    id?: SortOrder
+    country?: SortOrder
+    state?: SortOrderInput | SortOrder
+    postalCodePrefix?: SortOrderInput | SortOrder
+    rate?: SortOrder
+    description?: SortOrderInput | SortOrder
+    isActive?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type TaxRateWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    AND?: TaxRateWhereInput | TaxRateWhereInput[]
+    OR?: TaxRateWhereInput[]
+    NOT?: TaxRateWhereInput | TaxRateWhereInput[]
+    country?: StringFilter<"TaxRate"> | string
+    state?: StringNullableFilter<"TaxRate"> | string | null
+    postalCodePrefix?: StringNullableFilter<"TaxRate"> | string | null
+    rate?: FloatFilter<"TaxRate"> | number
+    description?: StringNullableFilter<"TaxRate"> | string | null
+    isActive?: BoolFilter<"TaxRate"> | boolean
+    createdAt?: DateTimeFilter<"TaxRate"> | Date | string
+    updatedAt?: DateTimeFilter<"TaxRate"> | Date | string
+  }, "id">
+
+  export type TaxRateOrderByWithAggregationInput = {
+    id?: SortOrder
+    country?: SortOrder
+    state?: SortOrderInput | SortOrder
+    postalCodePrefix?: SortOrderInput | SortOrder
+    rate?: SortOrder
+    description?: SortOrderInput | SortOrder
+    isActive?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    _count?: TaxRateCountOrderByAggregateInput
+    _avg?: TaxRateAvgOrderByAggregateInput
+    _max?: TaxRateMaxOrderByAggregateInput
+    _min?: TaxRateMinOrderByAggregateInput
+    _sum?: TaxRateSumOrderByAggregateInput
+  }
+
+  export type TaxRateScalarWhereWithAggregatesInput = {
+    AND?: TaxRateScalarWhereWithAggregatesInput | TaxRateScalarWhereWithAggregatesInput[]
+    OR?: TaxRateScalarWhereWithAggregatesInput[]
+    NOT?: TaxRateScalarWhereWithAggregatesInput | TaxRateScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"TaxRate"> | string
+    country?: StringWithAggregatesFilter<"TaxRate"> | string
+    state?: StringNullableWithAggregatesFilter<"TaxRate"> | string | null
+    postalCodePrefix?: StringNullableWithAggregatesFilter<"TaxRate"> | string | null
+    rate?: FloatWithAggregatesFilter<"TaxRate"> | number
+    description?: StringNullableWithAggregatesFilter<"TaxRate"> | string | null
+    isActive?: BoolWithAggregatesFilter<"TaxRate"> | boolean
+    createdAt?: DateTimeWithAggregatesFilter<"TaxRate"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"TaxRate"> | Date | string
+  }
+
   export type UserCreateInput = {
     id?: string
     email: string
@@ -20251,6 +24470,9 @@ export namespace Prisma {
     featured?: boolean
     discount?: number | null
     features?: ProductCreatefeaturesInput | string[]
+    weight?: number | null
+    weightUnit?: string | null
+    dimensions?: string | null
     freeShippingThreshold?: number | null
     warrantyPeriod?: string | null
     warrantyDescription?: string | null
@@ -20277,6 +24499,9 @@ export namespace Prisma {
     discount?: number | null
     categoryId?: string | null
     features?: ProductCreatefeaturesInput | string[]
+    weight?: number | null
+    weightUnit?: string | null
+    dimensions?: string | null
     freeShippingThreshold?: number | null
     warrantyPeriod?: string | null
     warrantyDescription?: string | null
@@ -20301,6 +24526,9 @@ export namespace Prisma {
     featured?: BoolFieldUpdateOperationsInput | boolean
     discount?: NullableFloatFieldUpdateOperationsInput | number | null
     features?: ProductUpdatefeaturesInput | string[]
+    weight?: NullableFloatFieldUpdateOperationsInput | number | null
+    weightUnit?: NullableStringFieldUpdateOperationsInput | string | null
+    dimensions?: NullableStringFieldUpdateOperationsInput | string | null
     freeShippingThreshold?: NullableFloatFieldUpdateOperationsInput | number | null
     warrantyPeriod?: NullableStringFieldUpdateOperationsInput | string | null
     warrantyDescription?: NullableStringFieldUpdateOperationsInput | string | null
@@ -20327,6 +24555,9 @@ export namespace Prisma {
     discount?: NullableFloatFieldUpdateOperationsInput | number | null
     categoryId?: NullableStringFieldUpdateOperationsInput | string | null
     features?: ProductUpdatefeaturesInput | string[]
+    weight?: NullableFloatFieldUpdateOperationsInput | number | null
+    weightUnit?: NullableStringFieldUpdateOperationsInput | string | null
+    dimensions?: NullableStringFieldUpdateOperationsInput | string | null
     freeShippingThreshold?: NullableFloatFieldUpdateOperationsInput | number | null
     warrantyPeriod?: NullableStringFieldUpdateOperationsInput | string | null
     warrantyDescription?: NullableStringFieldUpdateOperationsInput | string | null
@@ -20352,6 +24583,9 @@ export namespace Prisma {
     discount?: number | null
     categoryId?: string | null
     features?: ProductCreatefeaturesInput | string[]
+    weight?: number | null
+    weightUnit?: string | null
+    dimensions?: string | null
     freeShippingThreshold?: number | null
     warrantyPeriod?: string | null
     warrantyDescription?: string | null
@@ -20372,6 +24606,9 @@ export namespace Prisma {
     featured?: BoolFieldUpdateOperationsInput | boolean
     discount?: NullableFloatFieldUpdateOperationsInput | number | null
     features?: ProductUpdatefeaturesInput | string[]
+    weight?: NullableFloatFieldUpdateOperationsInput | number | null
+    weightUnit?: NullableStringFieldUpdateOperationsInput | string | null
+    dimensions?: NullableStringFieldUpdateOperationsInput | string | null
     freeShippingThreshold?: NullableFloatFieldUpdateOperationsInput | number | null
     warrantyPeriod?: NullableStringFieldUpdateOperationsInput | string | null
     warrantyDescription?: NullableStringFieldUpdateOperationsInput | string | null
@@ -20393,6 +24630,9 @@ export namespace Prisma {
     discount?: NullableFloatFieldUpdateOperationsInput | number | null
     categoryId?: NullableStringFieldUpdateOperationsInput | string | null
     features?: ProductUpdatefeaturesInput | string[]
+    weight?: NullableFloatFieldUpdateOperationsInput | number | null
+    weightUnit?: NullableStringFieldUpdateOperationsInput | string | null
+    dimensions?: NullableStringFieldUpdateOperationsInput | string | null
     freeShippingThreshold?: NullableFloatFieldUpdateOperationsInput | number | null
     warrantyPeriod?: NullableStringFieldUpdateOperationsInput | string | null
     warrantyDescription?: NullableStringFieldUpdateOperationsInput | string | null
@@ -20661,6 +24901,7 @@ export namespace Prisma {
     orderItems?: OrderItemCreateNestedManyWithoutOrderInput
     shippingAddress: AddressCreateNestedOneWithoutOrdersShippingInput
     billingAddress: AddressCreateNestedOneWithoutOrdersBillingInput
+    shippingMethod?: ShippingMethodCreateNestedOneWithoutOrdersInput
     coupons?: CouponCreateNestedManyWithoutOrdersInput
   }
 
@@ -20673,6 +24914,7 @@ export namespace Prisma {
     paymentMethod: string
     paymentStatus?: $Enums.PaymentStatus
     orderStatus?: $Enums.OrderStatus
+    shippingMethodId?: string | null
     shippingCost?: number
     taxAmount?: number
     createdAt?: Date | string
@@ -20695,6 +24937,7 @@ export namespace Prisma {
     orderItems?: OrderItemUpdateManyWithoutOrderNestedInput
     shippingAddress?: AddressUpdateOneRequiredWithoutOrdersShippingNestedInput
     billingAddress?: AddressUpdateOneRequiredWithoutOrdersBillingNestedInput
+    shippingMethod?: ShippingMethodUpdateOneWithoutOrdersNestedInput
     coupons?: CouponUpdateManyWithoutOrdersNestedInput
   }
 
@@ -20707,6 +24950,7 @@ export namespace Prisma {
     paymentMethod?: StringFieldUpdateOperationsInput | string
     paymentStatus?: EnumPaymentStatusFieldUpdateOperationsInput | $Enums.PaymentStatus
     orderStatus?: EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
+    shippingMethodId?: NullableStringFieldUpdateOperationsInput | string | null
     shippingCost?: FloatFieldUpdateOperationsInput | number
     taxAmount?: FloatFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -20724,6 +24968,7 @@ export namespace Prisma {
     paymentMethod: string
     paymentStatus?: $Enums.PaymentStatus
     orderStatus?: $Enums.OrderStatus
+    shippingMethodId?: string | null
     shippingCost?: number
     taxAmount?: number
     createdAt?: Date | string
@@ -20751,6 +24996,7 @@ export namespace Prisma {
     paymentMethod?: StringFieldUpdateOperationsInput | string
     paymentStatus?: EnumPaymentStatusFieldUpdateOperationsInput | $Enums.PaymentStatus
     orderStatus?: EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
+    shippingMethodId?: NullableStringFieldUpdateOperationsInput | string | null
     shippingCost?: FloatFieldUpdateOperationsInput | number
     taxAmount?: FloatFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -20996,6 +25242,9 @@ export namespace Prisma {
     startDate: Date | string
     endDate: Date | string
     position?: string | null
+    targetAudience?: string | null
+    goals?: string | null
+    notes?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     coupon: CouponCreateNestedOneWithoutCampaignsInput
@@ -21013,6 +25262,9 @@ export namespace Prisma {
     startDate: Date | string
     endDate: Date | string
     position?: string | null
+    targetAudience?: string | null
+    goals?: string | null
+    notes?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -21028,6 +25280,9 @@ export namespace Prisma {
     startDate?: DateTimeFieldUpdateOperationsInput | Date | string
     endDate?: DateTimeFieldUpdateOperationsInput | Date | string
     position?: NullableStringFieldUpdateOperationsInput | string | null
+    targetAudience?: NullableStringFieldUpdateOperationsInput | string | null
+    goals?: NullableStringFieldUpdateOperationsInput | string | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     coupon?: CouponUpdateOneRequiredWithoutCampaignsNestedInput
@@ -21045,6 +25300,9 @@ export namespace Prisma {
     startDate?: DateTimeFieldUpdateOperationsInput | Date | string
     endDate?: DateTimeFieldUpdateOperationsInput | Date | string
     position?: NullableStringFieldUpdateOperationsInput | string | null
+    targetAudience?: NullableStringFieldUpdateOperationsInput | string | null
+    goals?: NullableStringFieldUpdateOperationsInput | string | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -21061,6 +25319,9 @@ export namespace Prisma {
     startDate: Date | string
     endDate: Date | string
     position?: string | null
+    targetAudience?: string | null
+    goals?: string | null
+    notes?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -21076,6 +25337,9 @@ export namespace Prisma {
     startDate?: DateTimeFieldUpdateOperationsInput | Date | string
     endDate?: DateTimeFieldUpdateOperationsInput | Date | string
     position?: NullableStringFieldUpdateOperationsInput | string | null
+    targetAudience?: NullableStringFieldUpdateOperationsInput | string | null
+    goals?: NullableStringFieldUpdateOperationsInput | string | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -21092,6 +25356,9 @@ export namespace Prisma {
     startDate?: DateTimeFieldUpdateOperationsInput | Date | string
     endDate?: DateTimeFieldUpdateOperationsInput | Date | string
     position?: NullableStringFieldUpdateOperationsInput | string | null
+    targetAudience?: NullableStringFieldUpdateOperationsInput | string | null
+    goals?: NullableStringFieldUpdateOperationsInput | string | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -21302,6 +25569,279 @@ export namespace Prisma {
     imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
     backgroundColor?: NullableStringFieldUpdateOperationsInput | string | null
     active?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ShippingMethodCreateInput = {
+    id?: string
+    name: string
+    description?: string | null
+    estimatedDays: string
+    isActive?: boolean
+    defaultCost: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    orders?: OrderCreateNestedManyWithoutShippingMethodInput
+    shippingRates?: ShippingRateCreateNestedManyWithoutShippingMethodInput
+  }
+
+  export type ShippingMethodUncheckedCreateInput = {
+    id?: string
+    name: string
+    description?: string | null
+    estimatedDays: string
+    isActive?: boolean
+    defaultCost: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    orders?: OrderUncheckedCreateNestedManyWithoutShippingMethodInput
+    shippingRates?: ShippingRateUncheckedCreateNestedManyWithoutShippingMethodInput
+  }
+
+  export type ShippingMethodUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    estimatedDays?: StringFieldUpdateOperationsInput | string
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    defaultCost?: FloatFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    orders?: OrderUpdateManyWithoutShippingMethodNestedInput
+    shippingRates?: ShippingRateUpdateManyWithoutShippingMethodNestedInput
+  }
+
+  export type ShippingMethodUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    estimatedDays?: StringFieldUpdateOperationsInput | string
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    defaultCost?: FloatFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    orders?: OrderUncheckedUpdateManyWithoutShippingMethodNestedInput
+    shippingRates?: ShippingRateUncheckedUpdateManyWithoutShippingMethodNestedInput
+  }
+
+  export type ShippingMethodCreateManyInput = {
+    id?: string
+    name: string
+    description?: string | null
+    estimatedDays: string
+    isActive?: boolean
+    defaultCost: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type ShippingMethodUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    estimatedDays?: StringFieldUpdateOperationsInput | string
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    defaultCost?: FloatFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ShippingMethodUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    estimatedDays?: StringFieldUpdateOperationsInput | string
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    defaultCost?: FloatFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ShippingRateCreateInput = {
+    id?: string
+    country: string
+    state?: string | null
+    postalCodePrefix?: string | null
+    minOrderAmount?: number | null
+    maxOrderAmount?: number | null
+    minWeight?: number | null
+    maxWeight?: number | null
+    cost: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    shippingMethod: ShippingMethodCreateNestedOneWithoutShippingRatesInput
+  }
+
+  export type ShippingRateUncheckedCreateInput = {
+    id?: string
+    shippingMethodId: string
+    country: string
+    state?: string | null
+    postalCodePrefix?: string | null
+    minOrderAmount?: number | null
+    maxOrderAmount?: number | null
+    minWeight?: number | null
+    maxWeight?: number | null
+    cost: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type ShippingRateUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    country?: StringFieldUpdateOperationsInput | string
+    state?: NullableStringFieldUpdateOperationsInput | string | null
+    postalCodePrefix?: NullableStringFieldUpdateOperationsInput | string | null
+    minOrderAmount?: NullableFloatFieldUpdateOperationsInput | number | null
+    maxOrderAmount?: NullableFloatFieldUpdateOperationsInput | number | null
+    minWeight?: NullableFloatFieldUpdateOperationsInput | number | null
+    maxWeight?: NullableFloatFieldUpdateOperationsInput | number | null
+    cost?: FloatFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    shippingMethod?: ShippingMethodUpdateOneRequiredWithoutShippingRatesNestedInput
+  }
+
+  export type ShippingRateUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    shippingMethodId?: StringFieldUpdateOperationsInput | string
+    country?: StringFieldUpdateOperationsInput | string
+    state?: NullableStringFieldUpdateOperationsInput | string | null
+    postalCodePrefix?: NullableStringFieldUpdateOperationsInput | string | null
+    minOrderAmount?: NullableFloatFieldUpdateOperationsInput | number | null
+    maxOrderAmount?: NullableFloatFieldUpdateOperationsInput | number | null
+    minWeight?: NullableFloatFieldUpdateOperationsInput | number | null
+    maxWeight?: NullableFloatFieldUpdateOperationsInput | number | null
+    cost?: FloatFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ShippingRateCreateManyInput = {
+    id?: string
+    shippingMethodId: string
+    country: string
+    state?: string | null
+    postalCodePrefix?: string | null
+    minOrderAmount?: number | null
+    maxOrderAmount?: number | null
+    minWeight?: number | null
+    maxWeight?: number | null
+    cost: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type ShippingRateUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    country?: StringFieldUpdateOperationsInput | string
+    state?: NullableStringFieldUpdateOperationsInput | string | null
+    postalCodePrefix?: NullableStringFieldUpdateOperationsInput | string | null
+    minOrderAmount?: NullableFloatFieldUpdateOperationsInput | number | null
+    maxOrderAmount?: NullableFloatFieldUpdateOperationsInput | number | null
+    minWeight?: NullableFloatFieldUpdateOperationsInput | number | null
+    maxWeight?: NullableFloatFieldUpdateOperationsInput | number | null
+    cost?: FloatFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ShippingRateUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    shippingMethodId?: StringFieldUpdateOperationsInput | string
+    country?: StringFieldUpdateOperationsInput | string
+    state?: NullableStringFieldUpdateOperationsInput | string | null
+    postalCodePrefix?: NullableStringFieldUpdateOperationsInput | string | null
+    minOrderAmount?: NullableFloatFieldUpdateOperationsInput | number | null
+    maxOrderAmount?: NullableFloatFieldUpdateOperationsInput | number | null
+    minWeight?: NullableFloatFieldUpdateOperationsInput | number | null
+    maxWeight?: NullableFloatFieldUpdateOperationsInput | number | null
+    cost?: FloatFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type TaxRateCreateInput = {
+    id?: string
+    country: string
+    state?: string | null
+    postalCodePrefix?: string | null
+    rate: number
+    description?: string | null
+    isActive?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type TaxRateUncheckedCreateInput = {
+    id?: string
+    country: string
+    state?: string | null
+    postalCodePrefix?: string | null
+    rate: number
+    description?: string | null
+    isActive?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type TaxRateUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    country?: StringFieldUpdateOperationsInput | string
+    state?: NullableStringFieldUpdateOperationsInput | string | null
+    postalCodePrefix?: NullableStringFieldUpdateOperationsInput | string | null
+    rate?: FloatFieldUpdateOperationsInput | number
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type TaxRateUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    country?: StringFieldUpdateOperationsInput | string
+    state?: NullableStringFieldUpdateOperationsInput | string | null
+    postalCodePrefix?: NullableStringFieldUpdateOperationsInput | string | null
+    rate?: FloatFieldUpdateOperationsInput | number
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type TaxRateCreateManyInput = {
+    id?: string
+    country: string
+    state?: string | null
+    postalCodePrefix?: string | null
+    rate: number
+    description?: string | null
+    isActive?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type TaxRateUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    country?: StringFieldUpdateOperationsInput | string
+    state?: NullableStringFieldUpdateOperationsInput | string | null
+    postalCodePrefix?: NullableStringFieldUpdateOperationsInput | string | null
+    rate?: FloatFieldUpdateOperationsInput | number
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type TaxRateUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    country?: StringFieldUpdateOperationsInput | string
+    state?: NullableStringFieldUpdateOperationsInput | string | null
+    postalCodePrefix?: NullableStringFieldUpdateOperationsInput | string | null
+    rate?: FloatFieldUpdateOperationsInput | number
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -21623,6 +26163,9 @@ export namespace Prisma {
     discount?: SortOrder
     categoryId?: SortOrder
     features?: SortOrder
+    weight?: SortOrder
+    weightUnit?: SortOrder
+    dimensions?: SortOrder
     freeShippingThreshold?: SortOrder
     warrantyPeriod?: SortOrder
     warrantyDescription?: SortOrder
@@ -21637,6 +26180,7 @@ export namespace Prisma {
     stock?: SortOrder
     lowStockThreshold?: SortOrder
     discount?: SortOrder
+    weight?: SortOrder
     freeShippingThreshold?: SortOrder
   }
 
@@ -21651,6 +26195,9 @@ export namespace Prisma {
     featured?: SortOrder
     discount?: SortOrder
     categoryId?: SortOrder
+    weight?: SortOrder
+    weightUnit?: SortOrder
+    dimensions?: SortOrder
     freeShippingThreshold?: SortOrder
     warrantyPeriod?: SortOrder
     warrantyDescription?: SortOrder
@@ -21671,6 +26218,9 @@ export namespace Prisma {
     featured?: SortOrder
     discount?: SortOrder
     categoryId?: SortOrder
+    weight?: SortOrder
+    weightUnit?: SortOrder
+    dimensions?: SortOrder
     freeShippingThreshold?: SortOrder
     warrantyPeriod?: SortOrder
     warrantyDescription?: SortOrder
@@ -21685,6 +26235,7 @@ export namespace Prisma {
     stock?: SortOrder
     lowStockThreshold?: SortOrder
     discount?: SortOrder
+    weight?: SortOrder
     freeShippingThreshold?: SortOrder
   }
 
@@ -21893,6 +26444,11 @@ export namespace Prisma {
     isNot?: AddressWhereInput
   }
 
+  export type ShippingMethodNullableScalarRelationFilter = {
+    is?: ShippingMethodWhereInput | null
+    isNot?: ShippingMethodWhereInput | null
+  }
+
   export type CouponListRelationFilter = {
     every?: CouponWhereInput
     some?: CouponWhereInput
@@ -21912,6 +26468,7 @@ export namespace Prisma {
     paymentMethod?: SortOrder
     paymentStatus?: SortOrder
     orderStatus?: SortOrder
+    shippingMethodId?: SortOrder
     shippingCost?: SortOrder
     taxAmount?: SortOrder
     createdAt?: SortOrder
@@ -21933,6 +26490,7 @@ export namespace Prisma {
     paymentMethod?: SortOrder
     paymentStatus?: SortOrder
     orderStatus?: SortOrder
+    shippingMethodId?: SortOrder
     shippingCost?: SortOrder
     taxAmount?: SortOrder
     createdAt?: SortOrder
@@ -21948,6 +26506,7 @@ export namespace Prisma {
     paymentMethod?: SortOrder
     paymentStatus?: SortOrder
     orderStatus?: SortOrder
+    shippingMethodId?: SortOrder
     shippingCost?: SortOrder
     taxAmount?: SortOrder
     createdAt?: SortOrder
@@ -22189,6 +26748,9 @@ export namespace Prisma {
     startDate?: SortOrder
     endDate?: SortOrder
     position?: SortOrder
+    targetAudience?: SortOrder
+    goals?: SortOrder
+    notes?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -22210,6 +26772,9 @@ export namespace Prisma {
     startDate?: SortOrder
     endDate?: SortOrder
     position?: SortOrder
+    targetAudience?: SortOrder
+    goals?: SortOrder
+    notes?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -22226,6 +26791,9 @@ export namespace Prisma {
     startDate?: SortOrder
     endDate?: SortOrder
     position?: SortOrder
+    targetAudience?: SortOrder
+    goals?: SortOrder
+    notes?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -22323,6 +26891,167 @@ export namespace Prisma {
     active?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+  }
+
+  export type ShippingRateListRelationFilter = {
+    every?: ShippingRateWhereInput
+    some?: ShippingRateWhereInput
+    none?: ShippingRateWhereInput
+  }
+
+  export type ShippingRateOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type ShippingMethodCountOrderByAggregateInput = {
+    id?: SortOrder
+    name?: SortOrder
+    description?: SortOrder
+    estimatedDays?: SortOrder
+    isActive?: SortOrder
+    defaultCost?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type ShippingMethodAvgOrderByAggregateInput = {
+    defaultCost?: SortOrder
+  }
+
+  export type ShippingMethodMaxOrderByAggregateInput = {
+    id?: SortOrder
+    name?: SortOrder
+    description?: SortOrder
+    estimatedDays?: SortOrder
+    isActive?: SortOrder
+    defaultCost?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type ShippingMethodMinOrderByAggregateInput = {
+    id?: SortOrder
+    name?: SortOrder
+    description?: SortOrder
+    estimatedDays?: SortOrder
+    isActive?: SortOrder
+    defaultCost?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type ShippingMethodSumOrderByAggregateInput = {
+    defaultCost?: SortOrder
+  }
+
+  export type ShippingMethodScalarRelationFilter = {
+    is?: ShippingMethodWhereInput
+    isNot?: ShippingMethodWhereInput
+  }
+
+  export type ShippingRateCountOrderByAggregateInput = {
+    id?: SortOrder
+    shippingMethodId?: SortOrder
+    country?: SortOrder
+    state?: SortOrder
+    postalCodePrefix?: SortOrder
+    minOrderAmount?: SortOrder
+    maxOrderAmount?: SortOrder
+    minWeight?: SortOrder
+    maxWeight?: SortOrder
+    cost?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type ShippingRateAvgOrderByAggregateInput = {
+    minOrderAmount?: SortOrder
+    maxOrderAmount?: SortOrder
+    minWeight?: SortOrder
+    maxWeight?: SortOrder
+    cost?: SortOrder
+  }
+
+  export type ShippingRateMaxOrderByAggregateInput = {
+    id?: SortOrder
+    shippingMethodId?: SortOrder
+    country?: SortOrder
+    state?: SortOrder
+    postalCodePrefix?: SortOrder
+    minOrderAmount?: SortOrder
+    maxOrderAmount?: SortOrder
+    minWeight?: SortOrder
+    maxWeight?: SortOrder
+    cost?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type ShippingRateMinOrderByAggregateInput = {
+    id?: SortOrder
+    shippingMethodId?: SortOrder
+    country?: SortOrder
+    state?: SortOrder
+    postalCodePrefix?: SortOrder
+    minOrderAmount?: SortOrder
+    maxOrderAmount?: SortOrder
+    minWeight?: SortOrder
+    maxWeight?: SortOrder
+    cost?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type ShippingRateSumOrderByAggregateInput = {
+    minOrderAmount?: SortOrder
+    maxOrderAmount?: SortOrder
+    minWeight?: SortOrder
+    maxWeight?: SortOrder
+    cost?: SortOrder
+  }
+
+  export type TaxRateCountOrderByAggregateInput = {
+    id?: SortOrder
+    country?: SortOrder
+    state?: SortOrder
+    postalCodePrefix?: SortOrder
+    rate?: SortOrder
+    description?: SortOrder
+    isActive?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type TaxRateAvgOrderByAggregateInput = {
+    rate?: SortOrder
+  }
+
+  export type TaxRateMaxOrderByAggregateInput = {
+    id?: SortOrder
+    country?: SortOrder
+    state?: SortOrder
+    postalCodePrefix?: SortOrder
+    rate?: SortOrder
+    description?: SortOrder
+    isActive?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type TaxRateMinOrderByAggregateInput = {
+    id?: SortOrder
+    country?: SortOrder
+    state?: SortOrder
+    postalCodePrefix?: SortOrder
+    rate?: SortOrder
+    description?: SortOrder
+    isActive?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type TaxRateSumOrderByAggregateInput = {
+    rate?: SortOrder
   }
 
   export type CartCreateNestedManyWithoutUserInput = {
@@ -23053,6 +27782,12 @@ export namespace Prisma {
     connect?: AddressWhereUniqueInput
   }
 
+  export type ShippingMethodCreateNestedOneWithoutOrdersInput = {
+    create?: XOR<ShippingMethodCreateWithoutOrdersInput, ShippingMethodUncheckedCreateWithoutOrdersInput>
+    connectOrCreate?: ShippingMethodCreateOrConnectWithoutOrdersInput
+    connect?: ShippingMethodWhereUniqueInput
+  }
+
   export type CouponCreateNestedManyWithoutOrdersInput = {
     create?: XOR<CouponCreateWithoutOrdersInput, CouponUncheckedCreateWithoutOrdersInput> | CouponCreateWithoutOrdersInput[] | CouponUncheckedCreateWithoutOrdersInput[]
     connectOrCreate?: CouponCreateOrConnectWithoutOrdersInput | CouponCreateOrConnectWithoutOrdersInput[]
@@ -23116,6 +27851,16 @@ export namespace Prisma {
     upsert?: AddressUpsertWithoutOrdersBillingInput
     connect?: AddressWhereUniqueInput
     update?: XOR<XOR<AddressUpdateToOneWithWhereWithoutOrdersBillingInput, AddressUpdateWithoutOrdersBillingInput>, AddressUncheckedUpdateWithoutOrdersBillingInput>
+  }
+
+  export type ShippingMethodUpdateOneWithoutOrdersNestedInput = {
+    create?: XOR<ShippingMethodCreateWithoutOrdersInput, ShippingMethodUncheckedCreateWithoutOrdersInput>
+    connectOrCreate?: ShippingMethodCreateOrConnectWithoutOrdersInput
+    upsert?: ShippingMethodUpsertWithoutOrdersInput
+    disconnect?: ShippingMethodWhereInput | boolean
+    delete?: ShippingMethodWhereInput | boolean
+    connect?: ShippingMethodWhereUniqueInput
+    update?: XOR<XOR<ShippingMethodUpdateToOneWithWhereWithoutOrdersInput, ShippingMethodUpdateWithoutOrdersInput>, ShippingMethodUncheckedUpdateWithoutOrdersInput>
   }
 
   export type CouponUpdateManyWithoutOrdersNestedInput = {
@@ -23318,6 +28063,104 @@ export namespace Prisma {
     upsert?: CouponUpsertWithoutCampaignsInput
     connect?: CouponWhereUniqueInput
     update?: XOR<XOR<CouponUpdateToOneWithWhereWithoutCampaignsInput, CouponUpdateWithoutCampaignsInput>, CouponUncheckedUpdateWithoutCampaignsInput>
+  }
+
+  export type OrderCreateNestedManyWithoutShippingMethodInput = {
+    create?: XOR<OrderCreateWithoutShippingMethodInput, OrderUncheckedCreateWithoutShippingMethodInput> | OrderCreateWithoutShippingMethodInput[] | OrderUncheckedCreateWithoutShippingMethodInput[]
+    connectOrCreate?: OrderCreateOrConnectWithoutShippingMethodInput | OrderCreateOrConnectWithoutShippingMethodInput[]
+    createMany?: OrderCreateManyShippingMethodInputEnvelope
+    connect?: OrderWhereUniqueInput | OrderWhereUniqueInput[]
+  }
+
+  export type ShippingRateCreateNestedManyWithoutShippingMethodInput = {
+    create?: XOR<ShippingRateCreateWithoutShippingMethodInput, ShippingRateUncheckedCreateWithoutShippingMethodInput> | ShippingRateCreateWithoutShippingMethodInput[] | ShippingRateUncheckedCreateWithoutShippingMethodInput[]
+    connectOrCreate?: ShippingRateCreateOrConnectWithoutShippingMethodInput | ShippingRateCreateOrConnectWithoutShippingMethodInput[]
+    createMany?: ShippingRateCreateManyShippingMethodInputEnvelope
+    connect?: ShippingRateWhereUniqueInput | ShippingRateWhereUniqueInput[]
+  }
+
+  export type OrderUncheckedCreateNestedManyWithoutShippingMethodInput = {
+    create?: XOR<OrderCreateWithoutShippingMethodInput, OrderUncheckedCreateWithoutShippingMethodInput> | OrderCreateWithoutShippingMethodInput[] | OrderUncheckedCreateWithoutShippingMethodInput[]
+    connectOrCreate?: OrderCreateOrConnectWithoutShippingMethodInput | OrderCreateOrConnectWithoutShippingMethodInput[]
+    createMany?: OrderCreateManyShippingMethodInputEnvelope
+    connect?: OrderWhereUniqueInput | OrderWhereUniqueInput[]
+  }
+
+  export type ShippingRateUncheckedCreateNestedManyWithoutShippingMethodInput = {
+    create?: XOR<ShippingRateCreateWithoutShippingMethodInput, ShippingRateUncheckedCreateWithoutShippingMethodInput> | ShippingRateCreateWithoutShippingMethodInput[] | ShippingRateUncheckedCreateWithoutShippingMethodInput[]
+    connectOrCreate?: ShippingRateCreateOrConnectWithoutShippingMethodInput | ShippingRateCreateOrConnectWithoutShippingMethodInput[]
+    createMany?: ShippingRateCreateManyShippingMethodInputEnvelope
+    connect?: ShippingRateWhereUniqueInput | ShippingRateWhereUniqueInput[]
+  }
+
+  export type OrderUpdateManyWithoutShippingMethodNestedInput = {
+    create?: XOR<OrderCreateWithoutShippingMethodInput, OrderUncheckedCreateWithoutShippingMethodInput> | OrderCreateWithoutShippingMethodInput[] | OrderUncheckedCreateWithoutShippingMethodInput[]
+    connectOrCreate?: OrderCreateOrConnectWithoutShippingMethodInput | OrderCreateOrConnectWithoutShippingMethodInput[]
+    upsert?: OrderUpsertWithWhereUniqueWithoutShippingMethodInput | OrderUpsertWithWhereUniqueWithoutShippingMethodInput[]
+    createMany?: OrderCreateManyShippingMethodInputEnvelope
+    set?: OrderWhereUniqueInput | OrderWhereUniqueInput[]
+    disconnect?: OrderWhereUniqueInput | OrderWhereUniqueInput[]
+    delete?: OrderWhereUniqueInput | OrderWhereUniqueInput[]
+    connect?: OrderWhereUniqueInput | OrderWhereUniqueInput[]
+    update?: OrderUpdateWithWhereUniqueWithoutShippingMethodInput | OrderUpdateWithWhereUniqueWithoutShippingMethodInput[]
+    updateMany?: OrderUpdateManyWithWhereWithoutShippingMethodInput | OrderUpdateManyWithWhereWithoutShippingMethodInput[]
+    deleteMany?: OrderScalarWhereInput | OrderScalarWhereInput[]
+  }
+
+  export type ShippingRateUpdateManyWithoutShippingMethodNestedInput = {
+    create?: XOR<ShippingRateCreateWithoutShippingMethodInput, ShippingRateUncheckedCreateWithoutShippingMethodInput> | ShippingRateCreateWithoutShippingMethodInput[] | ShippingRateUncheckedCreateWithoutShippingMethodInput[]
+    connectOrCreate?: ShippingRateCreateOrConnectWithoutShippingMethodInput | ShippingRateCreateOrConnectWithoutShippingMethodInput[]
+    upsert?: ShippingRateUpsertWithWhereUniqueWithoutShippingMethodInput | ShippingRateUpsertWithWhereUniqueWithoutShippingMethodInput[]
+    createMany?: ShippingRateCreateManyShippingMethodInputEnvelope
+    set?: ShippingRateWhereUniqueInput | ShippingRateWhereUniqueInput[]
+    disconnect?: ShippingRateWhereUniqueInput | ShippingRateWhereUniqueInput[]
+    delete?: ShippingRateWhereUniqueInput | ShippingRateWhereUniqueInput[]
+    connect?: ShippingRateWhereUniqueInput | ShippingRateWhereUniqueInput[]
+    update?: ShippingRateUpdateWithWhereUniqueWithoutShippingMethodInput | ShippingRateUpdateWithWhereUniqueWithoutShippingMethodInput[]
+    updateMany?: ShippingRateUpdateManyWithWhereWithoutShippingMethodInput | ShippingRateUpdateManyWithWhereWithoutShippingMethodInput[]
+    deleteMany?: ShippingRateScalarWhereInput | ShippingRateScalarWhereInput[]
+  }
+
+  export type OrderUncheckedUpdateManyWithoutShippingMethodNestedInput = {
+    create?: XOR<OrderCreateWithoutShippingMethodInput, OrderUncheckedCreateWithoutShippingMethodInput> | OrderCreateWithoutShippingMethodInput[] | OrderUncheckedCreateWithoutShippingMethodInput[]
+    connectOrCreate?: OrderCreateOrConnectWithoutShippingMethodInput | OrderCreateOrConnectWithoutShippingMethodInput[]
+    upsert?: OrderUpsertWithWhereUniqueWithoutShippingMethodInput | OrderUpsertWithWhereUniqueWithoutShippingMethodInput[]
+    createMany?: OrderCreateManyShippingMethodInputEnvelope
+    set?: OrderWhereUniqueInput | OrderWhereUniqueInput[]
+    disconnect?: OrderWhereUniqueInput | OrderWhereUniqueInput[]
+    delete?: OrderWhereUniqueInput | OrderWhereUniqueInput[]
+    connect?: OrderWhereUniqueInput | OrderWhereUniqueInput[]
+    update?: OrderUpdateWithWhereUniqueWithoutShippingMethodInput | OrderUpdateWithWhereUniqueWithoutShippingMethodInput[]
+    updateMany?: OrderUpdateManyWithWhereWithoutShippingMethodInput | OrderUpdateManyWithWhereWithoutShippingMethodInput[]
+    deleteMany?: OrderScalarWhereInput | OrderScalarWhereInput[]
+  }
+
+  export type ShippingRateUncheckedUpdateManyWithoutShippingMethodNestedInput = {
+    create?: XOR<ShippingRateCreateWithoutShippingMethodInput, ShippingRateUncheckedCreateWithoutShippingMethodInput> | ShippingRateCreateWithoutShippingMethodInput[] | ShippingRateUncheckedCreateWithoutShippingMethodInput[]
+    connectOrCreate?: ShippingRateCreateOrConnectWithoutShippingMethodInput | ShippingRateCreateOrConnectWithoutShippingMethodInput[]
+    upsert?: ShippingRateUpsertWithWhereUniqueWithoutShippingMethodInput | ShippingRateUpsertWithWhereUniqueWithoutShippingMethodInput[]
+    createMany?: ShippingRateCreateManyShippingMethodInputEnvelope
+    set?: ShippingRateWhereUniqueInput | ShippingRateWhereUniqueInput[]
+    disconnect?: ShippingRateWhereUniqueInput | ShippingRateWhereUniqueInput[]
+    delete?: ShippingRateWhereUniqueInput | ShippingRateWhereUniqueInput[]
+    connect?: ShippingRateWhereUniqueInput | ShippingRateWhereUniqueInput[]
+    update?: ShippingRateUpdateWithWhereUniqueWithoutShippingMethodInput | ShippingRateUpdateWithWhereUniqueWithoutShippingMethodInput[]
+    updateMany?: ShippingRateUpdateManyWithWhereWithoutShippingMethodInput | ShippingRateUpdateManyWithWhereWithoutShippingMethodInput[]
+    deleteMany?: ShippingRateScalarWhereInput | ShippingRateScalarWhereInput[]
+  }
+
+  export type ShippingMethodCreateNestedOneWithoutShippingRatesInput = {
+    create?: XOR<ShippingMethodCreateWithoutShippingRatesInput, ShippingMethodUncheckedCreateWithoutShippingRatesInput>
+    connectOrCreate?: ShippingMethodCreateOrConnectWithoutShippingRatesInput
+    connect?: ShippingMethodWhereUniqueInput
+  }
+
+  export type ShippingMethodUpdateOneRequiredWithoutShippingRatesNestedInput = {
+    create?: XOR<ShippingMethodCreateWithoutShippingRatesInput, ShippingMethodUncheckedCreateWithoutShippingRatesInput>
+    connectOrCreate?: ShippingMethodCreateOrConnectWithoutShippingRatesInput
+    upsert?: ShippingMethodUpsertWithoutShippingRatesInput
+    connect?: ShippingMethodWhereUniqueInput
+    update?: XOR<XOR<ShippingMethodUpdateToOneWithWhereWithoutShippingRatesInput, ShippingMethodUpdateWithoutShippingRatesInput>, ShippingMethodUncheckedUpdateWithoutShippingRatesInput>
   }
 
   export type NestedStringFilter<$PrismaModel = never> = {
@@ -23631,6 +28474,7 @@ export namespace Prisma {
     orderItems?: OrderItemCreateNestedManyWithoutOrderInput
     shippingAddress: AddressCreateNestedOneWithoutOrdersShippingInput
     billingAddress: AddressCreateNestedOneWithoutOrdersBillingInput
+    shippingMethod?: ShippingMethodCreateNestedOneWithoutOrdersInput
     coupons?: CouponCreateNestedManyWithoutOrdersInput
   }
 
@@ -23642,6 +28486,7 @@ export namespace Prisma {
     paymentMethod: string
     paymentStatus?: $Enums.PaymentStatus
     orderStatus?: $Enums.OrderStatus
+    shippingMethodId?: string | null
     shippingCost?: number
     taxAmount?: number
     createdAt?: Date | string
@@ -23777,6 +28622,7 @@ export namespace Prisma {
     paymentMethod?: StringFilter<"Order"> | string
     paymentStatus?: EnumPaymentStatusFilter<"Order"> | $Enums.PaymentStatus
     orderStatus?: EnumOrderStatusFilter<"Order"> | $Enums.OrderStatus
+    shippingMethodId?: StringNullableFilter<"Order"> | string | null
     shippingCost?: FloatFilter<"Order"> | number
     taxAmount?: FloatFilter<"Order"> | number
     createdAt?: DateTimeFilter<"Order"> | Date | string
@@ -23901,6 +28747,9 @@ export namespace Prisma {
     featured?: boolean
     discount?: number | null
     features?: ProductCreatefeaturesInput | string[]
+    weight?: number | null
+    weightUnit?: string | null
+    dimensions?: string | null
     freeShippingThreshold?: number | null
     warrantyPeriod?: string | null
     warrantyDescription?: string | null
@@ -23925,6 +28774,9 @@ export namespace Prisma {
     featured?: boolean
     discount?: number | null
     features?: ProductCreatefeaturesInput | string[]
+    weight?: number | null
+    weightUnit?: string | null
+    dimensions?: string | null
     freeShippingThreshold?: number | null
     warrantyPeriod?: string | null
     warrantyDescription?: string | null
@@ -24032,6 +28884,9 @@ export namespace Prisma {
     discount?: FloatNullableFilter<"Product"> | number | null
     categoryId?: StringNullableFilter<"Product"> | string | null
     features?: StringNullableListFilter<"Product">
+    weight?: FloatNullableFilter<"Product"> | number | null
+    weightUnit?: StringNullableFilter<"Product"> | string | null
+    dimensions?: StringNullableFilter<"Product"> | string | null
     freeShippingThreshold?: FloatNullableFilter<"Product"> | number | null
     warrantyPeriod?: StringNullableFilter<"Product"> | string | null
     warrantyDescription?: StringNullableFilter<"Product"> | string | null
@@ -24295,6 +29150,9 @@ export namespace Prisma {
     featured?: boolean
     discount?: number | null
     features?: ProductCreatefeaturesInput | string[]
+    weight?: number | null
+    weightUnit?: string | null
+    dimensions?: string | null
     freeShippingThreshold?: number | null
     warrantyPeriod?: string | null
     warrantyDescription?: string | null
@@ -24320,6 +29178,9 @@ export namespace Prisma {
     discount?: number | null
     categoryId?: string | null
     features?: ProductCreatefeaturesInput | string[]
+    weight?: number | null
+    weightUnit?: string | null
+    dimensions?: string | null
     freeShippingThreshold?: number | null
     warrantyPeriod?: string | null
     warrantyDescription?: string | null
@@ -24359,6 +29220,9 @@ export namespace Prisma {
     featured?: BoolFieldUpdateOperationsInput | boolean
     discount?: NullableFloatFieldUpdateOperationsInput | number | null
     features?: ProductUpdatefeaturesInput | string[]
+    weight?: NullableFloatFieldUpdateOperationsInput | number | null
+    weightUnit?: NullableStringFieldUpdateOperationsInput | string | null
+    dimensions?: NullableStringFieldUpdateOperationsInput | string | null
     freeShippingThreshold?: NullableFloatFieldUpdateOperationsInput | number | null
     warrantyPeriod?: NullableStringFieldUpdateOperationsInput | string | null
     warrantyDescription?: NullableStringFieldUpdateOperationsInput | string | null
@@ -24384,6 +29248,9 @@ export namespace Prisma {
     discount?: NullableFloatFieldUpdateOperationsInput | number | null
     categoryId?: NullableStringFieldUpdateOperationsInput | string | null
     features?: ProductUpdatefeaturesInput | string[]
+    weight?: NullableFloatFieldUpdateOperationsInput | number | null
+    weightUnit?: NullableStringFieldUpdateOperationsInput | string | null
+    dimensions?: NullableStringFieldUpdateOperationsInput | string | null
     freeShippingThreshold?: NullableFloatFieldUpdateOperationsInput | number | null
     warrantyPeriod?: NullableStringFieldUpdateOperationsInput | string | null
     warrantyDescription?: NullableStringFieldUpdateOperationsInput | string | null
@@ -24532,6 +29399,9 @@ export namespace Prisma {
     featured?: boolean
     discount?: number | null
     features?: ProductCreatefeaturesInput | string[]
+    weight?: number | null
+    weightUnit?: string | null
+    dimensions?: string | null
     freeShippingThreshold?: number | null
     warrantyPeriod?: string | null
     warrantyDescription?: string | null
@@ -24557,6 +29427,9 @@ export namespace Prisma {
     discount?: number | null
     categoryId?: string | null
     features?: ProductCreatefeaturesInput | string[]
+    weight?: number | null
+    weightUnit?: string | null
+    dimensions?: string | null
     freeShippingThreshold?: number | null
     warrantyPeriod?: string | null
     warrantyDescription?: string | null
@@ -24619,6 +29492,9 @@ export namespace Prisma {
     featured?: BoolFieldUpdateOperationsInput | boolean
     discount?: NullableFloatFieldUpdateOperationsInput | number | null
     features?: ProductUpdatefeaturesInput | string[]
+    weight?: NullableFloatFieldUpdateOperationsInput | number | null
+    weightUnit?: NullableStringFieldUpdateOperationsInput | string | null
+    dimensions?: NullableStringFieldUpdateOperationsInput | string | null
     freeShippingThreshold?: NullableFloatFieldUpdateOperationsInput | number | null
     warrantyPeriod?: NullableStringFieldUpdateOperationsInput | string | null
     warrantyDescription?: NullableStringFieldUpdateOperationsInput | string | null
@@ -24644,6 +29520,9 @@ export namespace Prisma {
     discount?: NullableFloatFieldUpdateOperationsInput | number | null
     categoryId?: NullableStringFieldUpdateOperationsInput | string | null
     features?: ProductUpdatefeaturesInput | string[]
+    weight?: NullableFloatFieldUpdateOperationsInput | number | null
+    weightUnit?: NullableStringFieldUpdateOperationsInput | string | null
+    dimensions?: NullableStringFieldUpdateOperationsInput | string | null
     freeShippingThreshold?: NullableFloatFieldUpdateOperationsInput | number | null
     warrantyPeriod?: NullableStringFieldUpdateOperationsInput | string | null
     warrantyDescription?: NullableStringFieldUpdateOperationsInput | string | null
@@ -24700,6 +29579,7 @@ export namespace Prisma {
     user: UserCreateNestedOneWithoutOrdersInput
     orderItems?: OrderItemCreateNestedManyWithoutOrderInput
     billingAddress: AddressCreateNestedOneWithoutOrdersBillingInput
+    shippingMethod?: ShippingMethodCreateNestedOneWithoutOrdersInput
     coupons?: CouponCreateNestedManyWithoutOrdersInput
   }
 
@@ -24711,6 +29591,7 @@ export namespace Prisma {
     paymentMethod: string
     paymentStatus?: $Enums.PaymentStatus
     orderStatus?: $Enums.OrderStatus
+    shippingMethodId?: string | null
     shippingCost?: number
     taxAmount?: number
     createdAt?: Date | string
@@ -24742,6 +29623,7 @@ export namespace Prisma {
     user: UserCreateNestedOneWithoutOrdersInput
     orderItems?: OrderItemCreateNestedManyWithoutOrderInput
     shippingAddress: AddressCreateNestedOneWithoutOrdersShippingInput
+    shippingMethod?: ShippingMethodCreateNestedOneWithoutOrdersInput
     coupons?: CouponCreateNestedManyWithoutOrdersInput
   }
 
@@ -24753,6 +29635,7 @@ export namespace Prisma {
     paymentMethod: string
     paymentStatus?: $Enums.PaymentStatus
     orderStatus?: $Enums.OrderStatus
+    shippingMethodId?: string | null
     shippingCost?: number
     taxAmount?: number
     createdAt?: Date | string
@@ -24963,6 +29846,35 @@ export namespace Prisma {
     create: XOR<AddressCreateWithoutOrdersBillingInput, AddressUncheckedCreateWithoutOrdersBillingInput>
   }
 
+  export type ShippingMethodCreateWithoutOrdersInput = {
+    id?: string
+    name: string
+    description?: string | null
+    estimatedDays: string
+    isActive?: boolean
+    defaultCost: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    shippingRates?: ShippingRateCreateNestedManyWithoutShippingMethodInput
+  }
+
+  export type ShippingMethodUncheckedCreateWithoutOrdersInput = {
+    id?: string
+    name: string
+    description?: string | null
+    estimatedDays: string
+    isActive?: boolean
+    defaultCost: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    shippingRates?: ShippingRateUncheckedCreateNestedManyWithoutShippingMethodInput
+  }
+
+  export type ShippingMethodCreateOrConnectWithoutOrdersInput = {
+    where: ShippingMethodWhereUniqueInput
+    create: XOR<ShippingMethodCreateWithoutOrdersInput, ShippingMethodUncheckedCreateWithoutOrdersInput>
+  }
+
   export type CouponCreateWithoutOrdersInput = {
     id?: string
     code: string
@@ -25129,6 +30041,41 @@ export namespace Prisma {
     ordersShipping?: OrderUncheckedUpdateManyWithoutShippingAddressNestedInput
   }
 
+  export type ShippingMethodUpsertWithoutOrdersInput = {
+    update: XOR<ShippingMethodUpdateWithoutOrdersInput, ShippingMethodUncheckedUpdateWithoutOrdersInput>
+    create: XOR<ShippingMethodCreateWithoutOrdersInput, ShippingMethodUncheckedCreateWithoutOrdersInput>
+    where?: ShippingMethodWhereInput
+  }
+
+  export type ShippingMethodUpdateToOneWithWhereWithoutOrdersInput = {
+    where?: ShippingMethodWhereInput
+    data: XOR<ShippingMethodUpdateWithoutOrdersInput, ShippingMethodUncheckedUpdateWithoutOrdersInput>
+  }
+
+  export type ShippingMethodUpdateWithoutOrdersInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    estimatedDays?: StringFieldUpdateOperationsInput | string
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    defaultCost?: FloatFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    shippingRates?: ShippingRateUpdateManyWithoutShippingMethodNestedInput
+  }
+
+  export type ShippingMethodUncheckedUpdateWithoutOrdersInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    estimatedDays?: StringFieldUpdateOperationsInput | string
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    defaultCost?: FloatFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    shippingRates?: ShippingRateUncheckedUpdateManyWithoutShippingMethodNestedInput
+  }
+
   export type CouponUpsertWithWhereUniqueWithoutOrdersInput = {
     where: CouponWhereUniqueInput
     update: XOR<CouponUpdateWithoutOrdersInput, CouponUncheckedUpdateWithoutOrdersInput>
@@ -25175,6 +30122,7 @@ export namespace Prisma {
     user: UserCreateNestedOneWithoutOrdersInput
     shippingAddress: AddressCreateNestedOneWithoutOrdersShippingInput
     billingAddress: AddressCreateNestedOneWithoutOrdersBillingInput
+    shippingMethod?: ShippingMethodCreateNestedOneWithoutOrdersInput
     coupons?: CouponCreateNestedManyWithoutOrdersInput
   }
 
@@ -25187,6 +30135,7 @@ export namespace Prisma {
     paymentMethod: string
     paymentStatus?: $Enums.PaymentStatus
     orderStatus?: $Enums.OrderStatus
+    shippingMethodId?: string | null
     shippingCost?: number
     taxAmount?: number
     createdAt?: Date | string
@@ -25210,6 +30159,9 @@ export namespace Prisma {
     featured?: boolean
     discount?: number | null
     features?: ProductCreatefeaturesInput | string[]
+    weight?: number | null
+    weightUnit?: string | null
+    dimensions?: string | null
     freeShippingThreshold?: number | null
     warrantyPeriod?: string | null
     warrantyDescription?: string | null
@@ -25235,6 +30187,9 @@ export namespace Prisma {
     discount?: number | null
     categoryId?: string | null
     features?: ProductCreatefeaturesInput | string[]
+    weight?: number | null
+    weightUnit?: string | null
+    dimensions?: string | null
     freeShippingThreshold?: number | null
     warrantyPeriod?: string | null
     warrantyDescription?: string | null
@@ -25276,6 +30231,7 @@ export namespace Prisma {
     user?: UserUpdateOneRequiredWithoutOrdersNestedInput
     shippingAddress?: AddressUpdateOneRequiredWithoutOrdersShippingNestedInput
     billingAddress?: AddressUpdateOneRequiredWithoutOrdersBillingNestedInput
+    shippingMethod?: ShippingMethodUpdateOneWithoutOrdersNestedInput
     coupons?: CouponUpdateManyWithoutOrdersNestedInput
   }
 
@@ -25288,6 +30244,7 @@ export namespace Prisma {
     paymentMethod?: StringFieldUpdateOperationsInput | string
     paymentStatus?: EnumPaymentStatusFieldUpdateOperationsInput | $Enums.PaymentStatus
     orderStatus?: EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
+    shippingMethodId?: NullableStringFieldUpdateOperationsInput | string | null
     shippingCost?: FloatFieldUpdateOperationsInput | number
     taxAmount?: FloatFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -25317,6 +30274,9 @@ export namespace Prisma {
     featured?: BoolFieldUpdateOperationsInput | boolean
     discount?: NullableFloatFieldUpdateOperationsInput | number | null
     features?: ProductUpdatefeaturesInput | string[]
+    weight?: NullableFloatFieldUpdateOperationsInput | number | null
+    weightUnit?: NullableStringFieldUpdateOperationsInput | string | null
+    dimensions?: NullableStringFieldUpdateOperationsInput | string | null
     freeShippingThreshold?: NullableFloatFieldUpdateOperationsInput | number | null
     warrantyPeriod?: NullableStringFieldUpdateOperationsInput | string | null
     warrantyDescription?: NullableStringFieldUpdateOperationsInput | string | null
@@ -25342,6 +30302,9 @@ export namespace Prisma {
     discount?: NullableFloatFieldUpdateOperationsInput | number | null
     categoryId?: NullableStringFieldUpdateOperationsInput | string | null
     features?: ProductUpdatefeaturesInput | string[]
+    weight?: NullableFloatFieldUpdateOperationsInput | number | null
+    weightUnit?: NullableStringFieldUpdateOperationsInput | string | null
+    dimensions?: NullableStringFieldUpdateOperationsInput | string | null
     freeShippingThreshold?: NullableFloatFieldUpdateOperationsInput | number | null
     warrantyPeriod?: NullableStringFieldUpdateOperationsInput | string | null
     warrantyDescription?: NullableStringFieldUpdateOperationsInput | string | null
@@ -25365,6 +30328,9 @@ export namespace Prisma {
     featured?: boolean
     discount?: number | null
     features?: ProductCreatefeaturesInput | string[]
+    weight?: number | null
+    weightUnit?: string | null
+    dimensions?: string | null
     freeShippingThreshold?: number | null
     warrantyPeriod?: string | null
     warrantyDescription?: string | null
@@ -25390,6 +30356,9 @@ export namespace Prisma {
     discount?: number | null
     categoryId?: string | null
     features?: ProductCreatefeaturesInput | string[]
+    weight?: number | null
+    weightUnit?: string | null
+    dimensions?: string | null
     freeShippingThreshold?: number | null
     warrantyPeriod?: string | null
     warrantyDescription?: string | null
@@ -25460,6 +30429,9 @@ export namespace Prisma {
     featured?: BoolFieldUpdateOperationsInput | boolean
     discount?: NullableFloatFieldUpdateOperationsInput | number | null
     features?: ProductUpdatefeaturesInput | string[]
+    weight?: NullableFloatFieldUpdateOperationsInput | number | null
+    weightUnit?: NullableStringFieldUpdateOperationsInput | string | null
+    dimensions?: NullableStringFieldUpdateOperationsInput | string | null
     freeShippingThreshold?: NullableFloatFieldUpdateOperationsInput | number | null
     warrantyPeriod?: NullableStringFieldUpdateOperationsInput | string | null
     warrantyDescription?: NullableStringFieldUpdateOperationsInput | string | null
@@ -25485,6 +30457,9 @@ export namespace Prisma {
     discount?: NullableFloatFieldUpdateOperationsInput | number | null
     categoryId?: NullableStringFieldUpdateOperationsInput | string | null
     features?: ProductUpdatefeaturesInput | string[]
+    weight?: NullableFloatFieldUpdateOperationsInput | number | null
+    weightUnit?: NullableStringFieldUpdateOperationsInput | string | null
+    dimensions?: NullableStringFieldUpdateOperationsInput | string | null
     freeShippingThreshold?: NullableFloatFieldUpdateOperationsInput | number | null
     warrantyPeriod?: NullableStringFieldUpdateOperationsInput | string | null
     warrantyDescription?: NullableStringFieldUpdateOperationsInput | string | null
@@ -25548,6 +30523,7 @@ export namespace Prisma {
     orderItems?: OrderItemCreateNestedManyWithoutOrderInput
     shippingAddress: AddressCreateNestedOneWithoutOrdersShippingInput
     billingAddress: AddressCreateNestedOneWithoutOrdersBillingInput
+    shippingMethod?: ShippingMethodCreateNestedOneWithoutOrdersInput
   }
 
   export type OrderUncheckedCreateWithoutCouponsInput = {
@@ -25559,6 +30535,7 @@ export namespace Prisma {
     paymentMethod: string
     paymentStatus?: $Enums.PaymentStatus
     orderStatus?: $Enums.OrderStatus
+    shippingMethodId?: string | null
     shippingCost?: number
     taxAmount?: number
     createdAt?: Date | string
@@ -25582,6 +30559,9 @@ export namespace Prisma {
     startDate: Date | string
     endDate: Date | string
     position?: string | null
+    targetAudience?: string | null
+    goals?: string | null
+    notes?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -25597,6 +30577,9 @@ export namespace Prisma {
     startDate: Date | string
     endDate: Date | string
     position?: string | null
+    targetAudience?: string | null
+    goals?: string | null
+    notes?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -25658,6 +30641,9 @@ export namespace Prisma {
     startDate?: DateTimeFilter<"Campaign"> | Date | string
     endDate?: DateTimeFilter<"Campaign"> | Date | string
     position?: StringNullableFilter<"Campaign"> | string | null
+    targetAudience?: StringNullableFilter<"Campaign"> | string | null
+    goals?: StringNullableFilter<"Campaign"> | string | null
+    notes?: StringNullableFilter<"Campaign"> | string | null
     createdAt?: DateTimeFilter<"Campaign"> | Date | string
     updatedAt?: DateTimeFilter<"Campaign"> | Date | string
   }
@@ -25738,6 +30724,202 @@ export namespace Prisma {
     orders?: OrderUncheckedUpdateManyWithoutCouponsNestedInput
   }
 
+  export type OrderCreateWithoutShippingMethodInput = {
+    id?: string
+    totalAmount: number
+    paymentMethod: string
+    paymentStatus?: $Enums.PaymentStatus
+    orderStatus?: $Enums.OrderStatus
+    shippingCost?: number
+    taxAmount?: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    user: UserCreateNestedOneWithoutOrdersInput
+    orderItems?: OrderItemCreateNestedManyWithoutOrderInput
+    shippingAddress: AddressCreateNestedOneWithoutOrdersShippingInput
+    billingAddress: AddressCreateNestedOneWithoutOrdersBillingInput
+    coupons?: CouponCreateNestedManyWithoutOrdersInput
+  }
+
+  export type OrderUncheckedCreateWithoutShippingMethodInput = {
+    id?: string
+    userId: string
+    totalAmount: number
+    shippingAddressId: string
+    billingAddressId: string
+    paymentMethod: string
+    paymentStatus?: $Enums.PaymentStatus
+    orderStatus?: $Enums.OrderStatus
+    shippingCost?: number
+    taxAmount?: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    orderItems?: OrderItemUncheckedCreateNestedManyWithoutOrderInput
+    coupons?: CouponUncheckedCreateNestedManyWithoutOrdersInput
+  }
+
+  export type OrderCreateOrConnectWithoutShippingMethodInput = {
+    where: OrderWhereUniqueInput
+    create: XOR<OrderCreateWithoutShippingMethodInput, OrderUncheckedCreateWithoutShippingMethodInput>
+  }
+
+  export type OrderCreateManyShippingMethodInputEnvelope = {
+    data: OrderCreateManyShippingMethodInput | OrderCreateManyShippingMethodInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type ShippingRateCreateWithoutShippingMethodInput = {
+    id?: string
+    country: string
+    state?: string | null
+    postalCodePrefix?: string | null
+    minOrderAmount?: number | null
+    maxOrderAmount?: number | null
+    minWeight?: number | null
+    maxWeight?: number | null
+    cost: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type ShippingRateUncheckedCreateWithoutShippingMethodInput = {
+    id?: string
+    country: string
+    state?: string | null
+    postalCodePrefix?: string | null
+    minOrderAmount?: number | null
+    maxOrderAmount?: number | null
+    minWeight?: number | null
+    maxWeight?: number | null
+    cost: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type ShippingRateCreateOrConnectWithoutShippingMethodInput = {
+    where: ShippingRateWhereUniqueInput
+    create: XOR<ShippingRateCreateWithoutShippingMethodInput, ShippingRateUncheckedCreateWithoutShippingMethodInput>
+  }
+
+  export type ShippingRateCreateManyShippingMethodInputEnvelope = {
+    data: ShippingRateCreateManyShippingMethodInput | ShippingRateCreateManyShippingMethodInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type OrderUpsertWithWhereUniqueWithoutShippingMethodInput = {
+    where: OrderWhereUniqueInput
+    update: XOR<OrderUpdateWithoutShippingMethodInput, OrderUncheckedUpdateWithoutShippingMethodInput>
+    create: XOR<OrderCreateWithoutShippingMethodInput, OrderUncheckedCreateWithoutShippingMethodInput>
+  }
+
+  export type OrderUpdateWithWhereUniqueWithoutShippingMethodInput = {
+    where: OrderWhereUniqueInput
+    data: XOR<OrderUpdateWithoutShippingMethodInput, OrderUncheckedUpdateWithoutShippingMethodInput>
+  }
+
+  export type OrderUpdateManyWithWhereWithoutShippingMethodInput = {
+    where: OrderScalarWhereInput
+    data: XOR<OrderUpdateManyMutationInput, OrderUncheckedUpdateManyWithoutShippingMethodInput>
+  }
+
+  export type ShippingRateUpsertWithWhereUniqueWithoutShippingMethodInput = {
+    where: ShippingRateWhereUniqueInput
+    update: XOR<ShippingRateUpdateWithoutShippingMethodInput, ShippingRateUncheckedUpdateWithoutShippingMethodInput>
+    create: XOR<ShippingRateCreateWithoutShippingMethodInput, ShippingRateUncheckedCreateWithoutShippingMethodInput>
+  }
+
+  export type ShippingRateUpdateWithWhereUniqueWithoutShippingMethodInput = {
+    where: ShippingRateWhereUniqueInput
+    data: XOR<ShippingRateUpdateWithoutShippingMethodInput, ShippingRateUncheckedUpdateWithoutShippingMethodInput>
+  }
+
+  export type ShippingRateUpdateManyWithWhereWithoutShippingMethodInput = {
+    where: ShippingRateScalarWhereInput
+    data: XOR<ShippingRateUpdateManyMutationInput, ShippingRateUncheckedUpdateManyWithoutShippingMethodInput>
+  }
+
+  export type ShippingRateScalarWhereInput = {
+    AND?: ShippingRateScalarWhereInput | ShippingRateScalarWhereInput[]
+    OR?: ShippingRateScalarWhereInput[]
+    NOT?: ShippingRateScalarWhereInput | ShippingRateScalarWhereInput[]
+    id?: StringFilter<"ShippingRate"> | string
+    shippingMethodId?: StringFilter<"ShippingRate"> | string
+    country?: StringFilter<"ShippingRate"> | string
+    state?: StringNullableFilter<"ShippingRate"> | string | null
+    postalCodePrefix?: StringNullableFilter<"ShippingRate"> | string | null
+    minOrderAmount?: FloatNullableFilter<"ShippingRate"> | number | null
+    maxOrderAmount?: FloatNullableFilter<"ShippingRate"> | number | null
+    minWeight?: FloatNullableFilter<"ShippingRate"> | number | null
+    maxWeight?: FloatNullableFilter<"ShippingRate"> | number | null
+    cost?: FloatFilter<"ShippingRate"> | number
+    createdAt?: DateTimeFilter<"ShippingRate"> | Date | string
+    updatedAt?: DateTimeFilter<"ShippingRate"> | Date | string
+  }
+
+  export type ShippingMethodCreateWithoutShippingRatesInput = {
+    id?: string
+    name: string
+    description?: string | null
+    estimatedDays: string
+    isActive?: boolean
+    defaultCost: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    orders?: OrderCreateNestedManyWithoutShippingMethodInput
+  }
+
+  export type ShippingMethodUncheckedCreateWithoutShippingRatesInput = {
+    id?: string
+    name: string
+    description?: string | null
+    estimatedDays: string
+    isActive?: boolean
+    defaultCost: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    orders?: OrderUncheckedCreateNestedManyWithoutShippingMethodInput
+  }
+
+  export type ShippingMethodCreateOrConnectWithoutShippingRatesInput = {
+    where: ShippingMethodWhereUniqueInput
+    create: XOR<ShippingMethodCreateWithoutShippingRatesInput, ShippingMethodUncheckedCreateWithoutShippingRatesInput>
+  }
+
+  export type ShippingMethodUpsertWithoutShippingRatesInput = {
+    update: XOR<ShippingMethodUpdateWithoutShippingRatesInput, ShippingMethodUncheckedUpdateWithoutShippingRatesInput>
+    create: XOR<ShippingMethodCreateWithoutShippingRatesInput, ShippingMethodUncheckedCreateWithoutShippingRatesInput>
+    where?: ShippingMethodWhereInput
+  }
+
+  export type ShippingMethodUpdateToOneWithWhereWithoutShippingRatesInput = {
+    where?: ShippingMethodWhereInput
+    data: XOR<ShippingMethodUpdateWithoutShippingRatesInput, ShippingMethodUncheckedUpdateWithoutShippingRatesInput>
+  }
+
+  export type ShippingMethodUpdateWithoutShippingRatesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    estimatedDays?: StringFieldUpdateOperationsInput | string
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    defaultCost?: FloatFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    orders?: OrderUpdateManyWithoutShippingMethodNestedInput
+  }
+
+  export type ShippingMethodUncheckedUpdateWithoutShippingRatesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    estimatedDays?: StringFieldUpdateOperationsInput | string
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    defaultCost?: FloatFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    orders?: OrderUncheckedUpdateManyWithoutShippingMethodNestedInput
+  }
+
   export type CartCreateManyUserInput = {
     id?: string
     updatedAt?: Date | string
@@ -25751,6 +30933,7 @@ export namespace Prisma {
     paymentMethod: string
     paymentStatus?: $Enums.PaymentStatus
     orderStatus?: $Enums.OrderStatus
+    shippingMethodId?: string | null
     shippingCost?: number
     taxAmount?: number
     createdAt?: Date | string
@@ -25807,6 +30990,7 @@ export namespace Prisma {
     orderItems?: OrderItemUpdateManyWithoutOrderNestedInput
     shippingAddress?: AddressUpdateOneRequiredWithoutOrdersShippingNestedInput
     billingAddress?: AddressUpdateOneRequiredWithoutOrdersBillingNestedInput
+    shippingMethod?: ShippingMethodUpdateOneWithoutOrdersNestedInput
     coupons?: CouponUpdateManyWithoutOrdersNestedInput
   }
 
@@ -25818,6 +31002,7 @@ export namespace Prisma {
     paymentMethod?: StringFieldUpdateOperationsInput | string
     paymentStatus?: EnumPaymentStatusFieldUpdateOperationsInput | $Enums.PaymentStatus
     orderStatus?: EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
+    shippingMethodId?: NullableStringFieldUpdateOperationsInput | string | null
     shippingCost?: FloatFieldUpdateOperationsInput | number
     taxAmount?: FloatFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -25834,6 +31019,7 @@ export namespace Prisma {
     paymentMethod?: StringFieldUpdateOperationsInput | string
     paymentStatus?: EnumPaymentStatusFieldUpdateOperationsInput | $Enums.PaymentStatus
     orderStatus?: EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
+    shippingMethodId?: NullableStringFieldUpdateOperationsInput | string | null
     shippingCost?: FloatFieldUpdateOperationsInput | number
     taxAmount?: FloatFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -25921,6 +31107,9 @@ export namespace Prisma {
     featured?: boolean
     discount?: number | null
     features?: ProductCreatefeaturesInput | string[]
+    weight?: number | null
+    weightUnit?: string | null
+    dimensions?: string | null
     freeShippingThreshold?: number | null
     warrantyPeriod?: string | null
     warrantyDescription?: string | null
@@ -25963,6 +31152,9 @@ export namespace Prisma {
     featured?: BoolFieldUpdateOperationsInput | boolean
     discount?: NullableFloatFieldUpdateOperationsInput | number | null
     features?: ProductUpdatefeaturesInput | string[]
+    weight?: NullableFloatFieldUpdateOperationsInput | number | null
+    weightUnit?: NullableStringFieldUpdateOperationsInput | string | null
+    dimensions?: NullableStringFieldUpdateOperationsInput | string | null
     freeShippingThreshold?: NullableFloatFieldUpdateOperationsInput | number | null
     warrantyPeriod?: NullableStringFieldUpdateOperationsInput | string | null
     warrantyDescription?: NullableStringFieldUpdateOperationsInput | string | null
@@ -25987,6 +31179,9 @@ export namespace Prisma {
     featured?: BoolFieldUpdateOperationsInput | boolean
     discount?: NullableFloatFieldUpdateOperationsInput | number | null
     features?: ProductUpdatefeaturesInput | string[]
+    weight?: NullableFloatFieldUpdateOperationsInput | number | null
+    weightUnit?: NullableStringFieldUpdateOperationsInput | string | null
+    dimensions?: NullableStringFieldUpdateOperationsInput | string | null
     freeShippingThreshold?: NullableFloatFieldUpdateOperationsInput | number | null
     warrantyPeriod?: NullableStringFieldUpdateOperationsInput | string | null
     warrantyDescription?: NullableStringFieldUpdateOperationsInput | string | null
@@ -26011,6 +31206,9 @@ export namespace Prisma {
     featured?: BoolFieldUpdateOperationsInput | boolean
     discount?: NullableFloatFieldUpdateOperationsInput | number | null
     features?: ProductUpdatefeaturesInput | string[]
+    weight?: NullableFloatFieldUpdateOperationsInput | number | null
+    weightUnit?: NullableStringFieldUpdateOperationsInput | string | null
+    dimensions?: NullableStringFieldUpdateOperationsInput | string | null
     freeShippingThreshold?: NullableFloatFieldUpdateOperationsInput | number | null
     warrantyPeriod?: NullableStringFieldUpdateOperationsInput | string | null
     warrantyDescription?: NullableStringFieldUpdateOperationsInput | string | null
@@ -26172,6 +31370,7 @@ export namespace Prisma {
     paymentMethod: string
     paymentStatus?: $Enums.PaymentStatus
     orderStatus?: $Enums.OrderStatus
+    shippingMethodId?: string | null
     shippingCost?: number
     taxAmount?: number
     createdAt?: Date | string
@@ -26186,6 +31385,7 @@ export namespace Prisma {
     paymentMethod: string
     paymentStatus?: $Enums.PaymentStatus
     orderStatus?: $Enums.OrderStatus
+    shippingMethodId?: string | null
     shippingCost?: number
     taxAmount?: number
     createdAt?: Date | string
@@ -26205,6 +31405,7 @@ export namespace Prisma {
     user?: UserUpdateOneRequiredWithoutOrdersNestedInput
     orderItems?: OrderItemUpdateManyWithoutOrderNestedInput
     billingAddress?: AddressUpdateOneRequiredWithoutOrdersBillingNestedInput
+    shippingMethod?: ShippingMethodUpdateOneWithoutOrdersNestedInput
     coupons?: CouponUpdateManyWithoutOrdersNestedInput
   }
 
@@ -26216,6 +31417,7 @@ export namespace Prisma {
     paymentMethod?: StringFieldUpdateOperationsInput | string
     paymentStatus?: EnumPaymentStatusFieldUpdateOperationsInput | $Enums.PaymentStatus
     orderStatus?: EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
+    shippingMethodId?: NullableStringFieldUpdateOperationsInput | string | null
     shippingCost?: FloatFieldUpdateOperationsInput | number
     taxAmount?: FloatFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -26232,6 +31434,7 @@ export namespace Prisma {
     paymentMethod?: StringFieldUpdateOperationsInput | string
     paymentStatus?: EnumPaymentStatusFieldUpdateOperationsInput | $Enums.PaymentStatus
     orderStatus?: EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
+    shippingMethodId?: NullableStringFieldUpdateOperationsInput | string | null
     shippingCost?: FloatFieldUpdateOperationsInput | number
     taxAmount?: FloatFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -26251,6 +31454,7 @@ export namespace Prisma {
     user?: UserUpdateOneRequiredWithoutOrdersNestedInput
     orderItems?: OrderItemUpdateManyWithoutOrderNestedInput
     shippingAddress?: AddressUpdateOneRequiredWithoutOrdersShippingNestedInput
+    shippingMethod?: ShippingMethodUpdateOneWithoutOrdersNestedInput
     coupons?: CouponUpdateManyWithoutOrdersNestedInput
   }
 
@@ -26262,6 +31466,7 @@ export namespace Prisma {
     paymentMethod?: StringFieldUpdateOperationsInput | string
     paymentStatus?: EnumPaymentStatusFieldUpdateOperationsInput | $Enums.PaymentStatus
     orderStatus?: EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
+    shippingMethodId?: NullableStringFieldUpdateOperationsInput | string | null
     shippingCost?: FloatFieldUpdateOperationsInput | number
     taxAmount?: FloatFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -26278,6 +31483,7 @@ export namespace Prisma {
     paymentMethod?: StringFieldUpdateOperationsInput | string
     paymentStatus?: EnumPaymentStatusFieldUpdateOperationsInput | $Enums.PaymentStatus
     orderStatus?: EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
+    shippingMethodId?: NullableStringFieldUpdateOperationsInput | string | null
     shippingCost?: FloatFieldUpdateOperationsInput | number
     taxAmount?: FloatFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -26371,6 +31577,9 @@ export namespace Prisma {
     startDate: Date | string
     endDate: Date | string
     position?: string | null
+    targetAudience?: string | null
+    goals?: string | null
+    notes?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -26389,6 +31598,7 @@ export namespace Prisma {
     orderItems?: OrderItemUpdateManyWithoutOrderNestedInput
     shippingAddress?: AddressUpdateOneRequiredWithoutOrdersShippingNestedInput
     billingAddress?: AddressUpdateOneRequiredWithoutOrdersBillingNestedInput
+    shippingMethod?: ShippingMethodUpdateOneWithoutOrdersNestedInput
   }
 
   export type OrderUncheckedUpdateWithoutCouponsInput = {
@@ -26400,6 +31610,7 @@ export namespace Prisma {
     paymentMethod?: StringFieldUpdateOperationsInput | string
     paymentStatus?: EnumPaymentStatusFieldUpdateOperationsInput | $Enums.PaymentStatus
     orderStatus?: EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
+    shippingMethodId?: NullableStringFieldUpdateOperationsInput | string | null
     shippingCost?: FloatFieldUpdateOperationsInput | number
     taxAmount?: FloatFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -26416,6 +31627,7 @@ export namespace Prisma {
     paymentMethod?: StringFieldUpdateOperationsInput | string
     paymentStatus?: EnumPaymentStatusFieldUpdateOperationsInput | $Enums.PaymentStatus
     orderStatus?: EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
+    shippingMethodId?: NullableStringFieldUpdateOperationsInput | string | null
     shippingCost?: FloatFieldUpdateOperationsInput | number
     taxAmount?: FloatFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -26433,6 +31645,9 @@ export namespace Prisma {
     startDate?: DateTimeFieldUpdateOperationsInput | Date | string
     endDate?: DateTimeFieldUpdateOperationsInput | Date | string
     position?: NullableStringFieldUpdateOperationsInput | string | null
+    targetAudience?: NullableStringFieldUpdateOperationsInput | string | null
+    goals?: NullableStringFieldUpdateOperationsInput | string | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -26448,6 +31663,9 @@ export namespace Prisma {
     startDate?: DateTimeFieldUpdateOperationsInput | Date | string
     endDate?: DateTimeFieldUpdateOperationsInput | Date | string
     position?: NullableStringFieldUpdateOperationsInput | string | null
+    targetAudience?: NullableStringFieldUpdateOperationsInput | string | null
+    goals?: NullableStringFieldUpdateOperationsInput | string | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -26463,6 +31681,129 @@ export namespace Prisma {
     startDate?: DateTimeFieldUpdateOperationsInput | Date | string
     endDate?: DateTimeFieldUpdateOperationsInput | Date | string
     position?: NullableStringFieldUpdateOperationsInput | string | null
+    targetAudience?: NullableStringFieldUpdateOperationsInput | string | null
+    goals?: NullableStringFieldUpdateOperationsInput | string | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type OrderCreateManyShippingMethodInput = {
+    id?: string
+    userId: string
+    totalAmount: number
+    shippingAddressId: string
+    billingAddressId: string
+    paymentMethod: string
+    paymentStatus?: $Enums.PaymentStatus
+    orderStatus?: $Enums.OrderStatus
+    shippingCost?: number
+    taxAmount?: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type ShippingRateCreateManyShippingMethodInput = {
+    id?: string
+    country: string
+    state?: string | null
+    postalCodePrefix?: string | null
+    minOrderAmount?: number | null
+    maxOrderAmount?: number | null
+    minWeight?: number | null
+    maxWeight?: number | null
+    cost: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type OrderUpdateWithoutShippingMethodInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    totalAmount?: FloatFieldUpdateOperationsInput | number
+    paymentMethod?: StringFieldUpdateOperationsInput | string
+    paymentStatus?: EnumPaymentStatusFieldUpdateOperationsInput | $Enums.PaymentStatus
+    orderStatus?: EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
+    shippingCost?: FloatFieldUpdateOperationsInput | number
+    taxAmount?: FloatFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    user?: UserUpdateOneRequiredWithoutOrdersNestedInput
+    orderItems?: OrderItemUpdateManyWithoutOrderNestedInput
+    shippingAddress?: AddressUpdateOneRequiredWithoutOrdersShippingNestedInput
+    billingAddress?: AddressUpdateOneRequiredWithoutOrdersBillingNestedInput
+    coupons?: CouponUpdateManyWithoutOrdersNestedInput
+  }
+
+  export type OrderUncheckedUpdateWithoutShippingMethodInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    totalAmount?: FloatFieldUpdateOperationsInput | number
+    shippingAddressId?: StringFieldUpdateOperationsInput | string
+    billingAddressId?: StringFieldUpdateOperationsInput | string
+    paymentMethod?: StringFieldUpdateOperationsInput | string
+    paymentStatus?: EnumPaymentStatusFieldUpdateOperationsInput | $Enums.PaymentStatus
+    orderStatus?: EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
+    shippingCost?: FloatFieldUpdateOperationsInput | number
+    taxAmount?: FloatFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    orderItems?: OrderItemUncheckedUpdateManyWithoutOrderNestedInput
+    coupons?: CouponUncheckedUpdateManyWithoutOrdersNestedInput
+  }
+
+  export type OrderUncheckedUpdateManyWithoutShippingMethodInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    totalAmount?: FloatFieldUpdateOperationsInput | number
+    shippingAddressId?: StringFieldUpdateOperationsInput | string
+    billingAddressId?: StringFieldUpdateOperationsInput | string
+    paymentMethod?: StringFieldUpdateOperationsInput | string
+    paymentStatus?: EnumPaymentStatusFieldUpdateOperationsInput | $Enums.PaymentStatus
+    orderStatus?: EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
+    shippingCost?: FloatFieldUpdateOperationsInput | number
+    taxAmount?: FloatFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ShippingRateUpdateWithoutShippingMethodInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    country?: StringFieldUpdateOperationsInput | string
+    state?: NullableStringFieldUpdateOperationsInput | string | null
+    postalCodePrefix?: NullableStringFieldUpdateOperationsInput | string | null
+    minOrderAmount?: NullableFloatFieldUpdateOperationsInput | number | null
+    maxOrderAmount?: NullableFloatFieldUpdateOperationsInput | number | null
+    minWeight?: NullableFloatFieldUpdateOperationsInput | number | null
+    maxWeight?: NullableFloatFieldUpdateOperationsInput | number | null
+    cost?: FloatFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ShippingRateUncheckedUpdateWithoutShippingMethodInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    country?: StringFieldUpdateOperationsInput | string
+    state?: NullableStringFieldUpdateOperationsInput | string | null
+    postalCodePrefix?: NullableStringFieldUpdateOperationsInput | string | null
+    minOrderAmount?: NullableFloatFieldUpdateOperationsInput | number | null
+    maxOrderAmount?: NullableFloatFieldUpdateOperationsInput | number | null
+    minWeight?: NullableFloatFieldUpdateOperationsInput | number | null
+    maxWeight?: NullableFloatFieldUpdateOperationsInput | number | null
+    cost?: FloatFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ShippingRateUncheckedUpdateManyWithoutShippingMethodInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    country?: StringFieldUpdateOperationsInput | string
+    state?: NullableStringFieldUpdateOperationsInput | string | null
+    postalCodePrefix?: NullableStringFieldUpdateOperationsInput | string | null
+    minOrderAmount?: NullableFloatFieldUpdateOperationsInput | number | null
+    maxOrderAmount?: NullableFloatFieldUpdateOperationsInput | number | null
+    minWeight?: NullableFloatFieldUpdateOperationsInput | number | null
+    maxWeight?: NullableFloatFieldUpdateOperationsInput | number | null
+    cost?: FloatFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }

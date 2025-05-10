@@ -6,7 +6,7 @@ import { motion } from "framer-motion";
 import { 
   ChevronLeft, Save, Trash2, Upload, X, 
   Plus, Image as ImageIcon, AlertCircle, Zap,
-  Percent, DollarSign, Tag
+  Percent, DollarSign, Tag, Truck
 } from "lucide-react";
 import { useAuth } from "@/context/AuthContext";
 import { ProtectedRoute } from "@/components/auth/ProtectedRoute";
@@ -72,6 +72,19 @@ export default function AddProductPage() {
   const [returnInfo, setReturnInfo] = useState({
     returnPeriod: "30-Day Returns",
     returnDescription: "Hassle-free returns"
+  });
+  
+  // Product dimensions and weight
+  const [dimensions, setDimensions] = useState({
+    length: "",
+    width: "",
+    height: "",
+    unit: "cm" // Default unit (cm or inches)
+  });
+  
+  const [weight, setWeight] = useState({
+    value: "",
+    unit: "kg" // Default unit (kg or lbs)
   });
   
   // Admin protection
@@ -187,6 +200,48 @@ export default function AddProductPage() {
     setReturnInfo(prev => ({ ...prev, [name]: value }));
   };
   
+  // Handle dimension change
+  const handleDimensionChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    
+    // Clear errors when field is updated
+    if (errors.dimensions) {
+      setErrors(prev => {
+        const newErrors = { ...prev };
+        delete newErrors.dimensions;
+        return newErrors;
+      });
+    }
+    
+    setDimensions(prev => ({ ...prev, [name]: value }));
+  };
+  
+  // Handle dimension unit change
+  const handleDimensionUnitChange = (value: string) => {
+    setDimensions(prev => ({ ...prev, unit: value }));
+  };
+  
+  // Handle weight change
+  const handleWeightChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    
+    // Clear errors when field is updated
+    if (errors.weight) {
+      setErrors(prev => {
+        const newErrors = { ...prev };
+        delete newErrors.weight;
+        return newErrors;
+      });
+    }
+    
+    setWeight(prev => ({ ...prev, [name]: value }));
+  };
+  
+  // Handle weight unit change
+  const handleWeightUnitChange = (value: string) => {
+    setWeight(prev => ({ ...prev, unit: value }));
+  };
+  
   // Validate form
   const validateForm = () => {
     const newErrors: Record<string, string> = {};
@@ -227,6 +282,24 @@ export default function AddProductPage() {
       newErrors.features = "At least one feature is required";
     }
     
+    // Validate weight - it's required for proper shipping calculation
+    if (!weight.value) {
+      newErrors.weight = "Product weight is required for shipping calculation";
+    } else if (isNaN(Number(weight.value)) || Number(weight.value) <= 0) {
+      newErrors.weight = "Weight must be a positive number";
+    }
+    
+    // Validate dimensions
+    if (dimensions.length && dimensions.width && dimensions.height) {
+      if (isNaN(Number(dimensions.length)) || Number(dimensions.length) <= 0) {
+        newErrors.dimensions = "Length must be a positive number";
+      } else if (isNaN(Number(dimensions.width)) || Number(dimensions.width) <= 0) {
+        newErrors.dimensions = "Width must be a positive number";
+      } else if (isNaN(Number(dimensions.height)) || Number(dimensions.height) <= 0) {
+        newErrors.dimensions = "Height must be a positive number";
+      }
+    }
+    
     if (shippingInfo.freeShippingThreshold && (isNaN(Number(shippingInfo.freeShippingThreshold)) || Number(shippingInfo.freeShippingThreshold) < 0)) {
       newErrors.freeShippingThreshold = "Free shipping threshold must be a non-negative number";
     }
@@ -265,9 +338,12 @@ export default function AddProductPage() {
         return;
       }
       
-      if (errors.features && activeTab !== "features") {
-        setActiveTab("features");
-        toast.error("Please add at least one feature");
+      if (
+        (errors.features && activeTab !== "features") ||
+        ((errors.weight || errors.dimensions) && activeTab !== "shipping")
+      ) {
+        setActiveTab(errors.features ? "features" : "shipping");
+        toast.error(`Please check the ${errors.features ? "Features" : "Shipping Details"} tab for errors`);
         return;
       }
       
@@ -312,6 +388,9 @@ export default function AddProductPage() {
         discount: product.discount ? parseFloat(product.discount) : null,
         images: productImages,
         features,
+        weight: parseFloat(weight.value),
+        weightUnit: weight.unit,
+        dimensions: `${dimensions.length} x ${dimensions.width} x ${dimensions.height} ${dimensions.unit}`,
         freeShippingThreshold: parseFloat(shippingInfo.freeShippingThreshold),
         warrantyPeriod: warrantyInfo.warrantyPeriod,
         warrantyDescription: warrantyInfo.warrantyDescription,
@@ -456,6 +535,17 @@ export default function AddProductPage() {
                     >
                       Features
                       {errors.features && (
+                        <span className="ml-auto">
+                          <AlertCircle className="h-4 w-4" />
+                        </span>
+                      )}
+                    </TabsTrigger>
+                    <TabsTrigger 
+                      value="shipping" 
+                      className={`justify-start ${errors.weight || errors.dimensions ? 'text-red-500' : ''}`}
+                    >
+                      Shipping Details
+                      {(errors.weight || errors.dimensions) && (
                         <span className="ml-auto">
                           <AlertCircle className="h-4 w-4" />
                         </span>
@@ -761,6 +851,147 @@ export default function AddProductPage() {
                               <p className="mt-2 text-sm text-red-500">{errors.features}</p>
                             )}
                           </div>
+                        </div>
+                      </TabsContent>
+                      
+                      <TabsContent value="shipping" className="mt-0">
+                        <div className="space-y-6">
+                          <div className="border p-4 rounded-lg">
+                            <h3 className="text-base font-medium mb-3 flex items-center">
+                              <span className="mr-2">Product Weight</span>
+                              <Badge variant="outline" className="text-orange-500 border-orange-200 bg-orange-50">Required</Badge>
+                            </h3>
+                            <div className="space-y-2">
+                              <p className="text-sm text-muted-foreground mb-2">
+                                Accurate weight is crucial for shipping calculations, especially for international shipping to Egypt.
+                              </p>
+                              <div className="flex items-center gap-2">
+                                <div className="flex-1">
+                                  <Label htmlFor="weight-value" className={errors.weight ? "text-red-500" : ""}>
+                                    Weight *
+                                  </Label>
+                                  <Input
+                                    id="weight-value"
+                                    name="value"
+                                    type="number"
+                                    step="0.01"
+                                    min="0.01"
+                                    value={weight.value}
+                                    onChange={handleWeightChange}
+                                    className={errors.weight ? "border-red-500" : ""}
+                                    placeholder="e.g. 1.5"
+                                  />
+                                </div>
+                                <div className="w-24">
+                                  <Label htmlFor="weight-unit">Unit</Label>
+                                  <Select
+                                    value={weight.unit}
+                                    onValueChange={(value) => handleWeightUnitChange(value)}
+                                  >
+                                    <SelectTrigger id="weight-unit">
+                                      <SelectValue placeholder="Unit" />
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                      <SelectItem value="kg">kg</SelectItem>
+                                      <SelectItem value="lbs">lbs</SelectItem>
+                                    </SelectContent>
+                                  </Select>
+                                </div>
+                              </div>
+                              {errors.weight && (
+                                <p className="mt-1 text-sm text-red-500">{errors.weight}</p>
+                              )}
+                            </div>
+                          </div>
+                          
+                          <div className="border p-4 rounded-lg">
+                            <h3 className="text-base font-medium mb-3">Product Dimensions</h3>
+                            <p className="text-sm text-muted-foreground mb-2">
+                              Accurate dimensions help calculate volumetric weight for international shipping, especially to Egypt.
+                            </p>
+                            <div className="grid grid-cols-3 gap-4 mb-2">
+                              <div>
+                                <Label htmlFor="length" className={errors.dimensions ? "text-red-500" : ""}>
+                                  Length
+                                </Label>
+                                <Input
+                                  id="length"
+                                  name="length"
+                                  type="number"
+                                  step="0.1"
+                                  min="0.1"
+                                  value={dimensions.length}
+                                  onChange={handleDimensionChange}
+                                  className={errors.dimensions ? "border-red-500" : ""}
+                                  placeholder="L"
+                                />
+                              </div>
+                              <div>
+                                <Label htmlFor="width" className={errors.dimensions ? "text-red-500" : ""}>
+                                  Width
+                                </Label>
+                                <Input
+                                  id="width"
+                                  name="width"
+                                  type="number"
+                                  step="0.1"
+                                  min="0.1"
+                                  value={dimensions.width}
+                                  onChange={handleDimensionChange}
+                                  className={errors.dimensions ? "border-red-500" : ""}
+                                  placeholder="W"
+                                />
+                              </div>
+                              <div>
+                                <Label htmlFor="height" className={errors.dimensions ? "text-red-500" : ""}>
+                                  Height
+                                </Label>
+                                <Input
+                                  id="height"
+                                  name="height"
+                                  type="number"
+                                  step="0.1"
+                                  min="0.1"
+                                  value={dimensions.height}
+                                  onChange={handleDimensionChange}
+                                  className={errors.dimensions ? "border-red-500" : ""}
+                                  placeholder="H"
+                                />
+                              </div>
+                            </div>
+                            <div className="flex justify-end">
+                              <div className="w-24">
+                                <Label htmlFor="dimension-unit">Unit</Label>
+                                <Select
+                                  value={dimensions.unit}
+                                  onValueChange={(value) => handleDimensionUnitChange(value)}
+                                >
+                                  <SelectTrigger id="dimension-unit">
+                                    <SelectValue placeholder="Unit" />
+                                  </SelectTrigger>
+                                  <SelectContent>
+                                    <SelectItem value="cm">cm</SelectItem>
+                                    <SelectItem value="in">inches</SelectItem>
+                                  </SelectContent>
+                                </Select>
+                              </div>
+                            </div>
+                            {errors.dimensions && (
+                              <p className="mt-2 text-sm text-red-500">{errors.dimensions}</p>
+                            )}
+                          </div>
+                          
+                          <Alert className="bg-blue-50 dark:bg-blue-900/20 border-blue-200 dark:border-blue-800">
+                            <Truck className="h-4 w-4 text-blue-600" />
+                            <AlertTitle>Shipping Info</AlertTitle>
+                            <AlertDescription className="text-sm">
+                              <ul className="list-disc pl-5 space-y-1 mt-2">
+                                <li>Accurate weight and dimensions ensure correct shipping costs</li>
+                                <li>International shipping to Egypt requires precise measurements</li>
+                                <li>Higher shipping costs apply for Egypt (VAT 14%)</li>
+                              </ul>
+                            </AlertDescription>
+                          </Alert>
                         </div>
                       </TabsContent>
                       

@@ -27,7 +27,8 @@ router.get('/', async (req, res) => {
         },
         shippingAddress: true,
         billingAddress: true,
-        coupons: true
+        coupons: true,
+        shippingMethod: true
       },
       orderBy: {
         createdAt: 'desc'
@@ -60,7 +61,8 @@ router.get('/:id', async (req, res) => {
         },
         shippingAddress: true,
         billingAddress: true,
-        coupons: true
+        coupons: true,
+        shippingMethod: true
       }
     });
     
@@ -95,7 +97,8 @@ router.post('/', async (req, res) => {
       billingAddressId, 
       paymentMethod, 
       couponCode,
-      cartItems 
+      cartItems,
+      shippingMethodId
     } = req.body;
     
     // Validate cart items
@@ -124,9 +127,23 @@ router.post('/', async (req, res) => {
       return;
     }
     
+    // Verify shipping method exists if provided
+    let shippingMethod = null;
+    if (shippingMethodId) {
+      shippingMethod = await prisma.shippingMethod.findUnique({
+        where: { id: shippingMethodId, isActive: true }
+      });
+      
+      if (!shippingMethod) {
+        res.status(400).json({ message: 'Invalid shipping method' });
+        return;
+      }
+    }
+    
     // Calculate total amount
     let totalAmount = 0;
     const orderItems = [];
+    let totalWeight = 0;
     
     for (const item of cartItems) {
       // Get product details from database to ensure accuracy and prevent tampering
@@ -147,6 +164,9 @@ router.post('/', async (req, res) => {
       
       const itemTotal = product.price * item.quantity;
       totalAmount += itemTotal;
+      
+      // Add to total weight for shipping calculation
+      totalWeight += (product.weight || 1.0) * item.quantity;
       
       orderItems.push({
         productId: product.id,
@@ -200,11 +220,112 @@ router.post('/', async (req, res) => {
       }
     }
     
-    // Add tax and shipping (simplified calculation)
-    const taxRate = 0.1; // 10% tax
-    const taxAmount = totalAmount * taxRate;
-    const shippingCost = 10.0; // Flat shipping rate
+    // Calculate shipping cost based on location, weight, and method
+    let shippingCost = 0;
+    if (shippingMethod) {
+      // Find the most specific shipping rate
+      let applicableRate = await prisma.shippingRate.findFirst({
+        where: {
+          shippingMethodId: shippingMethod.id,
+          country: shippingAddress.country,
+          state: shippingAddress.state,
+          minWeight: { lte: totalWeight },
+          maxWeight: { gte: totalWeight },
+          OR: [
+            { minOrderAmount: { lte: totalAmount } },
+            { minOrderAmount: null }
+          ],
     
+        }
+      });
+      
+      // If no specific rate found, try country-level rate
+      if (!applicableRate) {
+        applicableRate = await prisma.shippingRate.findFirst({
+          where: {
+            shippingMethodId: shippingMethod.id,
+            country: shippingAddress.country,
+            state: null,
+            minWeight: { lte: totalWeight },
+            maxWeight: { gte: totalWeight },
+            OR: [
+              { minOrderAmount: { lte: totalAmount } },
+              { minOrderAmount: null }
+            ],
+          }
+        });
+      }
+      
+      // If no country-level rate, use default
+      if (!applicableRate) {
+        applicableRate = await prisma.shippingRate.findFirst({
+          where: {
+            shippingMethodId: shippingMethod.id,
+            country: '',
+            minWeight: { lte: totalWeight },
+            maxWeight: { gte: totalWeight },
+            OR: [
+              { minOrderAmount: { lte: totalAmount } },
+              { minOrderAmount: null }
+            ],
+          }
+        });
+      }
+      
+      // Set shipping cost
+      shippingCost = applicableRate ? applicableRate.cost : shippingMethod.defaultCost;
+      
+      // Check for free shipping
+      const freeShippingItem = await prisma.product.findFirst({
+        where: {
+          id: { in: cartItems.map(item => item.productId) },
+          AND: [
+            { freeShippingThreshold: { not: null } },
+            { freeShippingThreshold: { lte: totalAmount } }
+          ]
+        }
+      });
+      
+      if (freeShippingItem) {
+        shippingCost = 0;
+      }
+    } else {
+      // Default shipping cost if no method provided
+      shippingCost = 10.0;
+    }
+    
+    // Calculate tax based on address
+    let taxRate = 0.1; // Default 10% tax
+    
+    // Try to find location-specific tax rate
+    const addressTaxRate = await prisma.taxRate.findFirst({
+      where: {
+        country: shippingAddress.country,
+        state: shippingAddress.state,
+        isActive: true
+      }
+    });
+    
+    // If no state-specific rate, try country-level rate
+    if (!addressTaxRate) {
+      const countryTaxRate = await prisma.taxRate.findFirst({
+        where: {
+          country: shippingAddress.country,
+          state: null,
+          isActive: true
+        }
+      });
+      
+      if (countryTaxRate) {
+        taxRate = countryTaxRate.rate;
+      }
+    } else {
+      taxRate = addressTaxRate.rate;
+    }
+    
+    const taxAmount = totalAmount * taxRate;
+    
+    // Add tax and shipping to total
     totalAmount += taxAmount + shippingCost;
     
     // Create order
@@ -223,6 +344,9 @@ router.post('/', async (req, res) => {
         paymentMethod,
         paymentStatus: 'PENDING',
         orderStatus: 'PENDING',
+        shippingMethod: shippingMethodId ? {
+          connect: { id: shippingMethodId }
+        } : undefined,
         shippingCost,
         taxAmount,
         coupons: appliedCoupon ? {
@@ -244,7 +368,8 @@ router.post('/', async (req, res) => {
         },
         shippingAddress: true,
         billingAddress: true,
-        coupons: true
+        coupons: true,
+        shippingMethod: true
       }
     });
     
@@ -318,7 +443,8 @@ router.post('/:id/cancel', async (req, res) => {
         },
         shippingAddress: true,
         billingAddress: true,
-        coupons: true
+        coupons: true,
+        shippingMethod: true
       }
     });
     
@@ -352,7 +478,8 @@ router.get('/admin/all', requireAdmin, async (req, res) => {
         },
         shippingAddress: true,
         billingAddress: true,
-        coupons: true
+        coupons: true,
+        shippingMethod: true
       },
       orderBy: {
         createdAt: 'desc'
@@ -389,7 +516,8 @@ router.put('/:id/status', requireAdmin, async (req, res) => {
         },
         shippingAddress: true,
         billingAddress: true,
-        coupons: true
+        coupons: true,
+        shippingMethod: true
       }
     });
     
